@@ -165,4 +165,4 @@ app.get('/api/pending-summaries', authMiddleware, async (req, res) => {
   res.json({ aggregated, perCabin, pendings });
 });
 
-app.listen(process.env.PORT, () => console.log(`Server on port ${process.env.PORT}`));
+app.listen(process.env.PORT, () => console.log(`Server on port ${process.env.PORT}`)); 
