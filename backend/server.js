@@ -7,6 +7,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const crypto = require('crypto');
 
 dotenv.config();
 
@@ -49,9 +50,60 @@ passport.deserializeUser((user, done) => {
 
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
-  const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  res.redirect(`http://localhost:3002?token=${token}`);
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }), async (req, res) => {
+  const user = req.user;
+  // Generate access token (short-lived)
+  const accessToken = jwt.sign({ user: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  
+  // Generate refresh token (long-lived)
+  const refreshToken = crypto.randomBytes(32).toString('hex');
+  
+  // Store refresh token in DB with user ID and expiration (e.g., 7 days)
+  await new RefreshToken({
+    token: refreshToken,
+    userId: user.id,
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  }).save();
+
+  // Redirect with both tokens (or send in response body; adjust for security)
+  res.redirect(`http://localhost:3002?accessToken=${accessToken}&refreshToken=${refreshToken}`);
+});
+
+// Refresh Token Model
+const RefreshTokenSchema = new mongoose.Schema({
+  token: { type: String, required: true },
+  userId: { type: String, required: true },
+  expires: { type: Date, required: true }
+});
+
+const RefreshToken = mongoose.model('RefreshToken', RefreshTokenSchema);
+
+// Refresh endpoint
+app.post('/refresh', async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) return res.status(401).json({ message: 'Refresh token required' });
+  try {
+    const storedToken = await RefreshToken.findOne({ token: refreshToken });
+    if (!storedToken || storedToken.expires < new Date()) {
+      return res.status(403).json({ message: 'Invalid or expired refresh token' });
+    }
+
+    // Generate new access token
+    const newAccessToken = jwt.sign({ user: storedToken.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // Optional: Rotate refresh token (delete old, issue new)
+    await RefreshToken.deleteOne({ token: refreshToken });
+    const newRefreshToken = crypto.randomBytes(32).toString('hex');
+    await new RefreshToken({
+      token: newRefreshToken,
+      userId: storedToken.userId,
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    }).save();
+
+    res.json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 const authMiddleware = (req, res, next) => {
@@ -66,14 +118,13 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-// Checklist Model (updated enums and removed redundant field)
 const ChecklistSchema = new mongoose.Schema({
   cabinNumber: { type: Number, required: true },
   date: { type: String, default: () => new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' }) },
   guestName: { type: String },
   clearDoorCodes: { type: Boolean, default: false },
   resetThermostats: { type: Boolean, default: false },
-  cleanACFilter: { type: String, enum: ['', 'N/A', 'Done', 'Checked, Not Needed'], default: '' },
+  cleanACFilter: { type: String, enum: ['Checked, Not Needed', 'Done'], default: 'Checked, Not Needed' },
   checkUnderBedsSofa: { type: Boolean, default: false },
   checkShower: { type: Boolean, default: false },
   bathTowels: { type: Number, default: 4, min: 0, max: 4 },
@@ -81,15 +132,15 @@ const ChecklistSchema = new mongoose.Schema({
   washCloths: { type: Number, default: 4, min: 0, max: 4 },
   makeupCloths: { type: Number, default: 2, min: 0, max: 2 },
   bathMat: { type: Number, default: 1, min: 0, max: 1 },
-  shampoo: { type: Number, default: 0, min: 0, max: 1 },
+  shampoo: { type: Number, default: 1, min: 0, max: 1 },
   conditioner: { type: Number, default: 1, min: 0, max: 1 },
   bodyWash: { type: Number, default: 1, min: 0, max: 1 },
-  bodyLotion: { type: Number, default: 0, min: 0, max: 1 },
-  barSoap: { type: Number, default: 0, min: 0, max: 1 },
+  bodyLotion: { type: Number, default: 1, min: 0, max: 1 },
+  barSoap: { type: Number, default: 1, min: 0, max: 1 },
   soapDispenser: { type: Number, default: 0, min: 0, max: 1 },
-  toiletPaper: { type: Number, default: 1, min: 0, max: 2 },
+  toiletPaper: { type: Number, default: 2, min: 0, max: 2 },
   bathroomCups: { type: Number, default: 0, min: 0, max: 7 },
-  kleenex: { type: Number, default: 0, min: 0, max: 1 },
+  kleenex: { type: Number, default: 1, min: 0, max: 1 },
   bathCheckLights: { type: Number, default: 0, min: 0, max: 5 },
   gatherTowels: { type: Boolean, default: false },
   waterBottles: { type: Number, default: 4, min: 0, max: 4 },
@@ -97,24 +148,24 @@ const ChecklistSchema = new mongoose.Schema({
   coffeeSweeteners: { type: Number, default: 0, min: 0, max: 12 },
   coffeeCreamer: { type: Number, default: 0, min: 0, max: 12 },
   coffeeCupsCeramic: { type: Number, default: 0, min: 0, max: 4 },
-  coffeeCupsPaper: { type: Number, default: 0, min: 0, max: 4 },
-  coffeeCupLids: { type: Number, default: 0, min: 0, max: 4 },
+  coffeeCupsPaper: { type: Number, default: 4, min: 0, max: 4 },
+  coffeeCupLids: { type: Number, default: 4, min: 0, max: 4 },
   coffeeStirrers: { type: Number, default: 0, min: 0, max: 12 },
   emptyRelineTrashCans: { type: Number, default: 2, min: 0, max: 2 },
   emptyCoffeeWater: { type: Boolean, default: false },
   emptyCoffeePod: { type: Boolean, default: false },
-  paperTowels: { type: Number, default: 0, min: 0, max: 1 }, // Cabin 3 only
-  dishSoap: { type: Number, default: 0, min: 0, max: 1 }, // Cabin 3 only
+  paperTowels: { type: Number, default: 0, min: 0, max: 1 },
+  dishSoap: { type: Number, default: 0, min: 0, max: 1 },
   emptyRefrigerator: { type: Boolean, default: false },
   emptyMicrowaveOven: { type: Boolean, default: false },
   lockBattery: { type: Number, default: 0, min: 0, max: 4 },
   smokeAlarmBattery: { type: Number, default: 0, min: 0, max: 2 },
   motionDetectorBattery: { type: Number, default: 0, min: 0, max: 2 },
-  doorSensorBattery: { type: Number, default: 0, min: 0, max: 1 },
+  doorSensorBattery: { type: Number, default: 0, min: 0, max: 2 },
   livingCheckLights: { type: Number, default: 0, min: 0, max: 5 },
   tvRemoteUnderTV: { type: Boolean, default: false },
-  stripQueenBeds: { type: String, enum: ['', 'Bundled', 'OK', 'Not Needed'], default: '' },
-  stripKingBeds: { type: String, enum: ['', 'Bundled', 'OK', 'Not Needed'], default: '' },
+  stripQueenBeds: { type: String, enum: ['Not Needed', 'Bundled', 'OK'], default: 'Not Needed' },
+  stripKingBeds: { type: String, enum: ['Not Needed', 'Bundled', 'OK'], default: 'Not Needed' },
   shakeRugs: { type: Boolean, default: false },
   restockInventory: { type: String, default: '' },
   damagesYesNo: { type: Boolean, default: false },
@@ -124,7 +175,6 @@ const ChecklistSchema = new mongoose.Schema({
 
 const Checklist = mongoose.model('Checklist', ChecklistSchema);
 
-// Routes (unchanged)
 app.get('/api/checklists', authMiddleware, async (req, res) => {
   const checklists = await Checklist.find().sort({ createdAt: -1 });
   res.json(checklists);
@@ -136,6 +186,11 @@ app.get('/api/checklists/:id', authMiddleware, async (req, res) => {
 });
 
 app.post('/api/checklists', authMiddleware, async (req, res) => {
+  const existing = await Checklist.findOne({ cabinNumber: req.body.cabinNumber, completed: false });
+  if (existing) {
+    const updated = await Checklist.findByIdAndUpdate(existing._id, req.body, { new: true });
+    return res.json(updated);
+  }
   const checklist = new Checklist(req.body);
   await checklist.save();
   res.json(checklist);
@@ -144,6 +199,11 @@ app.post('/api/checklists', authMiddleware, async (req, res) => {
 app.put('/api/checklists/:id', authMiddleware, async (req, res) => {
   const updated = await Checklist.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(updated);
+});
+
+app.delete('/api/checklists/:id', authMiddleware, async (req, res) => {
+  await Checklist.findByIdAndDelete(req.params.id);
+  res.json({ message: 'Deleted' });
 });
 
 app.get('/api/pending-summaries', authMiddleware, async (req, res) => {
@@ -165,4 +225,4 @@ app.get('/api/pending-summaries', authMiddleware, async (req, res) => {
   res.json({ aggregated, perCabin, pendings });
 });
 
-app.listen(process.env.PORT, () => console.log(`Server on port ${process.env.PORT}`)); 
+app.listen(process.env.PORT, () => console.log(`Server on port ${process.env.PORT}`));
