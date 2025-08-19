@@ -9,7 +9,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const getComponentName = () => {
     if (location.pathname === '/') return '';
-    if (location.pathname.startsWith('/checklist')) return 'Checklist';
+    if (location.pathname.startsWith('/checklist/')) return 'Cabin ' + location.pathname.split('/').pop();
     if (location.pathname === '/history') return 'History';
     if (location.pathname.startsWith('/summary')) return 'Summary';
     if (location.pathname === '/cart') return 'Cart';

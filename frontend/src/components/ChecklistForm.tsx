@@ -78,31 +78,31 @@ const initialFormData: FormDataType = {
   bodyWash: 1,
   bodyLotion: 1,
   barSoap: 1,
-  soapDispenser: 0,
+  soapDispenser: 1,
   toiletPaper: 2,
-  bathroomCups: 0,
+  bathroomCups: 7,
   kleenex: 1,
   bathCheckLights: 0,
   gatherTowels: false,
   waterBottles: 4,
-  coffeePods: 0,
-  coffeeSweeteners: 0,
-  coffeeCreamer: 0,
-  coffeeCupsCeramic: 0,
+  coffeePods: 12,
+  coffeeSweeteners: 12,
+  coffeeCreamer: 12,
+  coffeeCupsCeramic: 4,
   coffeeCupsPaper: 4,
   coffeeCupLids: 4,
-  coffeeStirrers: 0,
+  coffeeStirrers: 12,
   emptyRelineTrashCans: 2,
   emptyCoffeeWater: false,
   emptyCoffeePod: false,
-  paperTowels: 0,
-  dishSoap: 0,
+  paperTowels: 1,
+  dishSoap: 1,
   emptyRefrigerator: false,
   emptyMicrowaveOven: false,
-  lockBattery: 0,
-  smokeAlarmBattery: 0,
-  motionDetectorBattery: 0,
-  doorSensorBattery: 0,
+  lockBattery: 4,
+  smokeAlarmBattery: 2,
+  motionDetectorBattery: 2,
+  doorSensorBattery: 2,
   livingCheckLights: 0,
   tvRemoteUnderTV: false,
   stripQueenBeds: 'Not Needed',
@@ -120,6 +120,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
 
   const [formData, setFormData] = useState<FormDataType>({ ...initialFormData, date: today, cabinNumber: cabinNum });
   const [isPosted, setIsPosted] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [id, setId] = useState(editId);
 
   useEffect(() => {
@@ -144,6 +145,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
 
   const debouncedPatch = debounce(async (updatedData: FormDataType) => {
     try {
+      if (isResetting) return;
       if (id) {
         await axios.put(`/api/checklists/${id}`, updatedData);
       } else {
@@ -224,10 +226,12 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
   const handleReset = async () => {
     if (id) {
       await axios.delete(`/api/checklists/${id}`);
+      setIsResetting(true);
       setId(undefined);
       setFormData({ ...initialFormData, cabinNumber: cabinNum, date: today });
       setIsPosted(false);
       toast.success('Reset successful');
+      setIsResetting(false);
     }
   };
 
@@ -239,13 +243,119 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
           <FaUndo />
         </button>
       )}
-      {/* Form fields */}
-      <label className="block">
-        Date:
-        <input name="date" value={formData.date} onChange={handleChange} className="mt-1 block w-full border rounded p-2" />
-      </label>
-      // Expand Bath and Kitchen with all fields as per specs, using handleChange, handleNumberChange, etc.
-      // Example for Bath:
+
+      {/* Untitled first section */}
+      <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
+        <div className="space-y-4">
+          <label className="block">
+            Date:
+            <input name="date" value={formData.date} onChange={handleChange} className="mt-1 block w-full border rounded p-2" />
+          </label>
+          <label className="block">
+            Guest Name:
+            <input name="guestName" value={formData.guestName} onChange={handleChange} className="mt-1 block w-full border rounded p-2" />
+          </label>
+          <label className="flex items-center space-x-2">
+            <input type="checkbox" name="clearDoorCodes" checked={formData.clearDoorCodes} onChange={handleChange} className="h-5 w-5" />
+            <span>Clear Door Codes</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input type="checkbox" name="resetThermostats" checked={formData.resetThermostats} onChange={handleChange} className="h-5 w-5" />
+            <span>Reset Thermostats</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input type="checkbox" name="tvRemoteUnderTV" checked={formData.tvRemoteUnderTV} onChange={handleChange} className="h-5 w-5" />
+            <span>TV Remote under TV</span>
+          </label>
+          <div className="flex items-center justify-between">
+            <span>Check Lightbulbs</span>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('bathCheckLights', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.bathCheckLights}
+                onChange={(e) => handleNumberInput('bathCheckLights', e.target.value)}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={5}
+              />
+              <button type="button" onClick={() => handleNumberChange('bathCheckLights', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
+          <label className="block">
+            Clean AC Filter:
+            <select name="cleanACFilter" value={formData.cleanACFilter} onChange={handleChange} className="mt-1 block w-full border rounded p-2">
+              <option value="Checked, Not Needed">Checked, Not Needed</option>
+              <option value="Done">Done</option>
+            </select>
+          </label>
+        </div>
+      </section>
+      <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
+        <h3 className="text-lg font-semibold mb-4">Batteries</h3>
+          <div className="flex items-center justify-between">
+            <span>Lock (AA)</span>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('lockBattery', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.lockBattery}
+                onChange={(e) => handleNumberInput('lockBattery', e.target.value)}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={4}
+              />
+              <button type="button" onClick={() => handleNumberChange('lockBattery', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Smoke Alarm (AA)</span>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('smokeAlarmBattery', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.smokeAlarmBattery}
+                onChange={(e) => handleNumberInput('smokeAlarmBattery', e.target.value)}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={2}
+              />
+              <button type="button" onClick={() => handleNumberChange('smokeAlarmBattery', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Motion Detector (AA)</span>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('motionDetectorBattery', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.motionDetectorBattery}
+                onChange={(e) => handleNumberInput('motionDetectorBattery', e.target.value)}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={2}
+              />
+              <button type="button" onClick={() => handleNumberChange('motionDetectorBattery', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Door Sensor (CR2032)</span>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('doorSensorBattery', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.doorSensorBattery}
+                onChange={(e) => handleNumberInput('doorSensorBattery', e.target.value)}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={2}
+              />
+              <button type="button" onClick={() => handleNumberChange('doorSensorBattery', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
+      </section>
+      <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
+        <h3 className="text-lg font-semibold mb-4">Bath</h3>
       <div className="flex items-center justify-between">
         <span>Bath Towels</span>
         <div className="flex items-center">
@@ -261,15 +371,438 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
           <button type="button" onClick={() => handleNumberChange('bathTowels', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
         </div>
       </div>
-      // Repeat for handTowels, washCloths, makeupCloths, bathMat, shampoo, conditioner, bodyWash, bodyLotion, barSoap, soapDispenser, toiletPaper, bathroomCups (Paper Cups), kleenex, bathCheckLights, gatherTowels
-      // Kitchen similar: waterBottles, coffeePods, coffeeSweeteners, coffeeCreamer, coffeeCupsCeramic, coffeeCupsPaper, coffeeCupLids, coffeeStirrers, emptyRelineTrashCans (Reline Trash Cans), emptyCoffeeWater, emptyCoffeePod, paperTowels, dishSoap, emptyRefrigerator, emptyMicrowaveOven
+      <div className="flex items-center justify-between">
+        <span>Hand Towels</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('handTowels', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.handTowels}
+            onChange={(e) => handleNumberInput('handTowels', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={2}
+          />
+          <button type="button" onClick={() => handleNumberChange('handTowels', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Wash Cloths</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('washCloths', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.washCloths}
+            onChange={(e) => handleNumberInput('washCloths', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={4}
+          />
+          <button type="button" onClick={() => handleNumberChange('washCloths', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Makeup Cloths</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('makeupCloths', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.makeupCloths}
+            onChange={(e) => handleNumberInput('makeupCloths', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={2}
+          />
+          <button type="button" onClick={() => handleNumberChange('makeupCloths', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Bath Mat</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('bathMat', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.bathMat}
+            onChange={(e) => handleNumberInput('bathMat', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={1}
+          />
+          <button type="button" onClick={() => handleNumberChange('bathMat', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Shampoo</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('shampoo', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.shampoo}
+            onChange={(e) => handleNumberInput('shampoo', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={1}
+          />
+          <button type="button" onClick={() => handleNumberChange('shampoo', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Conditioner</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('conditioner', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.conditioner}
+            onChange={(e) => handleNumberInput('conditioner', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={1}
+          />
+          <button type="button" onClick={() => handleNumberChange('conditioner', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Body Wash</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('bodyWash', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.bodyWash}
+            onChange={(e) => handleNumberInput('bodyWash', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={1}
+          />
+          <button type="button" onClick={() => handleNumberChange('bodyWash', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Body Lotion</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('bodyLotion', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.bodyLotion}
+            onChange={(e) => handleNumberInput('bodyLotion', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={1}
+          />
+          <button type="button" onClick={() => handleNumberChange('bodyLotion', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Bar Soap</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('barSoap', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.barSoap}
+            onChange={(e) => handleNumberInput('barSoap', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={1}
+          />
+          <button type="button" onClick={() => handleNumberChange('barSoap', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Soap Dispenser</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('soapDispenser', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.soapDispenser}
+            onChange={(e) => handleNumberInput('soapDispenser', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={1}
+          />
+          <button type="button" onClick={() => handleNumberChange('soapDispenser', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Toilet Paper</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('toiletPaper', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.toiletPaper}
+            onChange={(e) => handleNumberInput('toiletPaper', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={2}
+          />
+          <button type="button" onClick={() => handleNumberChange('toiletPaper', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Paper Cups</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('bathroomCups', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.bathroomCups}
+            onChange={(e) => handleNumberInput('bathroomCups', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={7}
+          />
+          <button type="button" onClick={() => handleNumberChange('bathroomCups', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Kleenex</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('kleenex', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.kleenex}
+            onChange={(e) => handleNumberInput('kleenex', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={1}
+          />
+          <button type="button" onClick={() => handleNumberChange('kleenex', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" name="checkShower" checked={formData.checkShower} onChange={handleChange} className="h-5 w-5" />
+        <span>Check Shower</span>
+      </label>
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" name="gatherTowels" checked={formData.gatherTowels} onChange={handleChange} className="h-5 w-5" />
+        <span>Gather Towels</span>
+      </label>
+      </section>
+      {/* Bedroom */}
+      <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
+        <h3 className="text-lg font-semibold mb-4">Bedroom</h3>
+        <div className="space-y-4">
+          <label className="block">
+            Strip Queen Bed:
+            <select name="stripQueenBeds" value={formData.stripQueenBeds} onChange={handleChange} className="mt-1 block w-full border rounded p-2">
+
+              <option value="Not Needed">Not Needed</option>
+              <option value="Bundled">Bundled</option>
+              <option value="OK">OK</option>
+            </select>
+          </label>
+          <label className="block">
+            Strip King Bed:
+            <select name="stripKingBeds" value={formData.stripKingBeds} onChange={handleChange} className="mt-1 block w-full border rounded p-2">
+
+              <option value="Not Needed">Not Needed</option>
+              <option value="Bundled">Bundled</option>
+              <option value="OK">OK</option>
+            </select>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input type="checkbox" name="checkUnderBedsSofa" checked={formData.checkUnderBedsSofa} onChange={handleChange} className="h-5 w-5" />
+            <span>Check under furniture</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input type="checkbox" name="shakeRugs" checked={formData.shakeRugs} onChange={handleChange} className="h-5 w-5" />
+            <span>Shake rugs outside</span>
+          </label>
+        </div>
+      </section>
+      <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
+        <h3 className="text-lg font-semibold mb-4">Kitchen</h3>
+
+      <div className="flex items-center justify-between">
+        <span>Water Bottles</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('waterBottles', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.waterBottles}
+            onChange={(e) => handleNumberInput('waterBottles', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={4}
+          />
+          <button type="button" onClick={() => handleNumberChange('waterBottles', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Coffee Pods</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('coffeePods', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.coffeePods}
+            onChange={(e) => handleNumberInput('coffeePods', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={12}
+          />
+          <button type="button" onClick={() => handleNumberChange('coffeePods', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Coffee Sweeteners</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('coffeeSweeteners', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.coffeeSweeteners}
+            onChange={(e) => handleNumberInput('coffeeSweeteners', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={12}
+          />
+          <button type="button" onClick={() => handleNumberChange('coffeeSweeteners', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Coffee Creamer</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('coffeeCreamer', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.coffeeCreamer}
+            onChange={(e) => handleNumberInput('coffeeCreamer', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={12}
+          />
+          <button type="button" onClick={() => handleNumberChange('coffeeCreamer', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Coffee Cups, Ceramic</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('coffeeCupsCeramic', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.coffeeCupsCeramic}
+            onChange={(e) => handleNumberInput('coffeeCupsCeramic', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={4}
+          />
+          <button type="button" onClick={() => handleNumberChange('coffeeCupsCeramic', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Coffee Cups, Paper</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('coffeeCupsPaper', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.coffeeCupsPaper}
+            onChange={(e) => handleNumberInput('coffeeCupsPaper', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={4}
+          />
+          <button type="button" onClick={() => handleNumberChange('coffeeCupsPaper', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Coffee Cup Lids</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('coffeeCupLids', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.coffeeCupLids}
+            onChange={(e) => handleNumberInput('coffeeCupLids', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={4}
+          />
+          <button type="button" onClick={() => handleNumberChange('coffeeCupLids', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Coffee Stirrers</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('coffeeStirrers', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.coffeeStirrers}
+            onChange={(e) => handleNumberInput('coffeeStirrers', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={12}
+          />
+          <button type="button" onClick={() => handleNumberChange('coffeeStirrers', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span>Reline Trash Cans</span>
+        <div className="flex items-center">
+          <button type="button" onClick={() => handleNumberChange('emptyRelineTrashCans', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+          <input
+            type="number"
+            value={formData.emptyRelineTrashCans}
+            onChange={(e) => handleNumberInput('emptyRelineTrashCans', e.target.value)}
+            className="w-16 text-center border rounded mx-2"
+            min={0}
+            max={2}
+          />
+          <button type="button" onClick={() => handleNumberChange('emptyRelineTrashCans', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+        </div>
+      </div>
+      {isCabin3 && (
+        <>
+          <div className="flex items-center justify-between">
+            <span>Paper Towels</span>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('paperTowels', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.paperTowels}
+                onChange={(e) => handleNumberInput('paperTowels', e.target.value)}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={1}
+              />
+              <button type="button" onClick={() => handleNumberChange('paperTowels', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Dish Soap</span>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('dishSoap', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.dishSoap}
+                onChange={(e) => handleNumberInput('dishSoap', e.target.value)}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={1}
+              />
+              <button type="button" onClick={() => handleNumberChange('dishSoap', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
+        </>
+      )}
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" name="emptyCoffeeWater" checked={formData.emptyCoffeeWater} onChange={handleChange} className="h-5 w-5" />
+        <span>Empty Coffee Water</span>
+      </label>
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" name="emptyCoffeePod" checked={formData.emptyCoffeePod} onChange={handleChange} className="h-5 w-5" />
+        <span>Empty Coffee Pod</span>
+      </label>
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" name="emptyRefrigerator" checked={formData.emptyRefrigerator} onChange={handleChange} className="h-5 w-5" />
+        <span>Empty Refrigerator</span>
+      </label>
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" name="emptyMicrowaveOven" checked={formData.emptyMicrowaveOven} onChange={handleChange} className="h-5 w-5" />
+        <span>Empty Microwave and Oven</span>
+      </label>
+      </section>
       {/* Comments */}
       <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-4">Comments</h3>
         <div className="space-y-4">
           <label className="flex items-center space-x-2">
             <input type="checkbox" name="damagesYesNo" checked={formData.damagesYesNo} onChange={handleChange} className="h-5 w-5" />
-            <span>Comments?</span>
+            <span>Comments? Damages? Maintenance Issues?</span>
           </label>
           {formData.damagesYesNo && (
             <label className="block">

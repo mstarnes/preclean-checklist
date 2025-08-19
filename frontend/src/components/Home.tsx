@@ -41,44 +41,47 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-3xl font-bold mb-8">Preclean Checklist</h1>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 max-w-md w-full">
         {[1, 2, 3].map(cabin => (
           <button
             key={cabin}
             onClick={() => navigate(`/checklist/${cabin}`)}
-            className="bg-blue-500 text-white p-4 rounded-lg shadow-lg hover:bg-blue-600 relative"
+            className="bg-blue-500 text-white p-4 rounded-lg shadow-lg hover:bg-blue-600 relative flex flex-col items-center justify-center aspect-square"
           >
-            {FaHome({ className: "mx-auto mb-2 h-8 w-8" })}
+            {FaHome({ className: "mb-2 h-8 w-8" })}
             Cabin {cabin}
             {pendingCabins.includes(cabin) && (
-              <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs"></span>
+              <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"></span>
             )}
           </button>
         ))}
         <button
-          onClick={() => navigate('/history')}
-          className="bg-green-500 text-white p-4 rounded-lg shadow-lg hover:bg-green-600 relative"
+          onClick={() => navigate('/summary/global')}
+          className={`bg-purple-500 text-white p-4 rounded-lg shadow-lg hover:bg-purple-600 relative flex flex-col items-center justify-center aspect-square ${hasPending ? '' : 'hidden'}`}
         >
-          {FaClock({ className: "mx-auto mb-2 h-8 w-8" })}
+          {FaList({ className: "mb-2 h-8 w-8" })}
+          Summary
+          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">{pendingCabins.length}</span>
+        </button>
+        <button
+          onClick={() => navigate('/history')}
+          className="bg-green-500 text-white p-4 rounded-lg shadow-lg hover:bg-green-600 relative flex flex-col items-center justify-center aspect-square"
+        >
+          {FaClock({ className: "mb-2 h-8 w-8" })}
           History
-          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs">{totalDocs}</span>
+          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">{totalDocs}</span>
+        </button>
+        <button
+          onClick={() => navigate('/cart')}
+          className="bg-yellow-500 text-white p-4 rounded-lg shadow-lg hover:bg-yellow-600 relative flex flex-col items-center justify-center aspect-square"
+        >
+          {FaShoppingCart({ className: "mb-2 h-8 w-8" })}
+          Cart
+          {cartItemsCount > 0 && (
+            <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">{cartItemsCount}</span>
+          )}
         </button>
       </div>
-      {hasPending && (
-        <button onClick={() => navigate('/summary/global')} className="mt-4 bg-purple-500 text-white p-4 rounded-lg shadow-lg hover:bg-purple-600 relative">
-          {FaList({ className: "mx-auto mb-2 h-8 w-8" })}
-          Summary
-          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs">{pendingCabins.length}</span>
-        </button>
-      )}
-      <button onClick={() => navigate('/cart')} className="mt-4 bg-yellow-500 text-white p-4 rounded-lg shadow-lg hover:bg-yellow-600 relative">
-        {FaShoppingCart({ className: "mx-auto mb-2 h-8 w-8" })}
-        Cart
-        {cartItemsCount > 0 && (
-          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs">{cartItemsCount}</span>
-        )}
-      </button>
     </div>
   );
 };
