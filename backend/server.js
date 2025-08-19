@@ -175,6 +175,44 @@ const ChecklistSchema = new mongoose.Schema({
 
 const Checklist = mongoose.model('Checklist', ChecklistSchema);
 
+const CartSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  items: [{
+    item: String,
+    quantity: Number,
+    cabin: Number,
+  }]
+});
+
+const Cart = mongoose.model('Cart', CartSchema);
+
+// Cart Endpoints
+app.get('/api/cart', authMiddleware, async (req, res) => {
+  const cart = await Cart.findOne({ userId: req.user });
+  res.json(cart ? cart.items : []);
+});
+
+app.post('/api/cart', authMiddleware, async (req, res) => {
+  const { item, quantity, cabin } = req.body;
+  let cart = await Cart.findOne({ userId: req.user });
+  if (!cart) {
+    cart = new Cart({ userId: req.user, items: [] });
+  }
+  cart.items.push({ item, quantity, cabin });
+  await cart.save();
+  res.json(cart.items);
+});
+
+app.delete('/api/cart/:index', authMiddleware, async (req, res) => {
+  const index = parseInt(req.params.index);
+  const cart = await Cart.findOne({ userId: req.user });
+  if (cart) {
+    cart.items.splice(index, 1);
+    await cart.save();
+  }
+  res.json(cart ? cart.items : []);
+});
+
 app.get('/api/checklists', authMiddleware, async (req, res) => {
   const checklists = await Checklist.find().sort({ createdAt: -1 });
   res.json(checklists);

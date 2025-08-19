@@ -1,5 +1,5 @@
 // frontend/src/context/CartContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
 
 interface CartItem {
   item: string;
@@ -9,6 +9,7 @@ interface CartItem {
 
 interface CartContextType {
   cart: CartItem[];
+  setCart: Dispatch<SetStateAction<CartItem[]>>;
   addToCart: (item: string, quantity: number, cabin: number | null) => void;
   removeFromCart: (index: number) => void;
 }
@@ -27,7 +28,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ cart, setCart, addToCart, removeFromCart }}>
       {children}
     </CartContext.Provider>
   );

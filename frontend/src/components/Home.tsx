@@ -1,4 +1,3 @@
-// frontend/src/components/Home.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -9,6 +8,7 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const [token, setToken] = useState(localStorage.getItem('accessToken'));
   const [pendingCabins, setPendingCabins] = useState<number[]>([]);
+  const [totalDocs, setTotalDocs] = useState(0);
   const { cart } = useCart();
   const cartItemsCount = cart.length;
 
@@ -29,6 +29,9 @@ const Home: React.FC = () => {
       axios.get('/api/pending-summaries').then(res => {
         setPendingCabins(res.data.pendings.map((p: any) => p.cabinNumber));
       });
+      axios.get('/api/checklists').then(res => {
+        setTotalDocs(res.data.length);
+      });
     }
   }, [token]);
 
@@ -46,34 +49,31 @@ const Home: React.FC = () => {
             onClick={() => navigate(`/checklist/${cabin}`)}
             className="bg-blue-500 text-white p-4 rounded-lg shadow-lg hover:bg-blue-600 relative"
           >
-            {/* @ts-ignore */}
-            <FaHome className="mx-auto mb-2 h-8 w-8" />
+            {FaHome({ className: "mx-auto mb-2 h-8 w-8" })}
             Cabin {cabin}
             {pendingCabins.includes(cabin) && (
-              <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs">1</span>
+              <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs"></span>
             )}
           </button>
         ))}
         <button
           onClick={() => navigate('/history')}
-          className="bg-green-500 text-white p-4 rounded-lg shadow-lg hover:bg-green-600"
+          className="bg-green-500 text-white p-4 rounded-lg shadow-lg hover:bg-green-600 relative"
         >
-          {/* @ts-ignore */}
-          <FaClock className="mx-auto mb-2 h-8 w-8" />
+          {FaClock({ className: "mx-auto mb-2 h-8 w-8" })}
           History
+          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs">{totalDocs}</span>
         </button>
       </div>
       {hasPending && (
         <button onClick={() => navigate('/summary/global')} className="mt-4 bg-purple-500 text-white p-4 rounded-lg shadow-lg hover:bg-purple-600 relative">
-          {/* @ts-ignore */}
-          <FaList className="mx-auto mb-2 h-8 w-8" />
+          {FaList({ className: "mx-auto mb-2 h-8 w-8" })}
           Summary
           <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs">{pendingCabins.length}</span>
         </button>
       )}
       <button onClick={() => navigate('/cart')} className="mt-4 bg-yellow-500 text-white p-4 rounded-lg shadow-lg hover:bg-yellow-600 relative">
-        {/* @ts-ignore */}
-        <FaShoppingCart className="mx-auto mb-2 h-8 w-8" />
+        {FaShoppingCart({ className: "mx-auto mb-2 h-8 w-8" })}
         Cart
         {cartItemsCount > 0 && (
           <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs">{cartItemsCount}</span>

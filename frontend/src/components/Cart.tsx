@@ -1,5 +1,6 @@
 // frontend/src/components/Cart.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useCart } from '../context/CartContext';
 
 const allItems = [
@@ -37,17 +38,23 @@ const allItems = [
 ];
 
 const Cart: React.FC = () => {
-  const { cart, removeFromCart, addToCart } = useCart();
+  const { cart, setCart, removeFromCart } = useCart();
   const [view, setView] = useState<'summary' | 'full'>('summary');
   const [checked, setChecked] = useState<Record<string, boolean>>(allItems.reduce((acc, item) => ({ ...acc, [item]: false }), {}));
+
+  useEffect(() => {
+    axios.get('/api/cart').then(res => setCart(res.data));
+  }, [setCart]);
 
   const handleCheck = (item: string, isChecked: boolean) => {
     setChecked(prev => ({ ...prev, [item]: isChecked }));
     if (isChecked) {
-      addToCart(item, 1, null);
+      axios.post('/api/cart', { item, quantity: 1, cabin: null }).then(res => setCart(res.data));
     } else {
       const index = cart.findIndex(c => c.item === item);
-      if (index !== -1) removeFromCart(index);
+      if (index !== -1) {
+        axios.delete('/api/cart/' + index).then(res => setCart(res.data));
+      }
     }
   };
 

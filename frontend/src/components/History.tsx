@@ -1,4 +1,3 @@
-// frontend/src/components/History.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -29,34 +28,31 @@ const History: React.FC = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 overflow-x-auto">
       <h2 className="text-2xl">History</h2>
       <input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="border p-2 mb-4" />
-      <table className="w-full border">
+      <table className="w-full border min-w-max">
         <thead>
           <tr>
-            <th className="text-left">Date</th>
-            <th className="text-left">Cabin</th>
-            <th className="text-left">Guest</th>
-            <th className="text-left">Clean AC</th>
-            <th className="text-left">Comments</th>
-            <th className="text-left">Actions</th>
+            <th className="text-left p-2">Date</th>
+            <th className="text-left p-2">Cabin</th>
+            <th className="text-left p-2">Guest</th>
+            <th className="text-left p-2">Clean AC</th>
+            <th className="text-left p-2">Comments</th>
+            <th className="text-left p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
           {filtered.map(cl => (
             <tr key={cl._id}>
-              <td>{cl.date}</td>
-              <td>{cl.cabinNumber}</td>
-              <td>{cl.guestName}</td>
-              <td>{cl.cleanACFilter === 'Done' ? 'Done' : ''}</td>
-              <td>{cl.damagesYesNo ? cl.damagesDescription : ''}</td>
-              <td>
-                {/* @ts-ignore */}
-                <FaEdit onClick={() => navigate(`/checklist/${cl.cabinNumber}?edit=${cl._id}`)} className="cursor-pointer inline mr-2" />
-                {/* @ts-ignore */}
-                <FaTrash onClick={() => handleDelete(cl._id)} className="cursor-pointer inline" />
-              </td>
+              <td className="p-2">{cl.date}</td>
+              <td className="p-2">{cl.cabinNumber}</td>
+              <td className="p-2">{cl.guestName}</td>
+              <td className="p-2">{cl.cleanACFilter === 'Done' ? 'Done' : ''}</td>
+              <td className="p-2">{cl.damagesYesNo ? cl.damagesDescription : ''}</td>
+              <td className="p-2">
+                {FaEdit({ onClick: () => navigate(`/checklist/${cl.cabinNumber}?edit=${cl._id}`), className: "cursor-pointer inline mr-2" })}
+                {FaTrash({ onClick: () => handleDelete(cl._id), className: "cursor-pointer inline" })}              </td>
             </tr>
           ))}
         </tbody>
