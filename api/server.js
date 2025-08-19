@@ -188,14 +188,18 @@ const Cart = mongoose.model('Cart', CartSchema);
 
 // Cart Endpoints
 app.get('/api/cart', authMiddleware, async (req, res) => {
+  console.log('Fetching cart for user:', req.user);
   const cart = await Cart.findOne({ userId: req.user });
   res.json(cart ? cart.items : []);
+  console.log('Cart found:', cart ? cart.items : 'No cart');
 });
 
 app.post('/api/cart', authMiddleware, async (req, res) => {
   const { item, quantity, cabin } = req.body;
+  console.log('Cart post: ' + JSON.stringify(req.body, null, 2));
   let cart = await Cart.findOne({ userId: req.user });
   if (!cart) {
+    console.log('New cart');
     cart = new Cart({ userId: req.user, items: [] });
   }
   cart.items.push({ item, quantity, cabin });

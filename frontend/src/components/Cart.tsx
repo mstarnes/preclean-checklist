@@ -41,9 +41,13 @@ const Cart: React.FC = () => {
   const { cart, setCart, removeFromCart } = useCart();
   const [view, setView] = useState<'summary' | 'full'>('summary');
   const [checked, setChecked] = useState<Record<string, boolean>>(allItems.reduce((acc, item) => ({ ...acc, [item]: false }), {}));
+  console.log('Cart component mounted');
 
-  useEffect(() => {
-    axios.get('/api/cart').then(res => setCart(res.data));
+  useEffect(() => { 
+    axios.get('/api/cart').then(res => { 
+      console.log('Fetched cart data:', res.data); 
+      setCart(res.data); 
+    }).catch(err => console.error('Cart fetch error:', err)); 
   }, [setCart]);
 
   const handleCheck = (item: string, isChecked: boolean) => {

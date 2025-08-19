@@ -1,5 +1,5 @@
-// frontend/src/context/CartContext.tsx
 import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
+import axios from 'axios';
 
 interface CartItem {
   item: string;
@@ -19,12 +19,22 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const addToCart = (item: string, quantity: number, cabin: number | null) => {
-    setCart(prev => [...prev, { item, quantity, cabin }]);
+  const addToCart = async (item: string, quantity: number, cabin: number | null) => {
+    try {
+      const res = await axios.post('/api/cart', { item, quantity, cabin });
+      setCart(res.data);
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+    }
   };
 
-  const removeFromCart = (index: number) => {
-    setCart(prev => prev.filter((_, i) => i !== index));
+  const removeFromCart = async (index: number) => {
+    try {
+      const res = await axios.delete(`/api/cart/${index}`);
+      setCart(res.data);
+    } catch (err) {
+      console.error('Error removing from cart:', err);
+    }
   };
 
   return (
