@@ -288,7 +288,51 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
               <button type="button" onClick={() => handleNumberChange('smokeAlarmBattery', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
             </div>
           </div>
-          // Repeat for motionDetectorBattery, doorSensorBattery, livingCheckLights
+          <div className="flex items-center justify-between">
+            <span>Motion Detector Battery (AA)</span>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('motionDetectorBattery', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.motionDetectorBattery}
+                onChange={(e) => handleNumberInput('motionDetectorBattery', e.target.value)}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={2}
+              />
+              <button type="button" onClick={() => handleNumberChange('motionDetectorBattery', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Door Sensor Battery (CR2032)</span>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('doorSensorBattery', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.doorSensorBattery}
+                onChange={(e) => handleNumberInput('doorSensorBattery', e.target.value)}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={2}
+              />
+              <button type="button" onClick={() => handleNumberChange('doorSensorBattery', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Check Lights</span>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('livingCheckLights', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.livingCheckLights}
+                onChange={(e) => handleNumberInput('livingCheckLights', e.target.value)}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={5}
+              />
+              <button type="button" onClick={() => handleNumberChange('livingCheckLights', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
           <label className="flex items-center space-x-2">
             <input type="checkbox" name="tvRemoteUnderTV" checked={formData.tvRemoteUnderTV} onChange={handleChange} className="h-5 w-5" />
             <span>TV Remote under TV</span>

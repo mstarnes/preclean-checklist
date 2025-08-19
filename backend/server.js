@@ -206,7 +206,7 @@ app.delete('/api/checklists/:id', authMiddleware, async (req, res) => {
   res.json({ message: 'Deleted' });
 });
 
-app.get('/api/pending-summaries', authMiddleware, async (req, res) => {
+app.get('/api/pending-summaries-old', authMiddleware, async (req, res) => {
   const pendings = await Checklist.find({ completed: false });
   const aggregated = {};
   const perCabin = {};
@@ -223,6 +223,30 @@ app.get('/api/pending-summaries', authMiddleware, async (req, res) => {
   });
 
   res.json({ aggregated, perCabin, pendings });
+});
+
+app.get('/api/pending-summaries', authMiddleware, async (req, res) => {
+  try {
+    const pendings = await Checklist.find({ completed: false });
+    const aggregated = {};
+    const perCabin = {};
+
+    pendings.forEach(cl => {
+      const cabin = cl.cabinNumber;
+      if (!perCabin[cabin]) perCabin[cabin] = {};
+      Object.keys(cl.toObject()).forEach(key => {
+        if (typeof cl[key] === 'number' && cl[key] > 0 && !['cabinNumber'].includes(key)) {
+          aggregated[key] = (aggregated[key] || 0) + cl[key];
+          perCabin[cabin][key] = cl[key];
+        }
+      });
+    });
+
+    res.json({ aggregated, perCabin, pendings });
+  } catch (err) {
+    console.error('Error in pending-summaries:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 app.listen(process.env.PORT, () => console.log(`Server on port ${process.env.PORT}`));
