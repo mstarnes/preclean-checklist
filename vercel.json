@@ -3,7 +3,7 @@
   "buildCommand": "yarn workspace frontend build",
   "outputDirectory": "frontend/build",
   "installCommand": "yarn install",
-  "ignoreCommand": "git diff HEAD --quiet .",
+  "ignoreCommand": "true",
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/server.js" },
     { "src": "/.*", "dest": "/frontend/build/index.html" }
@@ -15,6 +15,5 @@
       "config": { "distDir": "frontend/build" }
     },
     { "src": "api/server.js", "use": "@vercel/node" }
-  ],
-  "ignoreCommand": "true"
+  ]
 }
