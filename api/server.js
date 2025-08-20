@@ -14,6 +14,7 @@ const MongoStore = require("connect-mongo");
 dotenv.config();
 
 const app = express();
+app.enable('trust proxy');  // Add this line to trust Vercel's proxy and use https protocol
 app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3002", credentials: true }));
 app.use(bodyParser.json());
 
