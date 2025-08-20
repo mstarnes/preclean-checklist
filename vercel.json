@@ -1,6 +1,5 @@
 {
   "framework": null,
-  "buildCommandOld": "yarn workspace frontend build",
   "buildCommand": "cd frontend && yarn build",
   "outputDirectory": "frontend/build",
   "installCommand": "yarn install",
