@@ -1,6 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "yarn build",
+  "buildCommand": "console.log(process.cwd()) && yarn build",
   "outputDirectory": "frontend/public",
   "installCommand": "yarn install", 
   "ignoreCommand": "exit 1",
