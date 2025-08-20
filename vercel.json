@@ -4,10 +4,27 @@
   "buildCommand": "cd frontend && yarn build",
   "installCommand": "cd frontend && yarn install && cd .. && cd api && yarn install",
   "ignoreCommand": "exit 1",
-  "outputDirectory": "frontend/build",
+  "builds": [
+    {
+      "src": "frontend/build/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api/server.js",
+      "use": "@vercel/node"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/auth/google(.*)",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/refresh",
       "destination": "/api/server.js"
     },
     {
