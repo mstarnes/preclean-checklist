@@ -3,7 +3,6 @@
   "ignoreCommand": "exit 1",
   "buildCommand": "cd frontend && yarn build",
   "installCommand": "cd frontend && yarn install && cd .. && cd api && yarn install",
-  "ignoreCommand": "exit 1",
   "builds": [
     {
       "src": "frontend/build/**",
