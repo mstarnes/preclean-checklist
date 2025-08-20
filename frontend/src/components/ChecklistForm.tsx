@@ -1,6 +1,6 @@
 // frontend/src/components/ChecklistForm.tsx
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FaUndo } from 'react-icons/fa';
