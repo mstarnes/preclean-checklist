@@ -1,7 +1,7 @@
 {
   "framework": null,
   "buildCommand": "yarn build",
-  "outputDirectory": "frontend/public",
+  "outputDirectory": ".",
   "installCommand": "yarn install", 
   "ignoreCommand": "exit 1",
   "routes": [
