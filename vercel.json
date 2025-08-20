@@ -3,12 +3,11 @@
   "buildCommand": "yarn workspace frontend build",
   "outputDirectory": "frontend/build",
   "installCommand": "yarn install",
-  "ignoreCommand": "1",
+  "ignoreCommand": "echo 1",
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/server.js" },
     { "src": "/.*", "dest": "/frontend/build/index.html" }
   ],
-
   "builds": [
     {
       "src": "frontend/package.json",
