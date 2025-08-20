@@ -1,9 +1,24 @@
 {
+  "framework": null,
   "ignoreCommand": "exit 1",
-  "routes": [
-    { "src": "/(.*)", "dest": "/api/server.js" }
-  ],
   "builds": [
-    { "src": "api/server.js", "use": "@vercel/node" }
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build"
+    },
+    {
+      "src": "api/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
