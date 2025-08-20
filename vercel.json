@@ -1,7 +1,4 @@
 {
-  "framework": null,
-  "buildCommand": "echo 'Starting frontend build' && cd frontend && npm run build && echo 'Frontend build completed'",
-  "installCommand": "echo 'Starting API install' && cd api && npm install && echo 'API install completed' && cd .. && echo 'Starting frontend install' && cd frontend && npm install && echo 'Frontend install completed'",
   "ignoreCommand": "exit 1",
   "routes": [
     { "src": "/(.*)", "dest": "/api/server.js" }
