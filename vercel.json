@@ -1,18 +1,18 @@
 {
-  "framework": null,
+  "framework": "nextjs",
   "buildCommand": "yarn build",
-  "outputDirectory": ".",
+  "outputDirectory": "frontend/build",
   "installCommand": "yarn install", 
   "ignoreCommand": "exit 1",
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/server.js" },
-    { "src": "/.*", "dest": "frontend/public/index.html" }
+    { "src": "/.*", "dest": "frontend/build/index.html" }
   ],
   "builds": [
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "frontend/public" }
+      "config": { "distDir": "frontend/build" }
     },
     { "src": "api/server.js", "use": "@vercel/node" }
   ]
