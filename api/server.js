@@ -8,11 +8,13 @@ const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const crypto = require("crypto");
+const path = require("path");
+const MongoStore = require("connect-mongo");
 
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: "http://localhost:3002", credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3002", credentials: true }));
 app.use(bodyParser.json());
 
 app.use(
@@ -20,7 +22,8 @@ app.use(
     secret: process.env.JWT_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { secure: process.env.NODE_ENV === "production" },
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
   })
 );
 
@@ -32,62 +35,6 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
-    },
-    (accessToken, refreshToken, profile, done) => {
-      if (profile.emails[0].value === process.env.ALLOWED_EMAIL) {
-        return done(null, profile);
-      }
-      return done(null, false, { message: "Unauthorized" });
-    }
-  )
-);
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
-
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  async (req, res) => {
-    const user = req.user;
-    // Generate access token (short-lived)
-    const accessToken = jwt.sign({ user: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
-    // Generate refresh token (long-lived)
-    const refreshToken = crypto.randomBytes(32).toString("hex");
-
-    // Store refresh token in DB with user ID and expiration (e.g., 7 days)
-    await new RefreshToken({
-      token: refreshToken,
-      userId: user.id,
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    }).save();
-
-    // Redirect with both tokens (or send in response body; adjust for security)
-    res.redirect(
-      `http://localhost:3002?accessToken=${accessToken}&refreshToken=${refreshToken}`
-    );
-  }
-);
-
 // Refresh Token Model
 const RefreshTokenSchema = new mongoose.Schema({
   token: { type: String, required: true },
@@ -95,54 +42,7 @@ const RefreshTokenSchema = new mongoose.Schema({
   expires: { type: Date, required: true },
 });
 
-const RefreshToken = mongoose.model("RefreshToken", RefreshTokenSchema);
-
-// Refresh endpoint
-app.post("/refresh", async (req, res) => {
-  const { refreshToken } = req.body;
-  if (!refreshToken)
-    return res.status(401).json({ message: "Refresh token required" });
-  try {
-    const storedToken = await RefreshToken.findOne({ token: refreshToken });
-    if (!storedToken || storedToken.expires < new Date()) {
-      return res
-        .status(403)
-        .json({ message: "Invalid or expired refresh token" });
-    }
-
-    // Generate new access token
-    const newAccessToken = jwt.sign(
-      { user: storedToken.userId },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    // Optional: Rotate refresh token (delete old, issue new)
-    await RefreshToken.deleteOne({ token: refreshToken });
-    const newRefreshToken = crypto.randomBytes(32).toString("hex");
-    await new RefreshToken({
-      token: newRefreshToken,
-      userId: storedToken.userId,
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    }).save();
-
-    res.json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "No token" });
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.user;
-    next();
-  } catch (err) {
-    res.status(401).json({ message: "Invalid token" });
-  }
-};
+const RefreshToken = mongoose.models.RefreshToken || mongoose.model("RefreshToken", RefreshTokenSchema);
 
 const ChecklistSchema = new mongoose.Schema(
   {
@@ -222,7 +122,7 @@ const ChecklistSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Checklist = mongoose.model("Checklist", ChecklistSchema);
+const Checklist = mongoose.models.Checklist || mongoose.model("Checklist", ChecklistSchema);
 
 const CartSchema = new mongoose.Schema({
   userId: { type: String, required: true },
@@ -235,7 +135,111 @@ const CartSchema = new mongoose.Schema({
   ],
 });
 
-const Cart = mongoose.model("Cart", CartSchema);
+const Cart = mongoose.models.Cart || mongoose.model("Cart", CartSchema);
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "/auth/google/callback",
+    },
+    (accessToken, refreshToken, profile, done) => {
+      if (profile.emails[0].value === process.env.ALLOWED_EMAIL) {
+        return done(null, profile);
+      }
+      return done(null, false, { message: "Unauthorized" });
+    }
+  )
+);
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  async (req, res) => {
+    const user = req.user;
+    // Generate access token (short-lived)
+    const accessToken = jwt.sign({ user: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    // Generate refresh token (long-lived)
+    const refreshToken = crypto.randomBytes(32).toString("hex");
+
+    // Store refresh token in DB with user ID and expiration (e.g., 7 days)
+    await new RefreshToken({
+      token: refreshToken,
+      userId: user.id,
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    }).save();
+
+    // Redirect with both tokens (or send in response body; adjust for security)
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3002";
+    res.redirect(
+      `${frontendUrl}?accessToken=${accessToken}&refreshToken=${refreshToken}`
+    );
+  }
+);
+
+// Refresh endpoint
+app.post("/refresh", async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken)
+    return res.status(401).json({ message: "Refresh token required" });
+  try {
+    const storedToken = await RefreshToken.findOne({ token: refreshToken });
+    if (!storedToken || storedToken.expires < new Date()) {
+      return res
+        .status(403)
+        .json({ message: "Invalid or expired refresh token" });
+    }
+
+    // Generate new access token
+    const newAccessToken = jwt.sign(
+      { user: storedToken.userId },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    // Optional: Rotate refresh token (delete old, issue new)
+    await RefreshToken.deleteOne({ token: refreshToken });
+    const newRefreshToken = crypto.randomBytes(32).toString("hex");
+    await new RefreshToken({
+      token: newRefreshToken,
+      userId: storedToken.userId,
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    }).save();
+
+    res.json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+const authMiddleware = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "No token" });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded.user;
+    next();
+  } catch (err) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
 
 // Cart Endpoints
 app.get("/api/cart", authMiddleware, async (req, res) => {
@@ -357,8 +361,6 @@ app.get("/api/pending-summaries", authMiddleware, async (req, res) => {
   }
 });
 
-const path = require("path");
-
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "..", "frontend", "build")));
   app.get("*", (req, res) => {
@@ -366,6 +368,4 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(process.env.PORT, () =>
-  console.log(`Server on port ${process.env.PORT}`)
-);
+module.exports = app;
