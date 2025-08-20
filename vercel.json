@@ -1,7 +1,6 @@
 {
   "framework": null,
   "buildCommand": "yarn build",
-  "outputDirectory": "frontend/build",
   "installCommand": "yarn install", 
   "ignoreCommand": "exit 1",
   "routes": [
@@ -11,8 +10,7 @@
   "builds": [
     {
       "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "frontend/build" }
+      "use": "@vercel/static-build"
     },
     { "src": "api/server.js", "use": "@vercel/node" }
   ]
