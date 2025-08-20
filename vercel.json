@@ -5,7 +5,7 @@
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "frontend/build" }
+      "config": { "distDir": "build" }
     },
     {
       "src": "api/server.js",
@@ -20,6 +20,30 @@
     {
       "source": "/static/(.)",
       "destination": "/frontend/static/$1"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/frontend/favicon.ico"
+    },
+    {
+      "source": "/asset-manifest.json",
+      "destination": "/frontend/asset-manifest.json"
+    },
+    {
+      "source": "/manifest.json",
+      "destination": "/frontend/manifest.json"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/frontend/robots.txt"
+    },
+    {
+      "source": "/logo192.png",
+      "destination": "/frontend/logo192.png"
+    },
+    {
+      "source": "/logo512.png",
+      "destination": "/frontend/logo512.png"
     },
     {
       "source": "/(.*)",
