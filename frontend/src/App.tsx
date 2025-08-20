@@ -18,13 +18,13 @@ axios.interceptors.response.use(
       const refreshToken = localStorage.getItem('refreshToken');
       if (refreshToken) {
         try {
-          const res = await axios.post('http://localhost:5002/refresh', { refreshToken });
+          const res = await axios.post('/refresh', { refreshToken });
           localStorage.setItem('accessToken', res.data.accessToken);
           localStorage.setItem('refreshToken', res.data.refreshToken);
           error.config.headers['Authorization'] = `Bearer ${res.data.accessToken}`;
           return axios(error.config);
         } catch (refreshError) {
-          window.location.href = 'http://localhost:5002/auth/google';
+          window.location.href = '/auth/google';
         }
       }
     }

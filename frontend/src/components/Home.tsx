@@ -24,7 +24,7 @@ const Home: React.FC = () => {
       window.history.replaceState({}, document.title, "/");
     }
     if (!token) {
-      window.location.href = 'http://localhost:5002/auth/google';
+      window.location.href = '/auth/google';
     } else {
       axios.get('/api/pending-summaries').then(res => {
         setPendingCabins(res.data.pendings.map((p: any) => p.cabinNumber));
@@ -34,7 +34,7 @@ const Home: React.FC = () => {
       });
     }
   }, [token]);
-
+  
   if (!token) return <div>Loading...</div>;
 
   const hasPending = pendingCabins.length > 0;
