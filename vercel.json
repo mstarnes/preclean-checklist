@@ -4,28 +4,15 @@
   "buildCommand": "cd frontend && yarn build",
   "installCommand": "cd frontend && yarn install && cd .. && cd api && yarn install",
   "ignoreCommand": "exit 1",
-  "builds": [
-    {
-      "src": "frontend/build/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "api/server.js",
-      "use": "@vercel/node"
-    }
-  ],
+  "outputDirectory": "frontend/build",
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/server.js"
     },
     {
-      "source": "/static/(.*)",
-      "destination": "/frontend/build/static/$1"
-    },
-    {
       "source": "/(.*)",
-      "destination": "/frontend/build/index.html"
+      "destination": "/index.html"
     }
   ]
 }
