@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "api",
   "main": "server.js",
   "version": "1.0.0",
   "license": "MIT",

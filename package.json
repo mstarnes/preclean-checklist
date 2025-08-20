@@ -2,5 +2,5 @@
   "name": "preclean-checklist-app",
   "version": "1.0.0",
   "private": true,
-  "workspaces": ["frontend", "backend"]
+  "workspaces": ["frontend", "api"]
 }
