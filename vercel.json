@@ -1,7 +1,7 @@
 {
   "framework": null,
-  "buildCommand": "cd frontend && yarn build",
-  "installCommand": "cd api && yarn install && cd .. && cd frontend && yarn install",
+  "buildCommand": "cd frontend && npm run build",
+  "installCommand": "cd api && npm install && cd .. && cd frontend && npm install",
   "ignoreCommand": "exit 1",
   "routes": [
     { "src": "/(.*)", "dest": "/api/server.js" }
