@@ -1,10 +1,12 @@
 {
   "framework": null,
   "ignoreCommand": "exit 1",
+  "installCommand": "cd frontend && npm install && cd .. && cd api && npm install",
+  "buildCommand": "cd frontend && npm run build",
   "builds": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build"
+      "src": "frontend/build/**",
+      "use": "@vercel/static"
     },
     {
       "src": "api/server.js",
