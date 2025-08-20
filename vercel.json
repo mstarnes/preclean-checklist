@@ -1,12 +1,11 @@
 {
   "framework": null,
   "ignoreCommand": "exit 1",
-  "installCommand": "cd frontend && npm install && cd .. && cd api && npm install",
-  "buildCommand": "cd frontend && npm run build",
   "builds": [
     {
-      "src": "frontend/build/**",
-      "use": "@vercel/static"
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "build" }
     },
     {
       "src": "api/server.js",
@@ -15,12 +14,13 @@
   ],
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/(.)",
       "destination": "/api/server.js"
     },
     {
-      "source": "/(.*)",
+      "source": "/(.)",
       "destination": "/index.html"
     }
   ]
 }
+
