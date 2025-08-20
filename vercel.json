@@ -1,7 +1,7 @@
 {
   "framework": null,
   "buildCommand": "cd frontend && yarn build",
-  "installCommand": "yarn install",
+  "installCommand": "yarn install && cd frontend && yarn install",
   "ignoreCommand": "exit 1",
   "routes": [
     {
