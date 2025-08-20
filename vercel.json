@@ -1,6 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "mkdir build & cd frontend & mkdir build & yarn build",
+  "buildCommand": "yarn build",
   "outputDirectory": "frontend/public",
   "installCommand": "yarn install", 
   "ignoreCommand": "exit 1",
