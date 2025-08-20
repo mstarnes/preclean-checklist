@@ -1,18 +1,12 @@
 {
   "framework": null,
   "buildCommand": "cd frontend && yarn build",
-  "installCommand": "yarn install && cd frontend && yarn install",
+  "installCommand": "cd api && yarn install && cd .. && cd frontend && yarn install",
   "ignoreCommand": "exit 1",
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/api/server.js"
-    }
+    { "src": "/(.*)", "dest": "/api/server.js" }
   ],
   "builds": [
-    {
-      "src": "api/server.js",
-      "use": "@vercel/node"
-    }
+    { "src": "api/server.js", "use": "@vercel/node" }
   ]
 }
