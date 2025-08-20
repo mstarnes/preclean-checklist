@@ -16,5 +16,5 @@
     },
     { "src": "api/server.js", "use": "@vercel/node" }
   ],
-  "ignoreCommand": "git diff HEAD --quiet . || true"
+  "ignoreCommand": "true"
 }
