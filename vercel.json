@@ -15,5 +15,6 @@
       "config": { "distDir": "frontend/build" }
     },
     { "src": "api/server.js", "use": "@vercel/node" }
-  ]
+  ],
+  "ignoreCommand": "true"
 }
