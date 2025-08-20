@@ -2,7 +2,7 @@
   "framework": null,
   "buildCommand": "cd frontend && mkdir build & yarn build",
   "outputDirectory": "frontend/build",
-  "installCommand": "yarn install",
+  "installCommand": "yarn install", 
   "ignoreCommand": "exit 1",
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/server.js" },
