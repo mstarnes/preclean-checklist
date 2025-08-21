@@ -1,11 +1,9 @@
 {
   "framework": null,
+  "buildCommand": "cd frontend && yarn build && cp -r frontend/build/* .",
+  "installCommand": "cd frontend && yarn install && cd .. && cd api && yarn install",
+  "ignoreCommand": "exit 1",
   "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "build" }
-    },
     {
       "src": "api/server.js",
       "use": "@vercel/node"
@@ -28,6 +26,5 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "ignoreCommand": "exit 1"
+  ]
 }
