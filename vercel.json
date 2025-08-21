@@ -1,21 +1,25 @@
 {
   "framework": null,
-  "buildCommand": "cd frontend && yarn build && cp -r frontend/build/* .",
-  "installCommand": "cd frontend && yarn install && cd .. && cd api && yarn install",
-  "ignoreCommand": "exit 1",
   "builds": [
     {
+      "src": "frontend/package.json",
+      "use": "@vercel
+/static-build",
+      "config": { "distDir": "build" }
+    },
+    {
       "src": "api/server.js",
-      "use": "@vercel/node"
+      "use": "@vercel
+/node"
     }
   ],
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/(.)",
       "destination": "/api/server.js"
     },
     {
-      "source": "/auth/google(.*)",
+      "source": "/auth/google(.)",
       "destination": "/api/server.js"
     },
     {
@@ -23,8 +27,14 @@
       "destination": "/api/server.js"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/static/(.)",
+      "destination": "/frontend/build/static/$1"
+    },
+    {
+      "source": "/(.)",
+      "destination": "/frontend/build/index.html"
     }
-  ]
+  ],
+  "ignoreCommand": "exit 1"
 }
+
