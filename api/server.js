@@ -8,7 +8,6 @@ const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const crypto = require("crypto");
-const path = require("path");
 const MongoStore = require("connect-mongo");
 
 dotenv.config();
