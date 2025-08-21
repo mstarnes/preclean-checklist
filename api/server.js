@@ -14,14 +14,9 @@ const MongoStore = require("connect-mongo");
 dotenv.config();
 
 const app = express();
-app.enable("trust proxy");
+app.enable('trust proxy');
 
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3002",
-    credentials: true,
-  })
-);
+app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3002", credentials: true }));
 app.use(bodyParser.json());
 
 app.use(
@@ -49,9 +44,7 @@ const RefreshTokenSchema = new mongoose.Schema({
   expires: { type: Date, required: true },
 });
 
-const RefreshToken =
-  mongoose.models.RefreshToken ||
-  mongoose.model("RefreshToken", RefreshTokenSchema);
+const RefreshToken = mongoose.models.RefreshToken || mongoose.model("RefreshToken", RefreshTokenSchema);
 
 const ChecklistSchema = new mongoose.Schema(
   {
@@ -131,8 +124,7 @@ const ChecklistSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Checklist =
-  mongoose.models.Checklist || mongoose.model("Checklist", ChecklistSchema);
+const Checklist = mongoose.models.Checklist || mongoose.model("Checklist", ChecklistSchema);
 
 const CartSchema = new mongoose.Schema({
   userId: { type: String, required: true },
