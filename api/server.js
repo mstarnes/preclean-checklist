@@ -14,8 +14,14 @@ const MongoStore = require("connect-mongo");
 dotenv.config();
 
 const app = express();
-app.enable('trust proxy');  // Add this line to trust Vercel's proxy and use https protocol
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3002", credentials: true }));
+app.enable("trust proxy");
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3002",
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 
 app.use(
@@ -43,7 +49,9 @@ const RefreshTokenSchema = new mongoose.Schema({
   expires: { type: Date, required: true },
 });
 
-const RefreshToken = mongoose.models.RefreshToken || mongoose.model("RefreshToken", RefreshTokenSchema);
+const RefreshToken =
+  mongoose.models.RefreshToken ||
+  mongoose.model("RefreshToken", RefreshTokenSchema);
 
 const ChecklistSchema = new mongoose.Schema(
   {
@@ -123,7 +131,8 @@ const ChecklistSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Checklist = mongoose.models.Checklist || mongoose.model("Checklist", ChecklistSchema);
+const Checklist =
+  mongoose.models.Checklist || mongoose.model("Checklist", ChecklistSchema);
 
 const CartSchema = new mongoose.Schema({
   userId: { type: String, required: true },
@@ -363,9 +372,9 @@ app.get("/api/pending-summaries", authMiddleware, async (req, res) => {
 });
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "..", "frontend", "build")));
-  app.get("/*path", (req, res) => {
-    res.sendFile(path.join(__dirname, "..", "frontend", "build", "index.html"));
+  app.use(express.static(path.join(__dirname, "public")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
   });
 }
 
