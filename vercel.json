@@ -1,18 +1,33 @@
 {
   "framework": null,
-  "buildCommand": "cd frontend && yarn build && rm -rf api/public && mv frontend/build api/public",
-  "installCommand": "cd frontend && yarn install && cd .. && cd api && yarn install",
-  "ignoreCommand": "exit 1",
   "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "build" }
+    },
     {
       "src": "api/server.js",
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "/api/server.js"
+      "source": "/api/(.*)",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/auth/google(.*)",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/refresh",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ]
+  ],
+  "ignoreCommand": "exit 1"
 }
