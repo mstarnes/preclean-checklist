@@ -167,10 +167,6 @@ app.get(
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-app.get('/env', (req, res) => {
-    res.json(process.env);
-});
-
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
@@ -252,6 +248,7 @@ app.get("/api/cart", authMiddleware, async (req, res) => {
   const cart = await Cart.findOne({ userId: req.user });
   res.json(cart ? cart.items : []);
   console.log("Cart found:", cart ? cart.items : "No cart");
+  console.log("env " + JSON.stringify(process.env, null, 2));
 });
 
 app.post("/api/cart", authMiddleware, async (req, res) => {
