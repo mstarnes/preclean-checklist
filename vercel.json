@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "framework": null,
   "builds": [
     {
@@ -13,11 +14,11 @@
   ],
   "rewrites": [
     {
-      "source": "/api/(.)",
+      "source": "/api/(.*)",
       "destination": "/api/server.js"
     },
     {
-      "source": "/auth/google(.)",
+      "source": "/auth/google(.*)",
       "destination": "/api/server.js"
     },
     {
@@ -25,14 +26,37 @@
       "destination": "/api/server.js"
     },
     {
-      "source": "/static/(.)",
-      "destination": "/frontend/build/static/$1"
+      "source": "/static/(.*)",
+      "destination": "/frontend/static/$1"
     },
     {
-      "source": "/(.)",
-      "destination": "/frontend/build/index.html"
+      "source": "/asset-manifest.json",
+      "destination": "/frontend/asset-manifest.json"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/frontend/favicon.ico"
+    },
+    {
+      "source": "/logo192.png",
+      "destination": "/frontend/logo192.png"
+    },
+    {
+      "source": "/logo512.png",
+      "destination": "/frontend/logo512.png"
+    },
+    {
+      "source": "/manifest.json",
+      "destination": "/frontend/manifest.json"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/frontend/robots.txt"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/index.html"
     }
   ],
   "ignoreCommand": "exit 1"
 }
-
