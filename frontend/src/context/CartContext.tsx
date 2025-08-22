@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
+// frontend/src/context/CartContext.tsx
+import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction, useEffect } from 'react';
 import axios from 'axios';
 
 interface CartItem {
@@ -10,8 +11,8 @@ interface CartItem {
 interface CartContextType {
   cart: CartItem[];
   setCart: Dispatch<SetStateAction<CartItem[]>>;
-  addToCart: (item: string, quantity: number, cabin: number | null) => void;
-  removeFromCart: (index: number) => void;
+  addToCart: (item: string, quantity: number, cabin: number | null) => Promise<void>;
+  removeFromCart: (index: number) => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
