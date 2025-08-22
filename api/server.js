@@ -168,9 +168,7 @@ app.get(
 );
 
 app.get('/env', (req, res) => {
-  res.json({
-    JSON.stringify(process.env, null, 2);
-  });
+    res.json(process.env);
 });
 
 app.get(
