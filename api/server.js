@@ -188,7 +188,7 @@ app.get(
     }).save();
 
     // Redirect with both tokens (or send in response body; adjust for security)
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3003";
+    const frontendUrl = process.env.FRONTEND_URL || "https://preclean-checklist-frontend.vercel.app" || "http://localhost:3003";
     res.redirect(
       `${frontendUrl}?accessToken=${accessToken}&refreshToken=${refreshToken}`
     );
