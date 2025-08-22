@@ -26,9 +26,9 @@ const Home: React.FC = () => {
     if (!token) {
       window.location.href = '/auth/google';
     } else {
-      axios.get('/api/env').then(res => {
-        console.log( JSON.stringify(res.data, null, 2 ));
-      });
+      //axios.get('/api/env').then(res => {
+      //  console.log( JSON.stringify(res.data, null, 2 ));
+      //});
       axios.get('/api/pending-summaries').then(res => {
         setPendingCabins(res.data.pendings.map((p: any) => p.cabinNumber));
       });
