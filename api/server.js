@@ -169,7 +169,7 @@ app.get(
 
 app.get('/env', (req, res) => {
   res.json({
-    JSON.stingify(process.env, null, 2);
+    JSON.stringify(process.env, null, 2);
   });
 });
 
