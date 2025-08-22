@@ -19,6 +19,18 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const res = await axios.get('/api/cart');
+        setCart(res.data);
+      } catch (err) {
+        console.error('Failed to fetch cart:', err);
+      }
+    };
+    fetchCart();
+  }, []);
+
   const addToCart = async (item: string, quantity: number, cabin: number | null) => {
     try {
       const res = await axios.post('/api/cart', { item, quantity, cabin });

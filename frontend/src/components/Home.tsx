@@ -10,7 +10,7 @@ const Home: React.FC = () => {
   const [pendingCabins, setPendingCabins] = useState<number[]>([]);
   const [totalDocs, setTotalDocs] = useState(0);
   const { cart } = useCart();
-  const cartItemsCount = cart.length;
+  const cartItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);

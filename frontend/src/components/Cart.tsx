@@ -1,6 +1,5 @@
 // frontend/src/components/Cart.tsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useCart } from '../context/CartContext';
 
 const allItems = [
@@ -38,26 +37,29 @@ const allItems = [
 ];
 
 const Cart: React.FC = () => {
-  const { cart, setCart, removeFromCart } = useCart();
+  const { cart, addToCart, removeFromCart } = useCart();
   const [view, setView] = useState<'summary' | 'full'>('summary');
   const [checked, setChecked] = useState<Record<string, boolean>>(allItems.reduce((acc, item) => ({ ...acc, [item]: false }), {}));
   console.log('Cart component mounted');
 
-  useEffect(() => { 
-    axios.get('/api/cart').then(res => { 
-      console.log('Fetched cart data:', res.data); 
-      setCart(res.data); 
-    }).catch(err => console.error('Cart fetch error:', err)); 
-  }, [setCart]);
+  useEffect(() => {
+    const updatedChecked = allItems.reduce((acc, item) => ({
+      ...acc,
+      [item]: cart.some(c => c.item === item),
+    }), {});
+    setChecked(updatedChecked);
+  }, [cart]);
 
   const handleCheck = (item: string, isChecked: boolean) => {
     setChecked(prev => ({ ...prev, [item]: isChecked }));
     if (isChecked) {
-      axios.post('/api/cart', { item, quantity: 1, cabin: null }).then(res => setCart(res.data));
+      if (!cart.some(c => c.item === item)) {
+        addToCart(item, 1, null);
+      }
     } else {
       const index = cart.findIndex(c => c.item === item);
       if (index !== -1) {
-        axios.delete('/api/cart/' + index).then(res => setCart(res.data));
+        removeFromCart(index);
       }
     }
   };
