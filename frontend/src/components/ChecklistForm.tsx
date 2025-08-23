@@ -413,15 +413,15 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
         <span>Wash Cloths</span>
         <div className="flex items-center">
           <button type="button" onClick={() => handleNumberChange('washCloths', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
-          <input
-            type="number"
-            value={formData.washCloths}
-            onChange={(e) => handleNumberInput('washCloths', e.target.value)}
-            onFocus={handleFocus}
-            className="w-16 text-center border rounded mx-2"
-            min={0}
-            max={4}
-          />
+            <input
+              type="number"
+              value={formData.washCloths}
+              onChange={(e) => handleNumberInput('washCloths', e.target.value)}
+              onFocus={handleFocus}
+              className="w-16 text-center border rounded mx-2"
+              min={0}
+              max={4}
+            />
           <button type="button" onClick={() => handleNumberChange('washCloths', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
         </div>
       </div>
