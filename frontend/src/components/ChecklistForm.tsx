@@ -277,7 +277,6 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
               <button type="button" onClick={() => handleNumberChange('bathCheckLights', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
               <input
                 type="number"
-                keyboardType="numeric"
                 value={formData.bathCheckLights}
                 onChange={(e) => handleNumberInput('bathCheckLights', e.target.value)}
                 onFocus={handleFocus}
