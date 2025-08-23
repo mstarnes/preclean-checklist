@@ -78,7 +78,7 @@ const Summary: React.FC = () => {
   const isInCart = (key: string) => cart.some(c => c.item === labels[key as keyof typeof labels]);
 
   const handleAddToCart = (key: string) => {
-    addToCart(labels[key as keyof typeof labels], data.aggregated[key], null);
+    addToCart(labels[key as keyof typeof labels], 1, null);
   };
 
   const handleCabinClick = (cabin: string) => {
@@ -121,7 +121,6 @@ const Summary: React.FC = () => {
               <td className="border p-2">{data.aggregated[key]}</td>
               <td className="border p-2">
                 {!isInCart(key) && data.aggregated[key] > 0 && (
-                  // @ts-ignore
                   <FaShoppingCart className="cursor-pointer" onClick={() => handleAddToCart(key)} />
                 )}
               </td>

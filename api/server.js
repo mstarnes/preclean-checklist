@@ -120,6 +120,7 @@ const ChecklistSchema = new mongoose.Schema(
     damagesYesNo: { type: Boolean, default: false },
     damagesDescription: { type: String },
     completed: { type: Boolean, default: false },
+    restocked: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

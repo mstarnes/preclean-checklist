@@ -1,3 +1,4 @@
+// History.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -23,8 +24,14 @@ const History: React.FC = () => {
   });
 
   const handleDelete = async (id: string) => {
-    await axios.delete(`/api/checklists/${id}`);
-    setChecklists(prev => prev.filter(c => c._id !== id));
+    if (window.confirm('Are you sure you want to delete this checklist?')) {
+      await axios.delete(`/api/checklists/${id}`);
+      setChecklists(prev => prev.filter(c => c._id !== id));
+    }
+  };
+
+  const handleRowClick = (cl: any) => {
+    navigate(`/checklist/${cl.cabinNumber}?edit=${cl._id}`);
   };
 
   return (
@@ -35,24 +42,25 @@ const History: React.FC = () => {
         <thead>
           <tr>
             <th className="text-left p-2">Date</th>
-            <th className="text-left p-2">Cabin</th>
+            <th className="text-left p-2">Cab</th>
             <th className="text-left p-2">Guest</th>
-            <th className="text-left p-2">Clean AC</th>
+            <th className="text-left p-2">AC</th>
             <th className="text-left p-2">Comments</th>
             <th className="text-left p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
           {filtered.map(cl => (
-            <tr key={cl._id}>
+            <tr key={cl._id} onClick={() => handleRowClick(cl)} className="cursor-pointer">
               <td className="p-2">{cl.date}</td>
               <td className="p-2">{cl.cabinNumber}</td>
               <td className="p-2">{cl.guestName}</td>
-              <td className="p-2">{cl.cleanACFilter === 'Done' ? 'Done' : ''}</td>
-              <td className="p-2">{cl.damagesYesNo ? cl.damagesDescription : ''}</td>
-              <td className="p-2">
+              <td className="p-2">{cl.cleanACFilter === 'Done' ? '✓' : ''}</td>
+              <td className="p-2 whitespace-normal break-words">{cl.damagesYesNo ? cl.damagesDescription : ''}</td>
+              <td className="p-2" onClick={e => e.stopPropagation()}>
                 {FaEdit({ onClick: () => navigate(`/checklist/${cl.cabinNumber}?edit=${cl._id}`), className: "cursor-pointer inline mr-2" })}
-                {FaTrash({ onClick: () => handleDelete(cl._id), className: "cursor-pointer inline" })}              </td>
+                {FaTrash({ onClick: () => handleDelete(cl._id), className: "cursor-pointer inline" })}              
+              </td>
             </tr>
           ))}
         </tbody>

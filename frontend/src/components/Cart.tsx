@@ -73,7 +73,7 @@ const Cart: React.FC = () => {
           {cart.map((item, index) => (
             <li key={index} className="flex items-center space-x-2">
               <input type="checkbox" checked onChange={() => removeFromCart(index)} />
-              <span>{item.item} - {item.quantity}</span>
+              <span>{item.item}</span>
             </li>
           ))}
         </ul>
