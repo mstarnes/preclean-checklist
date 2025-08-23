@@ -235,6 +235,10 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
     }
   };
 
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
+  };
+
   return (
     <div className="p-4 max-w-md mx-auto bg-white min-h-screen relative">
       {isPosted && (
@@ -275,6 +279,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
                 type="number"
                 value={formData.bathCheckLights}
                 onChange={(e) => handleNumberInput('bathCheckLights', e.target.value)}
+                onFocus={handleFocus}
                 className="w-16 text-center border rounded mx-2"
                 min={0}
                 max={5}
@@ -301,6 +306,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
                 type="number"
                 value={formData.lockBattery}
                 onChange={(e) => handleNumberInput('lockBattery', e.target.value)}
+                onFocus={handleFocus}
                 className="w-16 text-center border rounded mx-2"
                 min={0}
                 max={4}
@@ -316,6 +322,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
                 type="number"
                 value={formData.smokeAlarmBattery}
                 onChange={(e) => handleNumberInput('smokeAlarmBattery', e.target.value)}
+                onFocus={handleFocus}
                 className="w-16 text-center border rounded mx-2"
                 min={0}
                 max={2}
@@ -331,6 +338,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
                 type="number"
                 value={formData.motionDetectorBattery}
                 onChange={(e) => handleNumberInput('motionDetectorBattery', e.target.value)}
+                onFocus={handleFocus}
                 className="w-16 text-center border rounded mx-2"
                 min={0}
                 max={2}
@@ -346,6 +354,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
                 type="number"
                 value={formData.doorSensorBattery}
                 onChange={(e) => handleNumberInput('doorSensorBattery', e.target.value)}
+                onFocus={handleFocus}
                 className="w-16 text-center border rounded mx-2"
                 min={0}
                 max={2}
@@ -364,6 +373,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.bathTowels}
             onChange={(e) => handleNumberInput('bathTowels', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={4}
@@ -379,6 +389,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.handTowels}
             onChange={(e) => handleNumberInput('handTowels', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={2}
@@ -394,6 +405,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.washCloths}
             onChange={(e) => handleNumberInput('washCloths', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={4}
@@ -409,6 +421,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.makeupCloths}
             onChange={(e) => handleNumberInput('makeupCloths', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={2}
@@ -424,6 +437,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.bathMat}
             onChange={(e) => handleNumberInput('bathMat', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={1}
@@ -439,6 +453,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.shampoo}
             onChange={(e) => handleNumberInput('shampoo', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={1}
@@ -454,6 +469,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.conditioner}
             onChange={(e) => handleNumberInput('conditioner', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={1}
@@ -469,6 +485,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.bodyWash}
             onChange={(e) => handleNumberInput('bodyWash', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={1}
@@ -484,6 +501,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.bodyLotion}
             onChange={(e) => handleNumberInput('bodyLotion', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={1}
@@ -499,6 +517,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.barSoap}
             onChange={(e) => handleNumberInput('barSoap', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={1}
@@ -514,6 +533,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.soapDispenser}
             onChange={(e) => handleNumberInput('soapDispenser', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={1}
@@ -529,6 +549,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.toiletPaper}
             onChange={(e) => handleNumberInput('toiletPaper', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={2}
@@ -544,6 +565,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.bathroomCups}
             onChange={(e) => handleNumberInput('bathroomCups', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={7}
@@ -559,6 +581,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.kleenex}
             onChange={(e) => handleNumberInput('kleenex', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={1}
@@ -618,6 +641,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.waterBottles}
             onChange={(e) => handleNumberInput('waterBottles', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={4}
@@ -633,6 +657,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.coffeePods}
             onChange={(e) => handleNumberInput('coffeePods', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={12}
@@ -648,6 +673,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.coffeeSweeteners}
             onChange={(e) => handleNumberInput('coffeeSweeteners', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={12}
@@ -663,6 +689,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.coffeeCreamer}
             onChange={(e) => handleNumberInput('coffeeCreamer', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={12}
@@ -678,6 +705,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.coffeeCupsCeramic}
             onChange={(e) => handleNumberInput('coffeeCupsCeramic', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={4}
@@ -693,6 +721,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.coffeeCupsPaper}
             onChange={(e) => handleNumberInput('coffeeCupsPaper', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={4}
@@ -708,6 +737,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.coffeeCupLids}
             onChange={(e) => handleNumberInput('coffeeCupLids', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={4}
@@ -723,6 +753,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.coffeeStirrers}
             onChange={(e) => handleNumberInput('coffeeStirrers', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={12}
@@ -738,6 +769,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
             type="number"
             value={formData.emptyRelineTrashCans}
             onChange={(e) => handleNumberInput('emptyRelineTrashCans', e.target.value)}
+            onFocus={handleFocus}
             className="w-16 text-center border rounded mx-2"
             min={0}
             max={2}
@@ -755,6 +787,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
                 type="number"
                 value={formData.paperTowels}
                 onChange={(e) => handleNumberInput('paperTowels', e.target.value)}
+                onFocus={handleFocus}
                 className="w-16 text-center border rounded mx-2"
                 min={0}
                 max={1}
@@ -770,6 +803,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
                 type="number"
                 value={formData.dishSoap}
                 onChange={(e) => handleNumberInput('dishSoap', e.target.value)}
+                onFocus={handleFocus}
                 className="w-16 text-center border rounded mx-2"
                 min={0}
                 max={1}
