@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaUndo } from 'react-icons/fa';
+import { FaUndo, FaCheck } from 'react-icons/fa';
 import debounce from 'lodash/debounce';
 
 interface FormDataType {
@@ -57,6 +57,7 @@ interface FormDataType {
   shakeRugs: boolean;
   damagesYesNo: boolean;
   damagesDescription: string;
+  completed: boolean; // Assuming this field exists or add it to schema
 }
 
 const initialFormData: FormDataType = {
@@ -110,6 +111,7 @@ const initialFormData: FormDataType = {
   shakeRugs: false,
   damagesYesNo: false,
   damagesDescription: '',
+  completed: false,
 };
 
 const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
