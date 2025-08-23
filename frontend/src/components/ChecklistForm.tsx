@@ -241,13 +241,23 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
     e.target.select();
   };
 
+  const handleCompleteToggle = () => {
+    const newCompleted = !formData.completed;
+    setFormData(prev => ({ ...prev, completed: newCompleted }));
+    toast.success(newCompleted ? 'Marked as completed!' : 'Reopened for edits');
+  };
+
   return (
     <div className="p-4 max-w-md mx-auto bg-white min-h-screen relative">
       {isPosted && (
-        <button onClick={handleReset} className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded">
-          {/* @ts-ignore */}
-          <FaUndo />
-        </button>
+        <>
+          <button onClick={handleReset} disabled={formData.completed || isResetting} className="absolute top-4 right-12 bg-red-500 text-white p-2 rounded disabled:opacity-50">
+            <FaUndo />
+          </button>
+          <button onClick={handleCompleteToggle} className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded">
+            <FaCheck className={formData.completed ? 'text-yellow-300' : ''} />
+          </button>
+        </>
       )}
 
       {/* Untitled first section */}
