@@ -37,7 +37,7 @@ const allItems = [
 ];
 
 const Cart: React.FC = () => {
-  const { cart, addToCart, removeFromCart } = useCart();
+  const { cart, addToCart, removeFromCart, clearCart } = useCart();
   const [view, setView] = useState<'summary' | 'full'>('summary');
   const [checked, setChecked] = useState<Record<string, boolean>>(allItems.reduce((acc, item) => ({ ...acc, [item]: false }), {}));
   console.log('Cart component mounted');
@@ -50,22 +50,23 @@ const Cart: React.FC = () => {
     setChecked(updatedChecked);
   }, [cart]);
 
-  const handleCheck = (item: string, isChecked: boolean) => {
+  const handleCheck = async (item: string, isChecked: boolean) => {
     setChecked(prev => ({ ...prev, [item]: isChecked }));
     if (isChecked) {
       if (!cart.some(c => c.item === item)) {
-        addToCart(item, 1, null);
+        await addToCart(item, 1, null);
       }
     } else {
       const index = cart.findIndex(c => c.item === item);
       if (index !== -1) {
-        removeFromCart(index);
+        await removeFromCart(index);
       }
     }
   };
 
   return (
     <div className="p-4">
+      <button onClick={clearCart} className="float-right bg-red-500 text-white p-2 rounded">Empty Cart</button>
       <button onClick={() => setView(view === 'summary' ? 'full' : 'summary')} className="mb-4 bg-blue-500 text-white p-2 rounded">Toggle View</button>
       {view === 'summary' ? (
         <ul className="space-y-4">

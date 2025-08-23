@@ -1,3 +1,4 @@
+// api/server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -258,7 +259,12 @@ app.post("/api/cart", authMiddleware, async (req, res) => {
     console.log("New cart");
     cart = new Cart({ userId: req.user, items: [] });
   }
-  cart.items.push({ item, quantity, cabin });
+  const existing = cart.items.find(i => i.item === item);
+  if (existing) {
+    existing.quantity += quantity;
+  } else {
+    cart.items.push({ item, quantity, cabin });
+  }
   await cart.save();
   res.json(cart.items);
 });
@@ -271,6 +277,15 @@ app.delete("/api/cart/:index", authMiddleware, async (req, res) => {
     await cart.save();
   }
   res.json(cart ? cart.items : []);
+});
+
+app.post("/api/cart/clear", authMiddleware, async (req, res) => {
+  const cart = await Cart.findOne({ userId: req.user });
+  if (cart) {
+    cart.items = [];
+    await cart.save();
+  }
+  res.json([]);
 });
 
 app.get("/api/checklists", authMiddleware, async (req, res) => {

@@ -13,6 +13,7 @@ interface CartContextType {
   setCart: Dispatch<SetStateAction<CartItem[]>>;
   addToCart: (item: string, quantity: number, cabin: number | null) => Promise<void>;
   removeFromCart: (index: number) => Promise<void>;
+  clearCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -50,8 +51,17 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const clearCart = async () => {
+    try {
+      const res = await axios.post('/api/cart/clear');
+      setCart(res.data);
+    } catch (err) {
+      console.error('Error clearing cart:', err);
+    }
+  };
+
   return (
-    <CartContext.Provider value={{ cart, setCart, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ cart, setCart, addToCart, removeFromCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );
