@@ -252,10 +252,10 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
       {isPosted && (
         <>
           <button onClick={handleReset} disabled={formData.completed || isResetting} className="absolute top-4 right-12 bg-red-500 text-white p-2 rounded disabled:opacity-50">
-            FaUndo({})
+            {FaUndo({})}
           </button>
           <button onClick={handleCompleteToggle} className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded">
-            <FaCheck className={formData.completed ? 'text-yellow-300' : ''} />
+            {FaCheck({ className: formData.completed ? 'text-yellow-300' : '' })}
           </button>
         </>
       )}
