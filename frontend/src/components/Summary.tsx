@@ -121,7 +121,7 @@ const Summary: React.FC = () => {
               <td className="border p-2">{data.aggregated[key]}</td>
               <td className="border p-2">
                 {!isInCart(key) && data.aggregated[key] > 0 && (
-                  <FaShoppingCart className="cursor-pointer" onClick={() => handleAddToCart(key)} />
+                  FaShoppingCart({ className: "cursor-pointer", onClick: () => handleAddToCart(key) })
                 )}
               </td>
             </tr>
