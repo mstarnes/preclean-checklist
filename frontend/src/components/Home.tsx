@@ -42,44 +42,44 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <div className="grid grid-cols-2 gap-4 max-w-md w-full">
+      <div className="grid grid-cols-2 gap-2 max-w-sm w-full">
         {[1, 2, 3].map(cabin => (
           <button
             key={cabin}
             onClick={() => navigate(`/checklist/${cabin}`)}
-            className="bg-blue-500 text-white p-3 rounded-lg shadow-lg hover:bg-blue-600 relative flex flex-col items-center justify-center aspect-square"
+            className="bg-blue-500 text-white p-2 rounded-lg shadow-lg hover:bg-blue-600 relative flex flex-col items-center justify-center aspect-square text-sm"
           >
-            {FaHome({ className: "mb-1 h-6 w-6" })}
+            {FaHome({ className: "mb-1 h-4 w-4" })}
             Cabin {cabin}
             {pendingCabins.includes(cabin) && (
-              <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"></span>
+              <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]"></span>
             )}
           </button>
         ))}
         <button
           onClick={() => navigate('/summary/global')}
-          className={`bg-purple-500 text-white p-3 rounded-lg shadow-lg hover:bg-purple-600 relative flex flex-col items-center justify-center aspect-square ${hasPending ? '' : 'hidden'}`}
+          className={`bg-purple-500 text-white p-2 rounded-lg shadow-lg hover:bg-purple-600 relative flex flex-col items-center justify-center aspect-square text-sm ${hasPending ? '' : 'hidden'}`}
         >
-          {FaList({ className: "mb-1 h-6 w-6" })}
+          {FaList({ className: "mb-1 h-4 w-4" })}
           Summary
-          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">{pendingCabins.length}</span>
+          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">{pendingCabins.length}</span>
         </button>
         <button
           onClick={() => navigate('/history')}
-          className="bg-green-500 text-white p-3 rounded-lg shadow-lg hover:bg-green-600 relative flex flex-col items-center justify-center aspect-square"
+          className="bg-green-500 text-white p-2 rounded-lg shadow-lg hover:bg-green-600 relative flex flex-col items-center justify-center aspect-square text-sm"
         >
-          {FaClock({ className: "mb-1 h-6 w-6" })}
+          {FaClock({ className: "mb-1 h-4 w-4" })}
           History
-          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">{totalDocs}</span>
+          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">{totalDocs}</span>
         </button>
         <button
           onClick={() => navigate('/cart')}
-          className="bg-yellow-500 text-white p-3 rounded-lg shadow-lg hover:bg-yellow-600 relative flex flex-col items-center justify-center aspect-square"
+          className="bg-yellow-500 text-white p-2 rounded-lg shadow-lg hover:bg-yellow-600 relative flex flex-col items-center justify-center aspect-square text-sm"
         >
-          {FaShoppingCart({ className: "mb-1 h-6 w-6" })}
+          {FaShoppingCart({ className: "mb-1 h-4 w-4" })}
           Cart
           {cartItemsCount > 0 && (
-            <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">{cartItemsCount}</span>
+            <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">{cartItemsCount}</span>
           )}
         </button>
       </div>
