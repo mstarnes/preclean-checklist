@@ -37,8 +37,9 @@ const History: React.FC = () => {
   return (
     <div className="p-4 overflow-x-auto">
       <h2 className="text-2xl">History</h2>
-      <input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="border p-2 mb-4" />
-      <table className="w-full border min-w-max">
+      <input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="border p-2 mb-4 w-full" />
+      {/* Desktop Table View */}
+      <table className="hidden sm:table w-full border min-w-max">
         <thead>
           <tr>
             <th className="text-left p-2">Date</th>
@@ -58,13 +59,33 @@ const History: React.FC = () => {
               <td className="p-2">{cl.cleanACFilter === 'Done' ? '✓' : ''}</td>
               <td className="p-2 whitespace-normal break-words max-w-xs">{cl.damagesYesNo ? cl.damagesDescription : ''}</td>
               <td className="p-2" onClick={e => e.stopPropagation()}>
-                {FaEdit({ onClick: () => navigate(`/checklist/${cl.cabinNumber}?edit=${cl._id}`), className: "cursor-pointer inline mr-2" })}
-                {FaTrash({ onClick: () => handleDelete(cl._id), className: "cursor-pointer inline" })}              
+                {FaEdit({ onClick: () => navigate(`/checklist/${cl.cabinNumber}?edit=${cl._id}`), className: "cursor-pointer inline mr-2 h-6 w-6" })}
+                {FaTrash({ onClick: () => handleDelete(cl._id), className: "cursor-pointer inline h-6 w-6" })}              
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {/* Mobile Card View */}
+      <div className="sm:hidden space-y-4">
+        {filtered.map(cl => (
+          <div key={cl._id} className="border p-4 rounded-lg shadow cursor-pointer" onClick={() => handleRowClick(cl)}>
+            <div className="flex justify-between items-start">
+              <div>
+                <p><strong>Date:</strong> {cl.date}</p>
+                <p><strong>Cab:</strong> {cl.cabinNumber}</p>
+                <p><strong>Guest:</strong> {cl.guestName}</p>
+                <p><strong>AC:</strong> {cl.cleanACFilter === 'Done' ? '✓' : ''}</p>
+                <p><strong>Comments:</strong> {cl.damagesYesNo ? cl.damagesDescription : ''}</p>
+              </div>
+              <div className="flex space-x-2" onClick={e => e.stopPropagation()}>
+                {FaEdit({ onClick: () => navigate(`/checklist/${cl.cabinNumber}?edit=${cl._id}`), className: "cursor-pointer h-6 w-6" })}
+                {FaTrash({ onClick: () => handleDelete(cl._id), className: "cursor-pointer h-6 w-6" })}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
