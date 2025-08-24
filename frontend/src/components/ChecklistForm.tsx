@@ -1,6 +1,6 @@
 // frontend/src/components/ChecklistForm.tsx
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FaUndo, FaCheck } from 'react-icons/fa';
@@ -114,8 +114,10 @@ const initialFormData: FormDataType = {
   completed: false,
 };
 
-const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
+const ChecklistForm: React.FC = () => {
   const { cabin } = useParams<{ cabin: string }>();
+  const [searchParams] = useSearchParams();
+  const edit = searchParams.get('edit');
   const cabinNum = parseInt(cabin || '1');
   const isCabin3 = cabinNum === 3;
   const today = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
@@ -123,7 +125,7 @@ const ChecklistForm: React.FC<{ editId?: string }> = ({ editId }) => {
   const [formData, setFormData] = useState<FormDataType>({ ...initialFormData, date: today, cabinNumber: cabinNum });
   const [isPosted, setIsPosted] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  const [id, setId] = useState(editId);
+  const [id, setId] = useState(edit || undefined);
 
   useEffect(() => {
     if (id) {
