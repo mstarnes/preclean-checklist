@@ -52,6 +52,7 @@ interface FormDataType {
   doorSensorBattery: number;
   livingCheckLights: number;
   tvRemoteUnderTV: boolean;
+  stripFullBeds: string;
   stripQueenBeds: string;
   stripKingBeds: string;
   shakeRugs: boolean;
@@ -96,8 +97,8 @@ const initialFormData: FormDataType = {
   emptyRelineTrashCans: 2,
   emptyCoffeeWater: false,
   emptyCoffeePod: false,
-  paperTowels: 1,
-  dishSoap: 1,
+  paperTowels: 0,
+  dishSoap: 0,
   emptyRefrigerator: false,
   emptyMicrowaveOven: false,
   lockBattery: 4,
@@ -106,6 +107,7 @@ const initialFormData: FormDataType = {
   doorSensorBattery: 2,
   livingCheckLights: 0,
   tvRemoteUnderTV: false,
+  stripFullBeds: 'Not Needed',
   stripQueenBeds: 'Not Needed',
   stripKingBeds: 'Not Needed',
   shakeRugs: false,
@@ -120,6 +122,7 @@ const ChecklistForm: React.FC = () => {
   const edit = searchParams.get('edit');
   const cabinNum = parseInt(cabin || '1');
   const isCabin3 = cabinNum === 3;
+  const isNotCabin3 = cabinNum != 3;
   const today = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
 
   const [formData, setFormData] = useState<FormDataType>({ ...initialFormData, date: today, cabinNumber: cabinNum });
@@ -625,6 +628,21 @@ const ChecklistForm: React.FC = () => {
               <option value="OK">OK</option>
             </select>
           </label>
+      {isCabin3 && (
+        <>
+          <label className="block">
+            Strip Full Bed:
+            <select name="stripFullBeds" value={formData.stripFullBeds} onChange={handleChange} className="mt-1 block w-full border rounded p-2">
+
+              <option value="Not Needed">Not Needed</option>
+              <option value="Bundled">Bundled</option>
+              <option value="OK">OK</option>
+            </select>
+          </label>
+        </>
+      )}
+      {isNotCabin3 && (
+        <>
           <label className="block">
             Strip King Bed:
             <select name="stripKingBeds" value={formData.stripKingBeds} onChange={handleChange} className="mt-1 block w-full border rounded p-2">
@@ -642,6 +660,8 @@ const ChecklistForm: React.FC = () => {
             <input type="checkbox" name="shakeRugs" checked={formData.shakeRugs} onChange={handleChange} className="h-5 w-5" />
             <span>Shake rugs outside</span>
           </label>
+        </>
+      )}
         </div>
       </section>
       <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
