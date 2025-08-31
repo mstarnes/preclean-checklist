@@ -122,7 +122,7 @@ const ChecklistForm: React.FC = () => {
   const edit = searchParams.get('edit');
   const cabinNum = parseInt(cabin || '1');
   const isCabin3 = cabinNum === 3;
-  const isNotCabin3 = cabinNum != 3;
+  const isNotCabin3 = cabinNum !== 3;
   const today = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
 
   const [formData, setFormData] = useState<FormDataType>({ ...initialFormData, date: today, cabinNumber: cabinNum });
