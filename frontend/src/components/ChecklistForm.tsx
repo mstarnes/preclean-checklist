@@ -652,6 +652,8 @@ const ChecklistForm: React.FC = () => {
               <option value="OK">OK</option>
             </select>
           </label>
+        </>
+      )}
           <label className="flex items-center space-x-2">
             <input type="checkbox" name="checkUnderBedsSofa" checked={formData.checkUnderBedsSofa} onChange={handleChange} className="h-5 w-5" />
             <span>Check under furniture</span>
@@ -660,8 +662,6 @@ const ChecklistForm: React.FC = () => {
             <input type="checkbox" name="shakeRugs" checked={formData.shakeRugs} onChange={handleChange} className="h-5 w-5" />
             <span>Shake rugs outside</span>
           </label>
-        </>
-      )}
         </div>
       </section>
       <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
