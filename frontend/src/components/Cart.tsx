@@ -18,6 +18,7 @@ const allItems = [
   'Paper Cups',
   'Kleenex',
   'Bath Check Lights',
+  'Pen',
   'Water Bottles',
   'Coffee Pods',
   'Coffee Sweeteners',
@@ -35,6 +36,7 @@ const allItems = [
   'Door Sensor Battery (CR2032)',
   'Living Check Lights',
 ];
+
 
 const Cart: React.FC = () => {
   const { cart, addToCart, removeFromCart, clearCart } = useCart();

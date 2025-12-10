@@ -194,6 +194,7 @@ const ChecklistForm: React.FC = () => {
     const minMax = getMinMax(name);
     setFormData(prev => ({ ...prev, [name]: Math.max(minMax.min, Math.min(minMax.max, num)) }));
   };
+  
 
   const getMinMax = (name: keyof FormDataType) => {
     switch (name) {
