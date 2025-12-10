@@ -148,10 +148,16 @@ passport.use(
       callbackURL: "/auth/google/callback",
     },
     (accessToken, refreshToken, profile, done) => {
+      /*
       if (profile.emails[0].value === process.env.ALLOWED_EMAIL) {
         return done(null, profile);
       }
       return done(null, false, { message: "Unauthorized" });
+      */
+      const allowedEmails = process.env.ALLOWED_EMAIL ? process.env.ALLOWED_EMAIL.split(',').map(email => email.trim().toLowerCase()) : [];
+      if (allowedEmails.length > 0 && !allowedEmails.includes(user.email.toLowerCase())) {
+        return res.status(403).send('Not authorized');
+      }
     }
   )
 );
