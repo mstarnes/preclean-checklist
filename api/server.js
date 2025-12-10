@@ -148,16 +148,23 @@ passport.use(
       callbackURL: "/auth/google/callback",
     },
     (accessToken, refreshToken, profile, done) => {
-      /*
-      if (profile.emails[0].value === process.env.ALLOWED_EMAIL) {
-        return done(null, profile);
+      // profile.emails[0].value is the user's email
+      const userEmail = profile.emails?.[0]?.value?.toLowerCase();
+
+      // Support multiple allowed emails from Vercel env var
+      const allowedEmails = process.env.ALLOWED_EMAIL
+        ? process.env.ALLOWED_EMAIL.split(",")
+            .map(e => e.trim().toLowerCase())
+            .filter(Boolean)
+        : [];
+
+      // If ALLOWED_EMAIL is set and user's email is not in the list → reject
+      if (allowedEmails.length > 0 && !allowedEmails.includes(userEmail)) {
+        return done(null, false, { message: "Not authorized" });
       }
-      return done(null, false, { message: "Unauthorized" });
-      */
-      const allowedEmails = process.env.ALLOWED_EMAIL ? process.env.ALLOWED_EMAIL.split(',').map(email => email.trim().toLowerCase()) : [];
-      if (allowedEmails.length > 0 && !allowedEmails.includes(user.email.toLowerCase())) {
-        return res.status(403).send('Not authorized');
-      }
+
+      // Success → pass the full profile to serializeUser
+      return done(null, profile);
     }
   )
 );
@@ -179,26 +186,27 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   async (req, res) => {
-    const user = req.user;
-    // Generate access token (short-lived)
-    const accessToken = jwt.sign({ user: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const user = req.user; // <-- this is now valid
+    const userEmail = user.emails[0].value;
 
-    // Generate refresh token (long-lived)
-    const refreshToken = crypto.randomBytes(32).toString("hex");
+    // Generate tokens
+    const accessToken = jwt.sign(
+      { user: user.id, email: userEmail },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
-    // Store refresh token in DB with user ID and expiration (e.g., 7 days)
+    const refreshTokenValue = crypto.randomBytes(32).toString("hex");
+
     await new RefreshToken({
-      token: refreshToken,
+      token: refreshTokenValue,
       userId: user.id,
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     }).save();
 
-    // Redirect with both tokens (or send in response body; adjust for security)
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3002";
     res.redirect(
-      `${frontendUrl}?accessToken=${accessToken}&refreshToken=${refreshToken}`
+      `${frontendUrl}?accessToken=${accessToken}&refreshToken=${refreshTokenValue}`
     );
   }
 );
