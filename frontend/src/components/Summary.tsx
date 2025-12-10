@@ -24,6 +24,7 @@ const labels = {
   bathroomCups: 'Paper Cups, Bathroom',
   kleenex: 'Kleenex',
   bathCheckLights: 'Bath Check Lights',
+  pen: 'Pen for Guestbook',
   waterBottles: 'Water Bottles',
   coffeePods: 'Coffee Pods',
   coffeeSweeteners: 'Coffee Sweeteners',

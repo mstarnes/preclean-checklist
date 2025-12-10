@@ -52,6 +52,7 @@ interface FormDataType {
   doorSensorBattery: number;
   livingCheckLights: number;
   tvRemoteUnderTV: boolean;
+  pen: boolean;
   stripFullBeds: string;
   stripQueenBeds: string;
   stripKingBeds: string;
@@ -107,6 +108,7 @@ const initialFormData: FormDataType = {
   doorSensorBattery: 2,
   livingCheckLights: 0,
   tvRemoteUnderTV: false,
+  pen: false;
   stripFullBeds: 'Not Needed',
   stripQueenBeds: 'Not Needed',
   stripKingBeds: 'Not Needed',
@@ -287,6 +289,10 @@ const ChecklistForm: React.FC = () => {
           <label className="flex items-center space-x-2">
             <input type="checkbox" name="tvRemoteUnderTV" checked={formData.tvRemoteUnderTV} onChange={handleChange} className="h-5 w-5" />
             <span>TV Remote under TV</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input type="checkbox" name="pen" checked={formData.pen} onChange={handleChange} className="h-5 w-5" />
+            <span>Pen for Guestbook</span>
           </label>
           <div className="flex items-center justify-between">
             <span>Check Lightbulbs</span>
