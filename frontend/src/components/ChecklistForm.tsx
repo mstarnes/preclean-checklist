@@ -29,6 +29,7 @@ interface FormDataType {
   toiletPaper: number;
   bathroomCups: number;
   kleenex: number;
+  pen: number;
   bathCheckLights: number;
   gatherTowels: boolean;
   waterBottles: number;
@@ -52,7 +53,6 @@ interface FormDataType {
   doorSensorBattery: number;
   livingCheckLights: number;
   tvRemoteUnderTV: boolean;
-  pen: boolean;
   stripFullBeds: string;
   stripQueenBeds: string;
   stripKingBeds: string;
@@ -85,6 +85,7 @@ const initialFormData: FormDataType = {
   toiletPaper: 2,
   bathroomCups: 7,
   kleenex: 1,
+  pen: 1,
   bathCheckLights: 0,
   gatherTowels: false,
   waterBottles: 4,
@@ -108,7 +109,6 @@ const initialFormData: FormDataType = {
   doorSensorBattery: 2,
   livingCheckLights: 0,
   tvRemoteUnderTV: false,
-  pen: false,
   stripFullBeds: 'Not Needed',
   stripQueenBeds: 'Not Needed',
   stripKingBeds: 'Not Needed',
@@ -216,6 +216,7 @@ const ChecklistForm: React.FC = () => {
       case 'barSoap':
       case 'soapDispenser':
       case 'kleenex':
+      case 'pen':
       case 'paperTowels':
       case 'dishSoap':
       case 'doorSensorBattery': return { min: 0, max: 1 };
@@ -291,10 +292,22 @@ const ChecklistForm: React.FC = () => {
             <input type="checkbox" name="tvRemoteUnderTV" checked={formData.tvRemoteUnderTV} onChange={handleChange} className="h-5 w-5" />
             <span>TV Remote under TV</span>
           </label>
-          <label className="flex items-center space-x-2">
-            <input type="checkbox" name="pen" checked={formData.pen} onChange={handleChange} className="h-5 w-5" />
+          <div className="flex items-center justify-between">
             <span>Pen for Guestbook</span>
-          </label>
+            <div className="flex items-center">
+              <button type="button" onClick={() => handleNumberChange('pen', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
+              <input
+                type="number"
+                value={formData.pen}
+                onChange={(e) => handleNumberInput('pen', e.target.value)}
+                onFocus={handleFocus}
+                className="w-16 text-center border rounded mx-2"
+                min={0}
+                max={1}
+              />
+              <button type="button" onClick={() => handleNumberChange('pen', 1)} className="bg-gray-200 px-3 py-1 rounded">+</button>
+            </div>
+          </div>
           <div className="flex items-center justify-between">
             <span>Check Lightbulbs</span>
             <div className="flex items-center">

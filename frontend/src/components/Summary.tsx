@@ -89,7 +89,6 @@ const Summary: React.FC = () => {
     }
   };
 
-  
   return (
     <div className="p-4">
       <button onClick={print} className="float-right bg-blue-500 text-white p-2 rounded">Print</button>
