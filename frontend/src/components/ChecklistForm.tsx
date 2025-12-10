@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import { FaUndo, FaCheck } from 'react-icons/fa';
 import debounce from 'lodash/debounce';
 
+const [hasUserInteracted, setHasUserInteracted] = useState(false);
+
 interface FormDataType {
   cabinNumber: number;
   date: string;
@@ -133,6 +135,7 @@ const ChecklistForm: React.FC = () => {
   const [id, setId] = useState(edit || undefined);
 
   useEffect(() => {
+    if (!hasUserInteracted) return; // ← blocks auto-save on load
     if (id) {
       axios.get(`/api/checklists/${id}`).then(res => {
         setFormData(res.data);
@@ -174,6 +177,7 @@ const ChecklistForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
+    setHasUserInteracted(true); // ← THIS IS THE KEY
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
@@ -181,6 +185,7 @@ const ChecklistForm: React.FC = () => {
   };
 
   const handleNumberChange = (name: keyof FormDataType, delta: number) => {
+    setHasUserInteracted(true); // ← mark interaction
     setFormData(prev => {
       const current = prev[name] as number;
       const minMax = getMinMax(name);
@@ -189,12 +194,12 @@ const ChecklistForm: React.FC = () => {
   };
 
   const handleNumberInput = (name: keyof FormDataType, value: string) => {
+    setHasUserInteracted(true); // ← mark interaction
     const num = Number(value);
     if (isNaN(num)) return;
     const minMax = getMinMax(name);
     setFormData(prev => ({ ...prev, [name]: Math.max(minMax.min, Math.min(minMax.max, num)) }));
   };
-
 
   const getMinMax = (name: keyof FormDataType) => {
     switch (name) {
