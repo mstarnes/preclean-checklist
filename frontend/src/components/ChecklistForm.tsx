@@ -575,7 +575,7 @@ const ChecklistForm: React.FC = () => {
         </div>
       </div>
       <div className="flex items-center justify-between">
-        <span>Paper Cups</span>
+        <span>Paper Cups, Bathroom</span>
         <div className="flex items-center">
           <button type="button" onClick={() => handleNumberChange('bathroomCups', -1)} className="bg-gray-200 px-3 py-1 rounded">-</button>
           <input

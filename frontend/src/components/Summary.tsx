@@ -21,7 +21,7 @@ const labels = {
   barSoap: 'Bar Soap',
   soapDispenser: 'Soap Dispenser',
   toiletPaper: 'Toilet Paper',
-  bathroomCups: 'Paper Cups',
+  bathroomCups: 'Paper Cups, Bathroom',
   kleenex: 'Kleenex',
   bathCheckLights: 'Bath Check Lights',
   waterBottles: 'Water Bottles',
