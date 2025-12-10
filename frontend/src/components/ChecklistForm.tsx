@@ -108,7 +108,7 @@ const initialFormData: FormDataType = {
   doorSensorBattery: 2,
   livingCheckLights: 0,
   tvRemoteUnderTV: false,
-  pen: false;
+  pen: false,
   stripFullBeds: 'Not Needed',
   stripQueenBeds: 'Not Needed',
   stripKingBeds: 'Not Needed',
@@ -194,7 +194,7 @@ const ChecklistForm: React.FC = () => {
     const minMax = getMinMax(name);
     setFormData(prev => ({ ...prev, [name]: Math.max(minMax.min, Math.min(minMax.max, num)) }));
   };
-  
+
 
   const getMinMax = (name: keyof FormDataType) => {
     switch (name) {
