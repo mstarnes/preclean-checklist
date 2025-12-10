@@ -84,6 +84,7 @@ const ChecklistSchema = new mongoose.Schema(
     kleenex: { type: Number, default: 1, min: 0, max: 1 },
     bathCheckLights: { type: Number, default: 0, min: 0, max: 5 },
     gatherTowels: { type: Boolean, default: false },
+    pen: { type: Boolean, default: false },
     waterBottles: { type: Number, default: 4, min: 0, max: 4 },
     coffeePods: { type: Number, default: 0, min: 0, max: 12 },
     coffeeSweeteners: { type: Number, default: 0, min: 0, max: 12 },
