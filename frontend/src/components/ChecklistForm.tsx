@@ -128,11 +128,10 @@ const ChecklistForm: React.FC = () => {
   const today = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
 
   const [formData, setFormData] = useState<FormDataType>({ ...initialFormData, date: today, cabinNumber: cabinNum });
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isPosted, setIsPosted] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [id, setId] = useState(edit || undefined);
-
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   useEffect(() => {
     if (!hasUserInteracted) return; // ← blocks auto-save on load
