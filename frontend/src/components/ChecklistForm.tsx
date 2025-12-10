@@ -6,8 +6,6 @@ import { toast } from 'react-toastify';
 import { FaUndo, FaCheck } from 'react-icons/fa';
 import debounce from 'lodash/debounce';
 
-const [hasUserInteracted, setHasUserInteracted] = useState(false);
-
 interface FormDataType {
   cabinNumber: number;
   date: string;
@@ -133,6 +131,8 @@ const ChecklistForm: React.FC = () => {
   const [isPosted, setIsPosted] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [id, setId] = useState(edit || undefined);
+
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   useEffect(() => {
     if (!hasUserInteracted) return; // ← blocks auto-save on load
