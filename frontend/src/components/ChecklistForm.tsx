@@ -152,7 +152,7 @@ const ChecklistForm: React.FC = () => {
         }
       });
     }
-  }, [id, cabinNum, today]);
+  }, [id, cabinNum, today, hasUserInteracted]);
 
   const debouncedPatch = debounce(async (updatedData: FormDataType) => {
     try {
