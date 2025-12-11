@@ -77,7 +77,7 @@ const History: React.FC = () => {
                 <p><strong>AC:</strong> {cl.cleanACFilter === 'Done' ? '✓' : ''}</p>
                 <p><strong>Comments:</strong> {cl.damagesYesNo ? cl.damagesDescription : ''}</p>
               </div>
-              <div className="flex space-x-2" style="background-color: red">
+              <div className="flex" onClick={e => e.stopPropagation()}>
                 {FaTrash({ onClick: () => handleDelete(cl._id), className: "cursor-pointer h-6 w-6" })}
               </div>
             </div>
