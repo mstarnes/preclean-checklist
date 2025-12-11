@@ -59,7 +59,6 @@ const History: React.FC = () => {
               <td className="p-2">{cl.cleanACFilter === 'Done' ? '✓' : ''}</td>
               <td className="p-2 whitespace-normal break-words max-w-xs">{cl.damagesYesNo ? cl.damagesDescription : ''}</td>
               <td className="p-2" onClick={e => e.stopPropagation()}>
-                {FaEdit({ onClick: () => navigate(`/checklist/${cl.cabinNumber}?edit=${cl._id}`), className: "cursor-pointer inline mr-2 h-6 w-6" })}
                 {FaTrash({ onClick: () => handleDelete(cl._id), className: "cursor-pointer inline h-6 w-6" })}              
               </td>
             </tr>
