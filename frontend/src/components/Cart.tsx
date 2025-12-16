@@ -37,7 +37,6 @@ const allItems = [
   'Living Check Lights',
 ];
 
-
 const Cart: React.FC = () => {
   const { cart, addToCart, removeFromCart, clearCart } = useCart();
   const [view, setView] = useState<'summary' | 'full'>('summary');

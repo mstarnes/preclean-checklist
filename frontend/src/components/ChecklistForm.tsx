@@ -128,13 +128,11 @@ const ChecklistForm: React.FC = () => {
   const today = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
 
   const [formData, setFormData] = useState<FormDataType>({ ...initialFormData, date: today, cabinNumber: cabinNum });
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isPosted, setIsPosted] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [id, setId] = useState(edit || undefined);
 
   useEffect(() => {
-    if (!hasUserInteracted) return; // ← blocks auto-save on load
     if (id) {
       axios.get(`/api/checklists/${id}`).then(res => {
         setFormData(res.data);
@@ -152,7 +150,7 @@ const ChecklistForm: React.FC = () => {
         }
       });
     }
-  }, [id, cabinNum, today, hasUserInteracted]);
+  }, [id, cabinNum, today]);
 
   const debouncedPatch = debounce(async (updatedData: FormDataType) => {
     try {
@@ -176,7 +174,6 @@ const ChecklistForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-    setHasUserInteracted(true); // ← THIS IS THE KEY
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
@@ -184,7 +181,6 @@ const ChecklistForm: React.FC = () => {
   };
 
   const handleNumberChange = (name: keyof FormDataType, delta: number) => {
-    setHasUserInteracted(true); // ← mark interaction
     setFormData(prev => {
       const current = prev[name] as number;
       const minMax = getMinMax(name);
@@ -193,7 +189,6 @@ const ChecklistForm: React.FC = () => {
   };
 
   const handleNumberInput = (name: keyof FormDataType, value: string) => {
-    setHasUserInteracted(true); // ← mark interaction
     const num = Number(value);
     if (isNaN(num)) return;
     const minMax = getMinMax(name);
