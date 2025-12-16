@@ -240,19 +240,26 @@ const Summary: React.FC = () => {
       <div ref={componentRef}>
         <style type="text/css" media="print">
           {`
-      @page { size: A4 portrait; margin: 0.3cm 0.2cm; }
-      body { margin: 0; padding: 0; font-size: 9pt; line-height: 1.1; }
-      html, body { height: 100%; }
-      body * { visibility: hidden; }
-      #print-section, #print-section * { visibility: visible; }
-      #print-section { position: absolute; left: 0; top: 0; width: 100%; height: auto; page-break-after: avoid; }
-      /* Force no extra page */
-      #print-section::after { content: ""; display: block; height: 0; page-break-after: avoid; }
-    `}
+            @page { size: A4 portrait; margin: 0.2cm; }
+            html, body { height: 100vh; margin: 0; padding: 0; overflow: hidden; }
+            body { font-size: 9pt; line-height: 1.05; }
+            body * { visibility: hidden; }
+            #print-section, #print-section * { visibility: visible; }
+            #print-section { 
+              position: absolute; 
+              left: 0; top: 0; 
+              width: 100%; 
+              height: 100%; 
+              box-sizing: border-box;
+              page-break-after: avoid;
+            }
+            /* Kill any trailing space */
+            #print-section::after { content: ""; display: block; height: 0; }
+          `}
         </style>
 
-        <div id="print-section" className="p-1">
-          <h2 className="text-base font-bold mb-1 text-center">
+        <div id="print-section" className="p-0">
+          <h2 className="text-base font-bold mb-0.5 text-center">
             Restock Summary
           </h2>
           <table className="w-full border-collapse text-xs">
