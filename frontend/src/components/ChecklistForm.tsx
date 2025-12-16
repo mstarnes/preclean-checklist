@@ -317,11 +317,7 @@ const ChecklistForm: React.FC = () => {
             }`}
           >
             {/* @ts-ignore */}
-            {formData.completed ? (
-              <FaLock className="h-6 w-6" />
-            ) : (
-              <FaCheck className="h-6 w-6" />
-            )}
+            {formData.completed ? (<FaLock className="h-6 w-6" />) : (<FaCheck className="h-6 w-6" />)}
           </button>
         </>
       )}
