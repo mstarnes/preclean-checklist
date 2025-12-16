@@ -236,30 +236,39 @@ const Summary: React.FC = () => {
         </table>
       </div>
 
-      {/* Printable version — no second page */}
-      <div ref={componentRef}>
-        <style type="text/css" media="print">
+      {/* Printable version — completely hidden on screen, visible only when printing */}
+      <div className="print-only">
+        <style type="text/css">
           {`
-            @page { size: A4 portrait; margin: 0.2cm; }
-            html, body { height: 100vh; margin: 0; padding: 0; overflow: hidden; }
-            body { font-size: 9pt; line-height: 1.05; }
-            body * { visibility: hidden; }
-            #print-section, #print-section * { visibility: visible; }
-            #print-section { 
-              position: absolute; 
-              left: 0; top: 0; 
-              width: 100%; 
-              height: 100%; 
-              box-sizing: border-box;
-              page-break-after: avoid;
+            .print-only {
+              position: absolute;
+              left: -9999px;
+              top: -9999px;
+              width: 1px;
+              height: 1px;
+              overflow: hidden;
             }
-            /* Kill any trailing space */
-            #print-section::after { content: ""; display: block; height: 0; }
+            @media print {
+              body * {
+                visibility: hidden;
+              }
+              .print-only, .print-only * {
+                visibility: visible;
+                position: static;
+                left: 0;
+                top: 0;
+                width: auto;
+                height: auto;
+                overflow: visible;
+              }
+              @page { size: A4 portrait; margin: 0.3cm; }
+              body { font-size: 9pt; line-height: 1.1; }
+            }
           `}
         </style>
 
-        <div id="print-section" className="p-0">
-          <h2 className="text-base font-bold mb-0.5 text-center">
+        <div className="p-1">
+          <h2 className="text-base font-bold mb-1 text-center">
             Restock Summary
           </h2>
           <table className="w-full border-collapse text-xs">
