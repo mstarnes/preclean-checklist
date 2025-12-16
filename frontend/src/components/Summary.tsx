@@ -1,63 +1,87 @@
 // frontend/src/components/Summary.tsx
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useReactToPrint } from 'react-to-print';
-import { toast } from 'react-toastify';
-import { ClipboardIcon } from '@heroicons/react/24/outline';
-import { FaShoppingCart } from 'react-icons/fa';
-import { useCart } from '../context/CartContext';
+import React, { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useReactToPrint } from "react-to-print";
+import { toast } from "react-toastify";
+import { ClipboardIcon } from "@heroicons/react/24/outline";
+import { FaShoppingCart } from "react-icons/fa";
+import { useCart } from "../context/CartContext";
 
 const labels = {
-  bathTowels: 'Bath Towels',
-  handTowels: 'Hand Towels',
-  washCloths: 'Wash Cloths',
-  makeupCloths: 'Makeup Cloths',
-  bathMat: 'Bath Mat',
-  shampoo: 'Shampoo',
-  conditioner: 'Conditioner',
-  bodyWash: 'Body Wash',
-  bodyLotion: 'Body Lotion',
-  barSoap: 'Bar Soap',
-  soapDispenser: 'Soap Dispenser',
-  toiletPaper: 'Toilet Paper',
-  bathroomCups: 'Paper Cups, Bathroom',
-  kleenex: 'Kleenex',
-  bathCheckLights: 'Bath Check Lights',
-  pen: 'Pen for Guestbook',
-  waterBottles: 'Water Bottles',
-  coffeePods: 'Coffee Pods',
-  coffeeSweeteners: 'Coffee Sweeteners',
-  coffeeCreamer: 'Coffee Creamer',
-  coffeeCupsCeramic: 'Coffee Cups, Ceramic',
-  coffeeCupsPaper: 'Coffee Cups, Paper',
-  coffeeCupLids: 'Coffee Cup Lids',
-  coffeeStirrers: 'Coffee Stirrers',
-  emptyRelineTrashCans: 'Reline Trash Cans',
-  paperTowels: 'Paper Towels',
-  dishSoap: 'Dish Soap',
-  lockBattery: 'Lock Battery (AA)',
-  smokeAlarmBattery: 'Smoke Alarm Battery (AA)',
-  motionDetectorBattery: 'Motion Detector Battery (AA)',
-  doorSensorBattery: 'Door Sensor Battery (CR2032)',
-  livingCheckLights: 'Living Check Lights',
+  bathTowels: "Bath Towels",
+  handTowels: "Hand Towels",
+  washCloths: "Wash Cloths",
+  makeupCloths: "Makeup Cloths",
+  bathMat: "Bath Mat",
+  shampoo: "Shampoo",
+  conditioner: "Conditioner",
+  bodyWash: "Body Wash",
+  bodyLotion: "Body Lotion",
+  barSoap: "Bar Soap",
+  soapDispenser: "Soap Dispenser",
+  toiletPaper: "Toilet Paper",
+  bathroomCups: "Paper Cups, Bathroom",
+  kleenex: "Kleenex",
+  bathCheckLights: "Bath Check Lights",
+  pen: "Pen for Guestbook",
+  waterBottles: "Water Bottles",
+  coffeePods: "Coffee Pods",
+  coffeeSweeteners: "Coffee Sweeteners",
+  coffeeCreamer: "Coffee Creamer",
+  coffeeCupsCeramic: "Coffee Cups, Ceramic",
+  coffeeCupsPaper: "Coffee Cups, Paper",
+  coffeeCupLids: "Coffee Cup Lids",
+  coffeeStirrers: "Coffee Stirrers",
+  emptyRelineTrashCans: "Reline Trash Cans",
+  paperTowels: "Paper Towels",
+  dishSoap: "Dish Soap",
+  lockBattery: "Lock Battery (AA)",
+  smokeAlarmBattery: "Smoke Alarm Battery (AA)",
+  motionDetectorBattery: "Motion Detector Battery (AA)",
+  doorSensorBattery: "Door Sensor Battery (CR2032)",
+  livingCheckLights: "Living Check Lights",
 };
 
 const itemOrder = [
-  'bathTowels', 'handTowels', 'washCloths', 'makeupCloths', 'bathMat',
-  'shampoo', 'conditioner', 'bodyWash', 'bodyLotion', 'barSoap', 'soapDispenser',
-  'toiletPaper', 'bathroomCups', 'kleenex', 'pen', 'bathCheckLights',
-  'waterBottles', 'coffeePods', 'coffeeSweeteners', 'coffeeCreamer',
-  'coffeeCupsCeramic', 'coffeeCupsPaper', 'coffeeCupLids', 'coffeeStirrers',
-  'emptyRelineTrashCans', 'paperTowels', 'dishSoap',
-  'lockBattery', 'smokeAlarmBattery', 'motionDetectorBattery', 'doorSensorBattery',
-  'livingCheckLights'
+  "bathTowels",
+  "handTowels",
+  "washCloths",
+  "makeupCloths",
+  "bathMat",
+  "shampoo",
+  "conditioner",
+  "bodyWash",
+  "bodyLotion",
+  "barSoap",
+  "soapDispenser",
+  "toiletPaper",
+  "bathroomCups",
+  "kleenex",
+  "pen",
+  "bathCheckLights",
+  "waterBottles",
+  "coffeePods",
+  "coffeeSweeteners",
+  "coffeeCreamer",
+  "coffeeCupsCeramic",
+  "coffeeCupsPaper",
+  "coffeeCupLids",
+  "coffeeStirrers",
+  "emptyRelineTrashCans",
+  "paperTowels",
+  "dishSoap",
+  "lockBattery",
+  "smokeAlarmBattery",
+  "motionDetectorBattery",
+  "doorSensorBattery",
+  "livingCheckLights",
 ];
 
 const Summary: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const isGlobal = id === 'global';
+  const isGlobal = id === "global";
   const [data, setData] = useState<{
     aggregated: Record<string, number>;
     perCabin: Record<string, Record<string, number>>;
@@ -78,35 +102,41 @@ const Summary: React.FC = () => {
       }
     `,
   });
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    axios.get('/api/pending-summaries').then(res => {
+    axios.get("/api/pending-summaries").then((res) => {
       setData(res.data);
       if (!isGlobal) {
         const cl = res.data.pendings.find((p: any) => p._id === id);
         if (cl) {
           let msg = `Cabin ${cl.cabinNumber} has been pre-cleaned.`;
-          if (cl.damagesYesNo && cl.damagesDescription) msg += ` Comments: ${cl.damagesDescription}`;
+          if (cl.damagesYesNo && cl.damagesDescription)
+            msg += ` Comments: ${cl.damagesDescription}`;
           setMessage(msg);
         }
       }
     });
   }, [id, isGlobal]);
 
-  const cabins = Object.keys(data.perCabin).sort((a, b) => Number(a) - Number(b));
-  const items = Object.keys(data.aggregated).sort((a, b) => 
-    itemOrder.indexOf(a) - itemOrder.indexOf(b)
+  const cabins = Object.keys(data.perCabin).sort(
+    (a, b) => Number(a) - Number(b)
+  );
+  const items = Object.keys(data.aggregated).sort(
+    (a, b) => itemOrder.indexOf(a) - itemOrder.indexOf(b)
   );
 
-  const isInCart = (key: string) => cart.some(c => c.item === labels[key as keyof typeof labels]);
+  const isInCart = (key: string) =>
+    cart.some((c) => c.item === labels[key as keyof typeof labels]);
 
   const handleAddToCart = (key: string) => {
     addToCart(labels[key as keyof typeof labels], data.aggregated[key], null);
   };
 
   const handleCabinClick = (cabin: string) => {
-    const pending = data.pendings.find((p: any) => p.cabinNumber === Number(cabin));
+    const pending = data.pendings.find(
+      (p: any) => p.cabinNumber === Number(cabin)
+    );
     if (pending) {
       navigate(`/checklist/${cabin}?edit=${pending._id}`);
     }
@@ -114,15 +144,29 @@ const Summary: React.FC = () => {
 
   return (
     <div className="p-4">
-      <button onClick={print} className="mb-4 bg-blue-500 text-white px-4 py-2 rounded float-right">Print</button>
+      <button
+        onClick={print}
+        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded float-right"
+      >
+        Print
+      </button>
       <h2 className="text-2xl font-bold mb-4 clear-both">
-        Restock Summary {isGlobal ? '' : `- Cabin ${data.pendings.find(p => p._id === id)?.cabinNumber || ''}`}
+        Restock Summary{" "}
+        {isGlobal
+          ? ""
+          : `- Cabin ${
+              data.pendings.find((p) => p._id === id)?.cabinNumber || ""
+            }`}
       </h2>
       {!isGlobal && message && (
         <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded">
           <p className="font-medium">{message}</p>
           <button
-            onClick={() => navigator.clipboard.writeText(message).then(() => toast.success('Copied to clipboard!'))}
+            onClick={() =>
+              navigator.clipboard
+                .writeText(message)
+                .then(() => toast.success("Copied to clipboard!"))
+            }
             className="mt-2"
           >
             <ClipboardIcon className="h-6 w-6 text-green-700" />
@@ -133,8 +177,10 @@ const Summary: React.FC = () => {
         <table className="w-full border-collapse table-fixed">
           <thead className="bg-gray-100">
             <tr>
-              <th className="border border-gray-300 p-3 text-left font-semibold w-[30%]">Item</th>
-              {cabins.map(cabin => (
+              <th className="border border-gray-300 p-3 text-left font-semibold w-[30%]">
+                Item
+              </th>
+              {cabins.map((cabin) => (
                 <th
                   key={cabin}
                   className="border border-gray-300 p-3 text-center font-semibold cursor-pointer hover:bg-gray-200"
@@ -143,16 +189,28 @@ const Summary: React.FC = () => {
                   Cabin {cabin}
                 </th>
               ))}
-              <th className="border border-gray-300 p-3 text-center font-semibold">Total</th>
-              <th className="border border-gray-300 p-3 text-center font-semibold">Buy</th>
+              <th className="border border-gray-300 p-3 text-center font-semibold">
+                Total
+              </th>
+              <th className="border border-gray-300 p-3 text-center font-semibold">
+                Buy
+              </th>
             </tr>
           </thead>
           <tbody>
-            {items.map(key => (
-              <tr key={key} className={data.aggregated[key] > 0 ? 'bg-red-50' : ''}>
-                <td className="border border-gray-300 p-3 font-medium break-words">{labels[key as keyof typeof labels] || key}</td>
-                {cabins.map(cabin => (
-                  <td key={cabin} className="border border-gray-300 p-3 text-center">
+            {items.map((key) => (
+              <tr
+                key={key}
+                className={data.aggregated[key] > 0 ? "bg-red-50" : ""}
+              >
+                <td className="border border-gray-300 p-3 font-medium break-words">
+                  {labels[key as keyof typeof labels] || key}
+                </td>
+                {cabins.map((cabin) => (
+                  <td
+                    key={cabin}
+                    className="border border-gray-300 p-3 text-center"
+                  >
                     {data.perCabin[cabin][key] || 0}
                   </td>
                 ))}
@@ -178,35 +236,73 @@ const Summary: React.FC = () => {
         </table>
       </div>
 
-      {/* Printable version */}
-      <div ref={componentRef} className="hidden print:block p-8">
-        <h2 className="text-3xl font-bold mb-6 text-center">Restock Summary</h2>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-black p-3 text-left">Item</th>
-              {cabins.map(cabin => (
-                <th key={cabin} className="border border-black p-3 text-center">Cabin {cabin}</th>
-              ))}
-              <th className="border border-black p-3 text-center">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map(key => (
-              <tr key={key}>
-                <td className="border border-black p-3">{labels[key as keyof typeof labels] || key}</td>
-                {cabins.map(cabin => (
-                  <td key={cabin} className="border border-black p-3 text-center">
-                    {data.perCabin[cabin][key] || 0}
-                  </td>
+      {/* Printable version — visible only when printing */}
+      <div ref={componentRef} className="print-only">
+        <style jsx>{`
+          @media screen {
+            .print-only {
+              position: absolute;
+              left: -9999px;
+              top: -9999px;
+              visibility: hidden;
+            }
+          }
+          @media print {
+            .print-only {
+              visibility: visible;
+              position: static;
+            }
+            body * {
+              visibility: hidden;
+            }
+            .print-only,
+            .print-only * {
+              visibility: visible;
+            }
+          }
+        `}</style>
+
+        <div className="p-8">
+          <h2 className="text-3xl font-bold mb-6 text-center">
+            Restock Summary
+          </h2>
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border-2 border-black p-3 text-left">Item</th>
+                {cabins.map((cabin) => (
+                  <th
+                    key={cabin}
+                    className="border-2 border-black p-3 text-center"
+                  >
+                    Cabin {cabin}
+                  </th>
                 ))}
-                <td className="border border-black p-3 text-center font-bold">
-                  {data.aggregated[key]}
-                </td>
+                <th className="border-2 border-black p-3 text-center">Total</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {items.map((key) => (
+                <tr key={key}>
+                  <td className="border-2 border-black p-3">
+                    {labels[key as keyof typeof labels] || key}
+                  </td>
+                  {cabins.map((cabin) => (
+                    <td
+                      key={cabin}
+                      className="border-2 border-black p-3 text-center"
+                    >
+                      {data.perCabin[cabin][key] || 0}
+                    </td>
+                  ))}
+                  <td className="border-2 border-black p-3 text-center font-bold">
+                    {data.aggregated[key]}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
