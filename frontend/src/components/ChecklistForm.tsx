@@ -325,7 +325,6 @@ const ChecklistForm: React.FC = () => {
           </button>
         </>
       )}
-      
 
       {/* Untitled first section */}
       <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
