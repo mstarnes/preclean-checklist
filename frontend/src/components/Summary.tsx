@@ -236,33 +236,18 @@ const Summary: React.FC = () => {
         </table>
       </div>
 
-      {/* Printable version — visible only when printing */}
-      <div ref={componentRef} className="print-only">
-        <style jsx>{`
-          @media screen {
-            .print-only {
-              position: absolute;
-              left: -9999px;
-              top: -9999px;
-              visibility: hidden;
-            }
-          }
-          @media print {
-            .print-only {
-              visibility: visible;
-              position: static;
-            }
-            body * {
-              visibility: hidden;
-            }
-            .print-only,
-            .print-only * {
-              visibility: visible;
-            }
-          }
-        `}</style>
+      {/* Printable version — hidden on screen, visible on print */}
+      <div ref={componentRef}>
+        <style type="text/css" media="print">
+          {`
+            @page { size: A4 portrait; margin: 1cm; }
+            body * { visibility: hidden; }
+            #print-section, #print-section * { visibility: visible; }
+            #print-section { position: absolute; left: 0; top: 0; width: 100%; }
+          `}
+        </style>
 
-        <div className="p-8">
+        <div id="print-section" className="p-8">
           <h2 className="text-3xl font-bold mb-6 text-center">
             Restock Summary
           </h2>
