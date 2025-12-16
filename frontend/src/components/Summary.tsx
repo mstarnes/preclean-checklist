@@ -236,38 +236,52 @@ const Summary: React.FC = () => {
         </table>
       </div>
 
-      {/* Printable version — hidden on screen via absolute positioning, visible on print */}
-      <div ref={componentRef} className="absolute -left-full -top-full w-0 h-0 overflow-hidden print:static print:left-auto print:top-auto print:w-auto print:h-auto print:overflow-visible">
-        <div className="p-1">
-          <h2 className="text-base font-bold mb-1 text-center">Restock Summary</h2>
+      {/* Printable version — professional, compact, single-page */}
+      <div ref={componentRef}>
+        <style type="text/css" media="print">
+          {`
+            @page { size: A4 portrait; margin: 0.4cm; }
+            body { margin: 0; padding: 0; font-size: 8pt; line-height: 1.1; }
+            body * { visibility: hidden; }
+            #print-section, #print-section * { visibility: visible; }
+            #print-section { position: absolute; left: 0; top: 0; width: 100%; }
+          `}
+        </style>
+
+        <div id="print-section" className="p-1">
+          <h2 className="text-sm font-bold text-center mb-1 uppercase tracking-wide">Tri L Lodging Precleaning — Restock Summary</h2>
           <table className="w-full border-collapse text-xs">
             <thead>
-              <tr className="bg-gray-200">
-                <th className="border border-gray-500 py-0.5 px-1 text-left">Item</th>
+              <tr className="bg-gray-300 font-bold">
+                <th className="border border-black py-0.5 px-1 text-left">Item</th>
                 {cabins.map(cabin => (
-                  <th key={cabin} className="border border-gray-500 py-0.5 px-1 text-center">Cabin {cabin}</th>
+                  <th key={cabin} className="border border-black py-0.5 px-1 text-center">Cabin {cabin}</th>
                 ))}
-                <th className="border border-gray-500 py-0.5 px-1 text-center">Total</th>
+                <th className="border border-black py-0.5 px-1 text-center">Total</th>
               </tr>
             </thead>
             <tbody>
               {items.map(key => (
-                <tr key={key}>
-                  <td className="border border-gray-500 py-0.5 px-1">{labels[key as keyof typeof labels] || key}</td>
+                <tr key={key} className={data.aggregated[key] > 0 ? 'font-bold' : ''}>
+                  <td className="border border-black py-0.5 px-1">{labels[key as keyof typeof labels] || key}</td>
                   {cabins.map(cabin => (
-                    <td key={cabin} className="border border-gray-500 py-0.5 px-1 text-center">
+                    <td key={cabin} className="border border-black py-0.5 px-1 text-center">
                       {data.perCabin[cabin][key] || 0}
                     </td>
                   ))}
-                  <td className="border border-gray-500 py-0.5 px-1 text-center font-bold">
+                  <td className="border border-black py-0.5 px-1 text-center bg-gray-100">
                     {data.aggregated[key]}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <p className="text-xs text-center mt-2 text-gray-600">
+            Printed on {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </p>
         </div>
       </div>
+
     </div>
   );
 };
