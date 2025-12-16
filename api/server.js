@@ -194,7 +194,7 @@ app.get(
     const accessToken = jwt.sign(
       { user: user.id, email: userEmail },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "30d" }
     );
 
     const refreshTokenValue = crypto.randomBytes(32).toString("hex");
@@ -202,7 +202,7 @@ app.get(
     await new RefreshToken({
       token: refreshTokenValue,
       userId: user.id,
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
     }).save();
 
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3002";
@@ -230,7 +230,7 @@ app.post("/refresh", async (req, res) => {
     const newAccessToken = jwt.sign(
       { user: storedToken.userId },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "30d" }
     );
 
     // Optional: Rotate refresh token (delete old, issue new)
@@ -239,7 +239,7 @@ app.post("/refresh", async (req, res) => {
     await new RefreshToken({
       token: newRefreshToken,
       userId: storedToken.userId,
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
     }).save();
 
     res.json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
