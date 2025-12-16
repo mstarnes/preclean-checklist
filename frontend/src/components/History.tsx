@@ -59,7 +59,10 @@ const History: React.FC = () => {
               <td className="p-2">{cl.cleanACFilter === 'Done' ? '✓' : ''}</td>
               <td className="p-2 whitespace-normal break-words max-w-xs">{cl.damagesYesNo ? cl.damagesDescription : ''}</td>
               <td className="p-2" onClick={e => e.stopPropagation()}>
-                {FaTrash({ onClick: () => handleDelete(cl._id), className: "cursor-pointer inline h-6 w-6" })}              
+                <FaTrash
+                  onClick={() => handleDelete(cl._id)}
+                  className="cursor-pointer inline h-6 w-6 text-red-600"
+                />
               </td>
             </tr>
           ))}
@@ -78,7 +81,13 @@ const History: React.FC = () => {
                 <p><strong>Comments:</strong> {cl.damagesYesNo ? cl.damagesDescription : ''}</p>
               </div>
               <div className="flex space-x-2" onClick={e => e.stopPropagation()}>
-                {FaTrash({ onClick: () => handleDelete(cl._id), className: "cursor-pointer h-6 w-6" })}
+                <FaTrash
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(cl._id);
+                  }}
+                  className="cursor-pointer h-6 w-6 text-red-600"
+                />
               </div>
             </div>
           </div>
