@@ -316,17 +316,16 @@ const ChecklistForm: React.FC = () => {
                 : "bg-green-500 hover:bg-green-600" // checkmark style when incomplete
             }`}
           >
+            {/* @ts-ignore */}
             {formData.completed ? (
-              {/* @ts-ignore */}
               <FaLock className="h-6 w-6" />
             ) : (
-              {/* @ts-ignore */}
               <FaCheck className="h-6 w-6" />
             )}
           </button>
         </>
       )}
-
+      
 
       {/* Untitled first section */}
       <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
