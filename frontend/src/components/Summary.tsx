@@ -236,35 +236,40 @@ const Summary: React.FC = () => {
         </table>
       </div>
 
-      {/* Printable version */}
+      {/* Printable version — no second page */}
       <div ref={componentRef}>
         <style type="text/css" media="print">
           {`
-      @page { size: A4 portrait; margin: 0.3cm; }
-      body { margin: 0; padding: 0; font-size: 9pt; line-height: 1.2; }
+      @page { size: A4 portrait; margin: 0.3cm 0.2cm; }
+      body { margin: 0; padding: 0; font-size: 9pt; line-height: 1.1; }
+      html, body { height: 100%; }
       body * { visibility: hidden; }
       #print-section, #print-section * { visibility: visible; }
-      #print-section { position: absolute; left: 0; top: 0; width: 100%; }
+      #print-section { position: absolute; left: 0; top: 0; width: 100%; height: auto; page-break-after: avoid; }
+      /* Force no extra page */
+      #print-section::after { content: ""; display: block; height: 0; page-break-after: avoid; }
     `}
         </style>
 
         <div id="print-section" className="p-1">
-          <h2 className="text-lg font-bold mb-1 text-center">
+          <h2 className="text-base font-bold mb-1 text-center">
             Restock Summary
           </h2>
           <table className="w-full border-collapse text-xs">
             <thead>
               <tr className="bg-gray-200">
-                <th className="border border-gray-500 p-1 text-left">Item</th>
+                <th className="border border-gray-500 py-0.5 px-1 text-left">
+                  Item
+                </th>
                 {cabins.map((cabin) => (
                   <th
                     key={cabin}
-                    className="border border-gray-500 p-1 text-center"
+                    className="border border-gray-500 py-0.5 px-1 text-center"
                   >
                     Cabin {cabin}
                   </th>
                 ))}
-                <th className="border border-gray-500 p-1 text-center">
+                <th className="border border-gray-500 py-0.5 px-1 text-center">
                   Total
                 </th>
               </tr>
@@ -272,18 +277,18 @@ const Summary: React.FC = () => {
             <tbody>
               {items.map((key) => (
                 <tr key={key}>
-                  <td className="border border-gray-500 p-1">
+                  <td className="border border-gray-500 py-0.5 px-1">
                     {labels[key as keyof typeof labels] || key}
                   </td>
                   {cabins.map((cabin) => (
                     <td
                       key={cabin}
-                      className="border border-gray-500 p-1 text-center"
+                      className="border border-gray-500 py-0.5 px-1 text-center"
                     >
                       {data.perCabin[cabin][key] || 0}
                     </td>
                   ))}
-                  <td className="border border-gray-500 p-1 text-center font-bold">
+                  <td className="border border-gray-500 py-0.5 px-1 text-center font-bold">
                     {data.aggregated[key]}
                   </td>
                 </tr>
