@@ -182,6 +182,7 @@ const ChecklistForm: React.FC = () => {
     try {
       if (isResetting) return;
       if (id) {
+        console.log("updating");
         await axios.put(`/api/checklists/${id}`, updatedData);
       } else {
         const res = await axios.post("/api/checklists", updatedData);
@@ -274,7 +275,6 @@ const ChecklistForm: React.FC = () => {
             trackClassName="h-3 bg-gray-300 rounded-full"
             min={min}
             max={max}
-            step={0.1}
             value={draftValue}
             // No step prop = smooth continuous drag
             onChange={(value: number) => {
