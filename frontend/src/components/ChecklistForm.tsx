@@ -265,6 +265,7 @@ const ChecklistForm: React.FC = () => {
             trackClassName="h-3 bg-gray-300 rounded-full"
             min={min}
             max={max}
+            step={null}
             value={formData[field] as number}
             onChange={(value: number) =>
               setFormData((prev) => ({ ...prev, [field]: value }))
