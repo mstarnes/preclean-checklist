@@ -204,27 +204,6 @@ const ChecklistForm: React.FC = () => {
     }));
   };
 
-  const handleNumberChange = (name: keyof FormDataType, delta: number) => {
-    setFormData((prev) => {
-      const current = prev[name] as number;
-      const minMax = getMinMax(name);
-      return {
-        ...prev,
-        [name]: Math.max(minMax.min, Math.min(minMax.max, current + delta)),
-      };
-    });
-  };
-
-  const handleNumberInput = (name: keyof FormDataType, value: string) => {
-    const num = Number(value);
-    if (isNaN(num)) return;
-    const minMax = getMinMax(name);
-    setFormData((prev) => ({
-      ...prev,
-      [name]: Math.max(minMax.min, Math.min(minMax.max, num)),
-    }));
-  };
-
   const getMinMax = (name: keyof FormDataType) => {
     switch (name) {
       case "bathTowels":
@@ -306,10 +285,6 @@ const ChecklistForm: React.FC = () => {
       toast.success("Reset successful");
       setIsResetting(false);
     }
-  };
-
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.select();
   };
 
   const handleCompleteToggle = () => {
