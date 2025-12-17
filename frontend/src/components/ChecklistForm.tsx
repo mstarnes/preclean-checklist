@@ -276,8 +276,9 @@ const ChecklistForm: React.FC = () => {
               min={min}
               max={max}
               value={value}
-              onChange={(value: number) => {
-                setFormData(prev => ({ ...prev, [field]: value }));
+              onChange={(val) => {
+                const value = Array.isArray(val) ? val[0] : val;  // coerce range to single (safe, since we're not using range)
+                setFormData(prev => ({ ...prev, [field]: value as number }));
               }}
               railStyle={{ backgroundColor: '#e5e7eb', height: 8 }}
               trackStyle={{ backgroundColor: '#3b82f6', height: 8 }}
