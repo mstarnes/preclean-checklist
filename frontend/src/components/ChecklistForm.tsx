@@ -578,7 +578,7 @@ const ChecklistForm: React.FC = () => {
             min={0}
             max={4}
             value={formData.bathTowels}
-            onChange={(value) => setFormData(prev => ({ ...prev, bathTowels: value }))}
+            onChange={(value: number) => setFormData(prev => ({ ...prev, bathTowels: value }))}
           />
           <span>{formData.bathTowels}</span>
         </div>
