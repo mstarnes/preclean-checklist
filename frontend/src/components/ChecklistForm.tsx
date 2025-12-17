@@ -279,19 +279,22 @@ const ChecklistForm: React.FC = () => {
                 const value = Array.isArray(val) ? val[0] : val;
                 setDraftFormData(prev => ({ ...prev, [field]: value }));
               }}
-              onChangeComplete={(val) => {  // ← new name, no deprecation
+              onChangeComplete={(val) => {
                 const value = Array.isArray(val) ? val[0] : val;
                 const rounded = Math.round(value);
                 setFormData(prev => ({ ...prev, [field]: rounded }));
               }}
-              railStyle={{ backgroundColor: '#e5e7eb', height: 8 }}
-              trackStyle={{ backgroundColor: '#3b82f6', height: 8 }}
-              handleStyle={{
-                borderColor: '#3b82f6',
-                height: 24,
-                width: 24,
-                marginTop: -8,
-                backgroundColor: '#ffffff',
+              styles={{
+                rail: { backgroundColor: '#e5e7eb', height: 8 },
+                track: { backgroundColor: '#3b82f6', height: 8 },
+                handle: {
+                  borderColor: '#3b82f6',
+                  height: 24,
+                  width: 24,
+                  marginTop: -8,
+                  backgroundColor: '#ffffff',
+                  opacity: 1,  // often needed, as default active opacity can be lower
+                },
               }}
             />
           </div>
