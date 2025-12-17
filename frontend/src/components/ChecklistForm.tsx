@@ -274,7 +274,10 @@ const ChecklistForm: React.FC = () => {
           <Slider
             // ... your props
             value={draftValue}  // ← use draft
-            onChange={(value: number) => setDraftFormData(prev => ({ ...prev, [field]: value }))}
+            onChange={(val) => {
+              const value = Array.isArray(val) ? val[0] : val;  // coerce to number
+              setFormData(prev => ({ ...prev, [field]: value as number }));
+            }}
             onAfterChange={(value: number) => {
               const rounded = Math.round(value);
               setFormData(prev => ({ ...prev, [field]: rounded }));
