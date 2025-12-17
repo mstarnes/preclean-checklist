@@ -273,6 +273,7 @@ const ChecklistForm: React.FC = () => {
             <Slider
               min={min}
               max={max}
+              step={0}
               value={draftValue}
               onChange={(val) => {
                 const value = Array.isArray(val) ? val[0] : val;
@@ -298,7 +299,7 @@ const ChecklistForm: React.FC = () => {
       </div>
     );
   };
-  
+
   const handleReset = async () => {
     if (id) {
       await axios.delete(`/api/checklists/${id}`);
