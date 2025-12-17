@@ -264,25 +264,33 @@ const ChecklistForm: React.FC = () => {
   // Helper to render a slider row
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
-    const draftValue = draftFormData[field] as number;  // ← use draft
+    const value = formData[field] as number;
 
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4">
-          <span className="text-base w-12 text-center">{Math.round(draftValue)}</span>
-          <Slider
-            // ... your props
-            value={draftValue}  // ← use draft
-            onChange={(val) => {
-              const value = Array.isArray(val) ? val[0] : val;  // coerce to number
-              setFormData(prev => ({ ...prev, [field]: value as number }));
-            }}
-            onAfterChange={(value: number) => {
-              const rounded = Math.round(value);
-              setFormData(prev => ({ ...prev, [field]: rounded }));
-            }}
-          />
+          <span className="text-base w-12 text-center">{value}</span>
+          <div className="w-40">
+            <Slider
+              min={min}
+              max={max}
+              value={value}
+              onChange={(val) => {
+                const newValue = Array.isArray(val) ? val[0] : val;
+                setFormData(prev => ({ ...prev, [field]: newValue as number }));
+              }}
+              railStyle={{ backgroundColor: '#e5e7eb', height: 8 }}
+              trackStyle={{ backgroundColor: '#3b82f6', height: 8 }}
+              handleStyle={{
+                borderColor: '#3b82f6',
+                height: 24,
+                width: 24,
+                marginTop: -8,
+                backgroundColor: '#ffffff',
+              }}
+            />
+          </div>
         </div>
       </div>
     );
