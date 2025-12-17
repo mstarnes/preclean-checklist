@@ -261,24 +261,29 @@ const ChecklistForm: React.FC = () => {
   // Helper to render a slider row
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
-    const currentValue = draftFormData[field] as number;
+    const draftValue = draftFormData[field] as number;
 
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4">
-          <span className="text-base w-12 text-center">{currentValue}</span>
+          <span className="text-base w-12 text-center">{Math.round(draftValue)}</span>
           <Slider
             className="w-40 h-8"
             thumbClassName="h-8 w-8 bg-blue-600 rounded-full cursor-grab active:cursor-grabbing focus:outline-none focus:ring-4 focus:ring-blue-300 -top-2"
             trackClassName="h-3 bg-gray-300 rounded-full"
             min={min}
             max={max}
-            value={currentValue}
-            onChange={(value: number) => setDraftFormData(prev => ({ ...prev, [field]: value }))}
+            value={draftValue}
+            // No step prop = smooth continuous drag
+            onChange={(value: number) => {
+              // Instant update during drag
+              setDraftFormData(prev => ({ ...prev, [field]: value }));
+            }}
             onAfterChange={(value: number) => {
-              // Only update formData (and trigger save) when drag ends
-              setFormData(prev => ({ ...prev, [field]: value }));
+              // Commit rounded integer on release
+              const rounded = Math.round(value);
+              setFormData(prev => ({ ...prev, [field]: rounded }));
             }}
           />
         </div>
