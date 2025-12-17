@@ -180,7 +180,6 @@ const ChecklistForm: React.FC = () => {
   }, [formData]);
 
   const debouncedPatch = debounce(async (updatedData: FormDataType) => {
-    if (1) return;
     try {
       if (isResetting) return;
       if (id) {
@@ -278,13 +277,11 @@ const ChecklistForm: React.FC = () => {
             min={min}
             max={max}
             value={draftValue}
-            // No step prop = smooth continuous drag
+            // NO step prop — this is key for smooth drag
             onChange={(value: number) => {
-              // Instant update during drag
               setDraftFormData(prev => ({ ...prev, [field]: value }));
             }}
             onAfterChange={(value: number) => {
-              // Commit rounded integer on release
               const rounded = Math.round(value);
               setFormData(prev => ({ ...prev, [field]: rounded }));
             }}
