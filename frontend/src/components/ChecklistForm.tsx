@@ -147,11 +147,6 @@ const ChecklistForm: React.FC = () => {
 
   const [draftFormData, setDraftFormData] = useState<FormDataType>(formData);
 
-  // Sync draft when formData changes (e.g., on load)
-  useEffect(() => {
-    setDraftFormData(formData);
-  }, [formData]);
-
   useEffect(() => {
     if (id) {
       axios.get(`/api/checklists/${id}`).then((res) => {
@@ -177,6 +172,11 @@ const ChecklistForm: React.FC = () => {
       });
     }
   }, [id, cabinNum, today]);
+
+  // Sync draft when formData changes (e.g., on load)
+  useEffect(() => {
+    setDraftFormData(formData);
+  }, [formData]);
 
   const debouncedPatch = debounce(async (updatedData: FormDataType) => {
     try {
