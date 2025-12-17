@@ -145,6 +145,7 @@ const ChecklistForm: React.FC = () => {
   const [isPosted, setIsPosted] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [id, setId] = useState(edit || undefined);
+  const [draftFormData, setDraftFormData] = useState<FormDataType>(formData);
 
   useEffect(() => {
     if (id) {
@@ -192,6 +193,11 @@ const ChecklistForm: React.FC = () => {
     debouncedPatch(formData);
     return () => debouncedPatch.cancel();
   }, [formData, debouncedPatch]);
+
+  // Sync draft when formData changes
+  useEffect(() => {
+    setDraftFormData(formData);
+  }, [formData]);
 
   const handleChange = (
     e: React.ChangeEvent<
