@@ -5,7 +5,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FaUndo, FaCheck, FaLock } from "react-icons/fa";
 import debounce from "lodash/debounce";
-import Slider from 'react-slider';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css'; // important for styling
 
 interface FormDataType {
   cabinNumber: number;
@@ -263,29 +264,32 @@ const ChecklistForm: React.FC = () => {
   // Helper to render a slider row
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
-    const draftValue = draftFormData[field] as number;
+    const value = formData[field] as number; // use formData directly (no draft needed with rc-slider)
 
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4">
-          <span className="text-base w-12 text-center">{Math.round(draftValue)}</span>
-          <Slider
-            className="w-40 h-8"
-            thumbClassName="h-8 w-8 bg-blue-600 rounded-full cursor-grab active:cursor-grabbing focus:outline-none focus:ring-4 focus:ring-blue-300 -top-2"
-            trackClassName="h-3 bg-gray-300 rounded-full"
-            min={min}
-            max={max}
-            value={draftValue}
-            // NO step prop — this is key for smooth drag
-            onChange={(value: number) => {
-              setDraftFormData(prev => ({ ...prev, [field]: value }));
-            }}
-            onAfterChange={(value: number) => {
-              const rounded = Math.round(value);
-              setFormData(prev => ({ ...prev, [field]: rounded }));
-            }}
-          />
+          <span className="text-base w-12 text-center">{value}</span>
+          <div className="w-40">
+            <Slider
+              min={min}
+              max={max}
+              value={value}
+              onChange={(value: number) => {
+                setFormData(prev => ({ ...prev, [field]: value }));
+              }}
+              railStyle={{ backgroundColor: '#e5e7eb', height: 8 }}
+              trackStyle={{ backgroundColor: '#3b82f6', height: 8 }}
+              handleStyle={{
+                borderColor: '#3b82f6',
+                height: 24,
+                width: 24,
+                marginTop: -8,
+                backgroundColor: '#ffffff',
+              }}
+            />
+          </div>
         </div>
       </div>
     );
