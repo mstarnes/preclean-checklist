@@ -178,11 +178,11 @@ const ChecklistForm: React.FC = () => {
       if (isResetting) return;
       if (id) {
         console.log("updating");
-        //await axios.put(`/api/checklists/${id}`, updatedData);
+        await axios.put(`/api/checklists/${id}`, updatedData);
       } else {
-        //const res = await axios.post("/api/checklists", updatedData);
-        //setId(res.data._id);
-        //setIsPosted(true);
+        const res = await axios.post("/api/checklists", updatedData);
+        setId(res.data._id);
+        setIsPosted(true);
       }
     } catch (err) {
       toast.error("Error saving changes");
