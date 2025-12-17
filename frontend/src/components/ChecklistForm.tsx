@@ -274,6 +274,7 @@ const ChecklistForm: React.FC = () => {
             trackClassName="h-3 bg-gray-300 rounded-full"
             min={min}
             max={max}
+            step={0.1}
             value={draftValue}
             // No step prop = smooth continuous drag
             onChange={(value: number) => {
