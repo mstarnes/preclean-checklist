@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FaUndo, FaCheck, FaLock } from "react-icons/fa";
 import debounce from "lodash/debounce";
+import Slider from 'react-slider';
 
 interface FormDataType {
   cabinNumber: number;
@@ -568,6 +569,19 @@ const ChecklistForm: React.FC = () => {
       </section>
       <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-4">Bath</h3>
+        <div className="flex items-center justify-between">
+          <span>Bath Towels</span>
+          <Slider
+            className="w-32 h-6"
+            thumbClassName="bg-blue-500 rounded-full -top-1 h-8 w-8"
+            trackClassName="bg-gray-200 h-2 rounded"
+            min={0}
+            max={4}
+            value={formData.bathTowels}
+            onChange={(value) => setFormData(prev => ({ ...prev, bathTowels: value }))}
+          />
+          <span>{formData.bathTowels}</span>
+        </div>
         <div className="flex items-center justify-between">
           <span>Bath Towels</span>
           <div className="flex items-center">
