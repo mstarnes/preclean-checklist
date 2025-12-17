@@ -175,10 +175,12 @@ const ChecklistForm: React.FC = () => {
 
   // Sync draft when formData changes (e.g., on load)
   useEffect(() => {
+    console.log("setting draft form data");
     setDraftFormData(formData);
   }, [formData]);
 
   const debouncedPatch = debounce(async (updatedData: FormDataType) => {
+    if (1) return;
     try {
       if (isResetting) return;
       if (id) {
