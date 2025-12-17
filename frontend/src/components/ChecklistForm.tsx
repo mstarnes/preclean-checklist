@@ -278,7 +278,7 @@ const ChecklistForm: React.FC = () => {
                 const value = Array.isArray(val) ? val[0] : val;
                 setDraftFormData(prev => ({ ...prev, [field]: value }));
               }}
-              onAfterChange={(val) => {
+              onChangeComplete={(val) => {  // ← new name, no deprecation
                 const value = Array.isArray(val) ? val[0] : val;
                 const rounded = Math.round(value);
                 setFormData(prev => ({ ...prev, [field]: rounded }));
@@ -298,7 +298,7 @@ const ChecklistForm: React.FC = () => {
       </div>
     );
   };
-
+  
   const handleReset = async () => {
     if (id) {
       await axios.delete(`/api/checklists/${id}`);
