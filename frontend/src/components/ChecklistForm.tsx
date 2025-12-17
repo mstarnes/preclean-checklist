@@ -280,16 +280,16 @@ const ChecklistForm: React.FC = () => {
           <span className="text-base font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             className="w-40 h-8"
-            thumbClassName="h-8 w-8 bg-blue-600 rounded-full cursor-grab focus:outline-none focus:ring-4 focus:ring-blue-300 -top-2"
+            thumbClassName="h-8 w-8 bg-blue-600 rounded-full cursor-grab active:cursor-grabbing focus:outline-none focus:ring-4 focus:ring-blue-300 -top-2"
             trackClassName="h-3 bg-gray-300 rounded-full"
             min={min}
             max={max}
-            step={null}
+            step={null}  // ← this makes drag smooth and continuous
             value={formData[field] as number}
             onChange={(value: number) =>
-              setFormData((prev) => ({ ...prev, [field]: value }))
+              setFormData((prev) => ({ ...prev, [field]: Math.round(value) }))  // round to nearest integer on release
             }
-          />
+          />  
         </div>
       </div>
     );
