@@ -191,25 +191,6 @@ const ChecklistForm: React.FC = () => {
     return () => debouncedPatch.cancel();
   }, [formData, debouncedPatch]);
 
-  const isFormValid = () => {
-    return (
-      formData.guestName.trim() !== '' &&
-      formData.date.trim() !== '' &&
-      formData.clearDoorCodes &&
-      formData.resetThermostats &&
-      formData.checkUnderBedsSofa &&
-      formData.checkShower &&
-      formData.gatherTowels &&
-      formData.tvRemoteUnderTV &&
-      formData.emptyCoffeeWater &&
-      formData.emptyCoffeePod &&
-      formData.emptyRefrigerator &&
-      formData.emptyMicrowaveOven &&
-      formData.shakeRugs
-      // Add any other required checkboxes if needed
-    );
-  };
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -277,19 +258,18 @@ const ChecklistForm: React.FC = () => {
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4">
-          <span className="text-base font-bold w-12 text-center">{formData[field] as number}</span>
+          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             className="w-40 h-8"
-            thumbClassName="h-8 w-8 bg-blue-600 rounded-full cursor-grab active:cursor-grabbing focus:outline-none focus:ring-4 focus:ring-blue-300 -top-2"
+            thumbClassName="h-8 w-8 bg-blue-600 rounded-full cursor-grab focus:outline-none focus:ring-4 focus:ring-blue-300 -top-2"
             trackClassName="h-3 bg-gray-300 rounded-full"
             min={min}
             max={max}
-            step={null}  // ← this makes drag smooth and continuous
             value={formData[field] as number}
             onChange={(value: number) =>
-              setFormData((prev) => ({ ...prev, [field]: Math.round(value) }))  // round to nearest integer on release
+              setFormData((prev) => ({ ...prev, [field]: value }))
             }
-          />  
+          />
         </div>
       </div>
     );
@@ -330,7 +310,6 @@ const ChecklistForm: React.FC = () => {
           {/* Complete / Reopen button */}
           <button
             onClick={handleCompleteToggle}
-            disabled={!isFormValid() && !formData.completed}
             className={`absolute top-4 right-4 p-2 rounded text-white font-bold ${
               formData.completed
                 ? "bg-amber-600 hover:bg-amber-700" // lock style when completed
