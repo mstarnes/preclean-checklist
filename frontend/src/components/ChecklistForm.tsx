@@ -256,21 +256,26 @@ const ChecklistForm: React.FC = () => {
   // Helper to render a slider row
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
-    const value = formData[field] as number;
+    const draftValue = draftFormData[field] as number;
 
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4">
-          <span className="text-base w-12 text-center">{value}</span>
+          <span className="text-base w-12 text-center">{Math.round(draftValue)}</span>
           <div className="w-40">
             <Slider
               min={min}
               max={max}
-              value={value}
+              value={draftValue}
               onChange={(val) => {
-                const newValue = Array.isArray(val) ? val[0] : val;
-                setFormData(prev => ({ ...prev, [field]: newValue as number }));
+                const value = Array.isArray(val) ? val[0] : val;
+                setDraftFormData(prev => ({ ...prev, [field]: value }));
+              }}
+              onAfterChange={(val) => {
+                const value = Array.isArray(val) ? val[0] : val;
+                const rounded = Math.round(value);
+                setFormData(prev => ({ ...prev, [field]: rounded }));
               }}
               railStyle={{ backgroundColor: '#e5e7eb', height: 8 }}
               trackStyle={{ backgroundColor: '#3b82f6', height: 8 }}
