@@ -273,7 +273,7 @@ const ChecklistForm: React.FC = () => {
             <Slider
               min={min}
               max={max}
-              step={0}
+              step={null}
               value={draftValue}
               onChange={(val) => {
                 const value = Array.isArray(val) ? val[0] : val;
