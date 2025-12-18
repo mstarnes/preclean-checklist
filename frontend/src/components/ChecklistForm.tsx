@@ -189,10 +189,10 @@ const ChecklistForm: React.FC = () => {
     }
   }, 1000);
 
-  useEffect(() => {
-    debouncedPatch(formData);
-    return () => debouncedPatch.cancel();
-  }, [formData, debouncedPatch]);
+//  useEffect(() => {
+//    debouncedPatch(formData);
+//    return () => debouncedPatch.cancel();
+//  }, [formData, debouncedPatch]);
 
   // Sync draft when formData changes
   useEffect(() => {
@@ -273,7 +273,7 @@ const ChecklistForm: React.FC = () => {
             <Slider
               min={min}
               max={max}
-              step={null}
+              step={0}
               value={draftValue}
               onChange={(val) => {
                 const value = Array.isArray(val) ? val[0] : val;
