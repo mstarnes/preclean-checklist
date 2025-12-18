@@ -259,8 +259,8 @@ const ChecklistForm: React.FC = () => {
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4">
           <Slider
-            className="w-40 h-8"
-            trackClassName="h-3 bg-gray-300 rounded-full"
+            className="w-40 h-10 relative"  // height for better alignment
+            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
             value={formData[field] as number}
@@ -270,12 +270,17 @@ const ChecklistForm: React.FC = () => {
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
-                className="h-8 w-8 bg-white border-4 border-blue-600 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm shadow-lg"
+                className="h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white -outline-none focus:outline-none"
+                style={{
+                  ...props.style,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                }}
               >
                 {state.valueNow}
               </div>
             )}
-          />
+          />          
         </div>
       </div>
     );
