@@ -258,7 +258,6 @@ const ChecklistForm: React.FC = () => {
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4">
-          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             className="w-40 h-8"
             trackClassName="h-3 bg-gray-300 rounded-full"
