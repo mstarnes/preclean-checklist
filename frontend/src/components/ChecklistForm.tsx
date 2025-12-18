@@ -268,7 +268,7 @@ const ChecklistForm: React.FC = () => {
             onAfterChange={(value: number) => {
               setFormData(prev => ({ ...prev, [field]: value }));
             }}
-            renderThumb={(props, state) => (
+            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
                 className="h-8 w-8 bg-white border-4 border-blue-600 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm shadow-lg"
