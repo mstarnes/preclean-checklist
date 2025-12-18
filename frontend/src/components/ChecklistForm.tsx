@@ -261,16 +261,21 @@ const ChecklistForm: React.FC = () => {
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             className="w-40 h-8"
-            thumbClassName="h-8 w-8 bg-blue-600 rounded-full cursor-grab focus:outline-none focus:ring-4 focus:ring-blue-300 -top-2"
             trackClassName="h-3 bg-gray-300 rounded-full"
             min={min}
             max={max}
-            marks
-            renderThumb={(props: any, state: any) => <div {...props}>{state.valueNow}</div>}
             value={formData[field] as number}
-            onAfterChange={(value: number) =>
-              setFormData((prev) => ({ ...prev, [field]: value }))
-            }
+            onAfterChange={(value: number) => {
+              setFormData(prev => ({ ...prev, [field]: value }));
+            }}
+            renderThumb={(props, state) => (
+              <div
+                {...props}
+                className="h-8 w-8 bg-white border-4 border-blue-600 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm shadow-lg"
+              >
+                {state.valueNow}
+              </div>
+            )}
           />
         </div>
       </div>
