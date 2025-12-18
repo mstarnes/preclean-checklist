@@ -4,7 +4,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FaUndo, FaCheck, FaLock } from "react-icons/fa";
-import debounce from "lodash/debounce";
+//import debounce from "lodash/debounce";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css'; // important for styling
 
@@ -173,6 +173,7 @@ const ChecklistForm: React.FC = () => {
     }
   }, [id, cabinNum, today]);
 
+/*
   const debouncedPatch = debounce(async (updatedData: FormDataType) => {
     try {
       if (isResetting) return;
@@ -189,10 +190,11 @@ const ChecklistForm: React.FC = () => {
     }
   }, 1000);
 
-//  useEffect(() => {
-//    debouncedPatch(formData);
-//    return () => debouncedPatch.cancel();
-//  }, [formData, debouncedPatch]);
+  useEffect(() => {
+    debouncedPatch(formData);
+    return () => debouncedPatch.cancel();
+  }, [formData, debouncedPatch]);
+*/
 
   // Sync draft when formData changes
   useEffect(() => {
