@@ -277,7 +277,7 @@ const ChecklistForm: React.FC = () => {
               value={draftValue}
               onChange={(val) => {
                 console.log("SliderRow: onChange");
-                const value = Array.isArray(val) ? val[0] : val;
+                // const value = Array.isArray(val) ? val[0] : val;
                 // setDraftFormData(prev => ({ ...prev, [field]: value }));
               }}
               onChangeComplete={(val) => {
