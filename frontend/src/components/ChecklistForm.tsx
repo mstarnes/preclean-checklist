@@ -190,12 +190,15 @@ const ChecklistForm: React.FC = () => {
   }, 1000);
 
   useEffect(() => {
+    console.log("debouncedPatch before");
     debouncedPatch(formData);
+    console.log("debouncedPatch after");
     return () => debouncedPatch.cancel();
   }, [formData, debouncedPatch]);
 
   // Sync draft when formData changes
   useEffect(() => {
+    console.log("setDraftFormData");
     setDraftFormData(formData);
   }, [formData]);
 
@@ -205,7 +208,7 @@ const ChecklistForm: React.FC = () => {
     >
   ) => {
     const { name, value, type } = e.target;
-    console.log("target: " + JSON.stringify(e.target));
+    console.log("target: " + name);
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -214,6 +217,7 @@ const ChecklistForm: React.FC = () => {
   };
 
   const getMinMax = (name: keyof FormDataType) => {
+    console.log("getMinMax");
     switch (name) {
       case "bathTowels":
       case "washCloths":
