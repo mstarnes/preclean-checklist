@@ -199,9 +199,9 @@ const ChecklistForm: React.FC = () => {
     setDraftFormData(formData);
   }, [formData]);
 
-  const handleChange = (
-    return;
-    /*
+  const handleChange = { return; }
+  /*
+  (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
