@@ -190,15 +190,12 @@ const ChecklistForm: React.FC = () => {
   }, 1000);
 
   useEffect(() => {
-    console.log("debouncedPatch before");
     debouncedPatch(formData);
-    console.log("debouncedPatch after");
     return () => debouncedPatch.cancel();
   }, [formData, debouncedPatch]);
 
   // Sync draft when formData changes
   useEffect(() => {
-    console.log("setDraftFormData");
     setDraftFormData(formData);
   }, [formData]);
 
@@ -208,7 +205,6 @@ const ChecklistForm: React.FC = () => {
     >
   ) => {
     const { name, value, type } = e.target;
-    console.log("target: " + name);
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -217,7 +213,6 @@ const ChecklistForm: React.FC = () => {
   };
 
   const getMinMax = (name: keyof FormDataType) => {
-    console.log("getMinMax");
     switch (name) {
       case "bathTowels":
       case "washCloths":
@@ -280,6 +275,11 @@ const ChecklistForm: React.FC = () => {
               max={max}
               step={0}
               value={draftValue}
+              onChange={(val) => {
+                console.log("SliderRow: onChange");
+                const value = Array.isArray(val) ? val[0] : val;
+                // setDraftFormData(prev => ({ ...prev, [field]: value }));
+              }}
               onChangeComplete={(val) => {
                 const value = Array.isArray(val) ? val[0] : val;
                 const rounded = Math.round(value);
