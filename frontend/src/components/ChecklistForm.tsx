@@ -199,20 +199,18 @@ const ChecklistForm: React.FC = () => {
     setDraftFormData(formData);
   }, [formData]);
 
-  const handleChange = { return; }
-  /*
-  (
+  const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
     const { name, value, type } = e.target;
+    console.log("target: " + JSON.stringify(e.target));
     setFormData((prev) => ({
       ...prev,
       [name]:
         type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
     }));
-    */
   };
 
   const getMinMax = (name: keyof FormDataType) => {
