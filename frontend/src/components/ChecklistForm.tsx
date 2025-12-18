@@ -266,11 +266,7 @@ const ChecklistForm: React.FC = () => {
 
   // Helper to render a slider row
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
-    if( 0 ) {
-      getMinMax(field);
-    }
-    const min = 0;
-    const max = 12;
+    const { min, max } = getMinMax(field);
     const draftValue = draftFormData[field] as number;
 
     return (
@@ -286,7 +282,9 @@ const ChecklistForm: React.FC = () => {
               value={draftValue}
               onChange={(val) => {
                 const value = Array.isArray(val) ? val[0] : val;
-                setDraftFormData(prev => ({ ...prev, [field]: value }));
+                if( 0 ) {
+                  setDraftFormData(prev => ({ ...prev, [field]: value }));
+                }
               }}
               onChangeComplete={(val) => {
                 const value = Array.isArray(val) ? val[0] : val;
