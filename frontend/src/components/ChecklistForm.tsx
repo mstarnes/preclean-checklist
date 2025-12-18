@@ -280,12 +280,6 @@ const ChecklistForm: React.FC = () => {
               max={max}
               step={0}
               value={draftValue}
-              onChange={(val) => {
-                const value = Array.isArray(val) ? val[0] : val;
-                if( 0 ) {
-                  setDraftFormData(prev => ({ ...prev, [field]: value }));
-                }
-              }}
               onChangeComplete={(val) => {
                 const value = Array.isArray(val) ? val[0] : val;
                 const rounded = Math.round(value);
