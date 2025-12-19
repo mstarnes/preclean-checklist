@@ -24,5 +24,21 @@ code {
     width: 1px;
     height: 1px;
     overflow: hidden;
+
+    @page { size: A4 portrait; margin: 0.2cm; }
+    html, body { height: 100vh; margin: 0; padding: 0; overflow: hidden; }
+    body { font-size: 9pt; line-height: 1.05; }
+    body * { visibility: hidden; }
+    #print-section, #print-section * { visibility: visible; }
+    #print-section { 
+      position: absolute; 
+      left: 0; top: 0; 
+      width: 100%; 
+      height: 100%; 
+      box-sizing: border-box;
+      page-break-after: avoid;
+    }
+    /* Kill any trailing space */
+    #print-section::after { content: ""; display: block; height: 0; }
   }
 }
