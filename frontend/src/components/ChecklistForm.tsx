@@ -1,5 +1,5 @@
 // frontend/src/components/ChecklistForm.tsx
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -285,9 +285,18 @@ const ChecklistForm: React.FC = () => {
 
 
   // Helper to render a slider row
-
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
+
+    const debouncedCommit = useRef<ReturnType<typeof debounce> | null>(null);
+
+    useEffect(() => {
+      return () => {
+        if (debouncedCommit.current) {
+          debouncedCommit.current.cancel();
+        }
+      };
+    }, []);
 
     return (
       <div className="flex items-center justify-between py-3">
@@ -301,8 +310,11 @@ const ChecklistForm: React.FC = () => {
             max={max}
             value={formData[field] as number}
             onAfterChange={(value: number) => {
-              // Debounce inline — only last value in 100ms wins
-              if (debouncedCommit.current) debouncedCommit.current.cancel();
+              // Cancel any pending debounce
+              if (debouncedCommit.current) {
+                debouncedCommit.current.cancel();
+              }
+              // Create new debounced commit
               debouncedCommit.current = debounce(() => {
                 setFormData(prev => {
                   if (prev[field] !== value) {
@@ -330,7 +342,7 @@ const ChecklistForm: React.FC = () => {
         </div>
       </div>
     );
-  };  
+  };
 
 
   const handleReset = async () => {
