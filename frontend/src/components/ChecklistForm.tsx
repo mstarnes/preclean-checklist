@@ -283,41 +283,42 @@ const ChecklistForm: React.FC = () => {
 
 
   // Helper to render a slider row
+
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
-    const sliderRef = useRef<HTMLDivElement>(null);
 
-    const commitValue = () => {
-      if (sliderRef.current) {
-        // Force commit current live value (from internal state via data attribute or props)
-        // react-slider doesn't expose live value externally, so use the thumb's text as proxy
-        const thumb = sliderRef.current.querySelector('.slider-thumb');
-        if (thumb) {
-          const liveValue = Number(thumb.textContent);
-          if (!isNaN(liveValue) && liveValue !== formData[field]) {
-            setFormData(prev => ({ ...prev, [field]: liveValue }));
+    // Debounced commit to handle double-fire
+    const debouncedCommit = useCallback(
+      debounce((value: number) => {
+        setFormData(prev => {
+          // Only update if different (prevents revert loop)
+          if (prev[field] !== value) {
+            return { ...prev, [field]: value };
           }
-        }
-      }
-    };
+          return prev;
+        });
+      }, 100), // 100ms window catches double-fire
+      [field]
+    );
+
+    useEffect(() => {
+      return () => debouncedCommit.cancel(); // cleanup
+    }, [debouncedCommit]);
 
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
-        <div className="flex items-center space-x-4 touch-none" ref={sliderRef}>
-          <span className="text-xl font-bold w-12 text-center">{formData[field] as number} *</span>
+        <div className="flex items-center space-x-4 touch-none">
+          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
-            className="w-40 h-10 relative slider-row"
+            className="w-40 h-10 relative slider-row slider-container"
             trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
             value={formData[field] as number}
             onAfterChange={(value: number) => {
-              logToDescription(`onAfterChange ${label}: ${value}`);
-              setFormData(prev => ({ ...prev, [field]: value }));
+              debouncedCommit(value);
             }}
-            onMouseUp={commitValue}  // fallback for desktop
-            onTouchEnd={commitValue} // fallback for iOS PWA
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
@@ -331,12 +332,12 @@ const ChecklistForm: React.FC = () => {
                 {state.valueNow}
               </div>
             )}
-          />
+          />          
         </div>
       </div>
     );
-  };
-  
+  };  
+
 
   const handleReset = async () => {
     if (id) {
