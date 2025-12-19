@@ -153,13 +153,13 @@ const ChecklistForm: React.FC = () => {
     const sliderContainers = document.querySelectorAll('.slider-container'); // add class "slider-container" to your slider wrapper div
     sliderContainers.forEach(container => {
       (container as HTMLElement).addEventListener('touchmove', preventScroll, { passive: false});
-      //(container as HTMLElement).addEventListener('touchstart', preventScroll, { passive: false});
+      (container as HTMLElement).addEventListener('touchstart', preventScroll, { passive: false});
     });
 
     return () => {
       sliderContainers.forEach(container => {
         (container as HTMLElement).removeEventListener('touchmove', preventScroll);
-        //(container as HTMLElement).removeEventListener('touchstart', preventScroll);
+        (container as HTMLElement).removeEventListener('touchstart', preventScroll);
       });
     };
 
