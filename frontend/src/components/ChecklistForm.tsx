@@ -311,13 +311,17 @@ const ChecklistForm: React.FC = () => {
             value={formData[field] as number}
 
             onAfterChange={(value: number) => {
-              // Ignore if value is the same as current committed (the revert fire)
               if (value === formData[field]) {
                 return; // do nothing — prevents snap-back
               }
 
-              // Otherwise, commit the new value
-              setFormData(prev => ({ ...prev, [field]: value }));
+              if (debouncedCommit.current) {
+                debouncedCommit.current.cancel();
+              }
+              debouncedCommit.current = debounce(() => {
+                setFormData(prev => ({ ...prev, [field]: value }));
+              }, 100); // ← 350ms hides the flicker
+              debouncedCommit.current();
             }}
 
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
