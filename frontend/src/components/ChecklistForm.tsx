@@ -288,7 +288,7 @@ const ChecklistForm: React.FC = () => {
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
-    const debouncedCommit = useRef<ReturnType<typeof debounce> | null>(null);
+    //const debouncedCommit = useRef<ReturnType<typeof debounce> | null>(null);
     const logToDescription = (message: string) => {
       const timestamp = new Date().toLocaleTimeString();
       setFormData(prev => ({
