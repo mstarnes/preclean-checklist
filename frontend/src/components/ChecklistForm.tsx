@@ -287,6 +287,7 @@ const ChecklistForm: React.FC = () => {
   // Helper to render a slider row
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
+    const currentValue = draftFormData[field] as number;
 
     //const debouncedCommit = useRef<ReturnType<typeof debounce> | null>(null);
     const logToDescription = (message: string) => {
@@ -325,7 +326,7 @@ const ChecklistForm: React.FC = () => {
 
             onAfterChange={(value: number) => {
               logToDescription(`onAfterChange ${label}: ${value}`);
-              if (value === formData[field]) {
+              if (value === currentValue {
                 logToDescription(`do nothing`);
                 return; // do nothing — prevents snap-back
               }
