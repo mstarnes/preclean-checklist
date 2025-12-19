@@ -16,6 +16,12 @@ code {
     monospace;
 }
 
+.slider-row, .react-slider-track, .react-slider thumb {
+  touch-action: pan-x;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 @media screen {
   .print-only {
     position: absolute;
