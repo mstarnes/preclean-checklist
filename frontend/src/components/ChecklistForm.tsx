@@ -326,8 +326,10 @@ const ChecklistForm: React.FC = () => {
             onAfterChange={(value: number) => {
               logToDescription(`onAfterChange ${label}: ${value}`);
               if (value === formData[field]) {
+                logToDescription(`do nothing`);
                 return; // do nothing — prevents snap-back
               }
+              logToDescription(`do something`);
 
               //if (debouncedCommit.current) {
               //  debouncedCommit.current.cancel();
