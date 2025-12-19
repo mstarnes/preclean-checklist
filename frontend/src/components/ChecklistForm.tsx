@@ -289,10 +289,6 @@ const ChecklistForm: React.FC = () => {
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
-     useEffect(() => {
-      return () => debouncedCommit.cancel(); // cleanup
-    }, [debouncedCommit]);
-
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
