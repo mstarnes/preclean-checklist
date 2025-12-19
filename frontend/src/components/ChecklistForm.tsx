@@ -289,8 +289,10 @@ const ChecklistForm: React.FC = () => {
             max={max}
             value={formData[field] as number}
             onChange={(value: number) => {
-              //console.log(value);
-              setFormData(prev => ({ ...prev, [field]: value }));
+              // Light fallback: commit only if different (catches missed onAfterChange on iOS)
+              if (value !== formData[field]) {
+                setFormData(prev => ({ ...prev, [field]: value }));
+              }
             }}
             onAfterChange={(value: number) => {
               //console.log([field].value);
