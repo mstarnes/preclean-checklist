@@ -296,7 +296,7 @@ const ChecklistForm: React.FC = () => {
         damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
       }));
     };
-
+    /*
     useEffect(() => {
       return () => {
         if (debouncedCommit.current) {
@@ -305,6 +305,7 @@ const ChecklistForm: React.FC = () => {
         }
       };
     }, []);
+    */
 
     return (
       <div className="flex items-center justify-between py-3">
