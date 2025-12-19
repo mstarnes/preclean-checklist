@@ -229,10 +229,12 @@ const ChecklistForm: React.FC = () => {
     >
   ) => {
     const { name, value, type } = e.target;
+    
     setFormData((prev) => ({
       ...prev,
       [name]:
         type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      damagesDescription: `${timestamp}: handleChange ${name} ${value}\n${prev.damagesDescription || ''}`,
     }));
   };
 
@@ -287,7 +289,7 @@ const ChecklistForm: React.FC = () => {
   // Helper to render a slider row
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
-    const currentValue = formData[field] as number;
+    const currentValue = prev.[field] as number;
 
     //const debouncedCommit = useRef<ReturnType<typeof debounce> | null>(null);
     const logToDescription = (message: string) => {
