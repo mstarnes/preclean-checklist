@@ -326,7 +326,7 @@ const ChecklistForm: React.FC = () => {
 
             onAfterChange={(value: number) => {
               logToDescription(`onAfterChange ${label}: ${value}`);
-              if (value === currentValue {
+              if (value === currentValue) {
                 logToDescription(`do nothing`);
                 return; // do nothing — prevents snap-back
               }
