@@ -316,7 +316,7 @@ const ChecklistForm: React.FC = () => {
               }
               debouncedCommit.current = debounce(() => {
                 setFormData(prev => ({ ...prev, [field]: value }));
-              }, 350); // ← 350ms hides the flicker
+              }, 450); // ← 350ms hides the flicker
               debouncedCommit.current();
             }}
 
