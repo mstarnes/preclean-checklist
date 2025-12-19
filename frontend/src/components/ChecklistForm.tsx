@@ -318,7 +318,7 @@ const ChecklistForm: React.FC = () => {
               // Schedule new commit — last one in 150ms wins (catches double-fire)
               debouncedCommit.current = debounce(() => {
                 setFormData(prev => ({ ...prev, [field]: value }));
-              }, 150);
+              }, 250);
 
               debouncedCommit.current();
             }}
