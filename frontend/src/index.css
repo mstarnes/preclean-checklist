@@ -22,12 +22,12 @@ code {
   -webkit-user-select: none;
   user-select: none;
 }
-/*
+
 .slider-container {
   touch-action: none;
   overscroll-behavior: contain;
 }
-*/
+
 @media screen {
   .print-only {
     position: absolute;
