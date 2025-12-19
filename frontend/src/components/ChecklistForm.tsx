@@ -146,6 +146,20 @@ const ChecklistForm: React.FC = () => {
   const [id, setId] = useState(edit || undefined);
 
   useEffect(() => {
+    const preventScroll = (e) => {
+      e.preventDefault();
+    };
+    document.addEventListener('touchmove', preventScroll, { passive: false});
+    document.addEventListener('touchstart', preventScroll, { passive: false});
+
+    return () => {
+      document.removeEventListener('touchmove', preventScroll);
+      document.removeEventListener('touchstart', preventScroll);
+    };
+
+  }, []);
+
+  useEffect(() => {
     if (id) {
       axios.get(`/api/checklists/${id}`).then((res) => {
         setFormData(res.data);
