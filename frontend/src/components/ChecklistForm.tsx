@@ -145,6 +145,14 @@ const ChecklistForm: React.FC = () => {
   const [isResetting, setIsResetting] = useState(false);
   const [id, setId] = useState(edit || undefined);
 
+  const logToDescription = (message: string) => {
+  const timestamp = new Date().toLocaleTimeString();
+    setFormData(prev => ({
+      ...prev,
+      damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
+    }));
+  };
+
   /*
   useEffect(() => {
     const preventScroll = (e: TouchEvent) => {
@@ -305,6 +313,7 @@ const ChecklistForm: React.FC = () => {
             max={max}
             value={formData[field] as number}
             onAfterChange={(value: number) => {
+              logToDescription(`onAfterChange ${label}: ${value}`);
               setFormData(prev => ({ ...prev, [field]: value }));
             }}
             onMouseUp={commitValue}  // fallback for desktop
