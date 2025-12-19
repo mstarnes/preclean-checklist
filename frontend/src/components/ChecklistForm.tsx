@@ -287,7 +287,12 @@ const ChecklistForm: React.FC = () => {
             min={min}
             max={max}
             value={formData[field] as number}
+            onChange={(value: number) => {
+              console.log([field].value);
+              //setFormData(prev => ({ ...prev, [field]: value }));
+            }}
             onAfterChange={(value: number) => {
+              //console.log([field].value);
               setFormData(prev => ({ ...prev, [field]: value }));
             }}
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
