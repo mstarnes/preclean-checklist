@@ -315,9 +315,9 @@ const ChecklistForm: React.FC = () => {
                 return; // do nothing — prevents snap-back
               }
 
-              if (debouncedCommit.current) {
-                debouncedCommit.current.cancel();
-              }
+              //if (debouncedCommit.current) {
+              //  debouncedCommit.current.cancel();
+              //}
               debouncedCommit.current = debounce(() => {
                 setFormData(prev => ({ ...prev, [field]: value }));
               }, 100); // ← 350ms hides the flicker
