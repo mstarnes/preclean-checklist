@@ -289,10 +289,18 @@ const ChecklistForm: React.FC = () => {
     const { min, max } = getMinMax(field);
 
     const debouncedCommit = useRef<ReturnType<typeof debounce> | null>(null);
+    const logToDescription = (message: string) => {
+      const timestamp = new Date().toLocaleTimeString();
+      setFormData(prev => ({
+        ...prev,
+        damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
+      }));
+    };
 
     useEffect(() => {
       return () => {
         if (debouncedCommit.current) {
+          logToDescription(`debouncedCommit`)
           debouncedCommit.current.cancel();
         }
       };
@@ -301,7 +309,11 @@ const ChecklistForm: React.FC = () => {
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
-        <div className="flex items-center space-x-4 touch-none">
+        <div 
+          className="flex items-center space-x-4 touch-none"
+          onTouchStart={() => logToDescription(`touchstart ${label}`)}
+          onTouchEnd={() => logToDescription(`touchend ${label}`)}
+        >
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             className="w-40 h-10 relative slider-row slider-container"
@@ -311,6 +323,7 @@ const ChecklistForm: React.FC = () => {
             value={formData[field] as number}
 
             onAfterChange={(value: number) => {
+              logToDescription(`onAfterChange ${label}: ${value}`);
               if (value === formData[field]) {
                 return; // do nothing — prevents snap-back
               }
@@ -321,7 +334,7 @@ const ChecklistForm: React.FC = () => {
               debouncedCommit.current = debounce(() => {
                 setFormData(prev => ({ ...prev, [field]: value }));
               }, 100); // ← 350ms hides the flicker
-              //debouncedCommit.current();
+              debouncedCommit.current();
             }}
 
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
