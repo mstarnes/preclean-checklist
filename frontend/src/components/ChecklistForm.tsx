@@ -158,8 +158,8 @@ const ChecklistForm: React.FC = () => {
 
     return () => {
       sliderContainers.forEach(container => {
-        //(container as HTMLElement).removeEventListener('touchmove', preventScroll);
-        //(container as HTMLElement).removeEventListener('touchstart', preventScroll);
+        (container as HTMLElement).removeEventListener('touchmove', preventScroll);
+        (container as HTMLElement).removeEventListener('touchstart', preventScroll);
       });
     };
 

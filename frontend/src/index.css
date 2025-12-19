@@ -17,13 +17,13 @@ code {
     monospace;
 }
 
-.slider-row, .react-slider-track, .react-slider-thumb {
+.slider-container, .react-slider-track, .react-slider-thumb {
   touch-action: pan-x;
   -webkit-user-select: none;
   user-select: none;
 }
 /*
-.slider-row {
+.slider-container {
   touch-action: none;
   overscroll-behavior: contain;
 }
