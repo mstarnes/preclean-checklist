@@ -234,7 +234,7 @@ const ChecklistForm: React.FC = () => {
       ...prev,
       [name]:
         type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-      damagesDescription: `${timestamp}: handleChange ${name} ${value}\n${prev.damagesDescription || ''}`,
+      damagesDescription: `handleChange ${name} ${value}\n${prev.damagesDescription || ''}`,
     }));
   };
 
