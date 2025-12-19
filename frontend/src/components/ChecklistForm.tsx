@@ -145,13 +145,15 @@ const ChecklistForm: React.FC = () => {
   const [isResetting, setIsResetting] = useState(false);
   const [id, setId] = useState(edit || undefined);
 
+  /*
   const logToDescription = (message: string) => {
-  const timestamp = new Date().toLocaleTimeString();
-    setFormData(prev => ({
-      ...prev,
-      damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
-    }));
+    const timestamp = new Date().toLocaleTimeString();
+      setFormData(prev => ({
+        ...prev,
+        damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
+      }));
   };
+  */
 
   /*
   useEffect(() => {
@@ -287,21 +289,7 @@ const ChecklistForm: React.FC = () => {
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
-    // Debounced commit to handle double-fire
-    const debouncedCommit = useCallback(
-      debounce((value: number) => {
-        setFormData(prev => {
-          // Only update if different (prevents revert loop)
-          if (prev[field] !== value) {
-            return { ...prev, [field]: value };
-          }
-          return prev;
-        });
-      }, 100), // 100ms window catches double-fire
-      [field]
-    );
-
-    useEffect(() => {
+     useEffect(() => {
       return () => debouncedCommit.cancel(); // cleanup
     }, [debouncedCommit]);
 
@@ -317,7 +305,17 @@ const ChecklistForm: React.FC = () => {
             max={max}
             value={formData[field] as number}
             onAfterChange={(value: number) => {
-              debouncedCommit(value);
+              // Debounce inline — only last value in 100ms wins
+              if (debouncedCommit.current) debouncedCommit.current.cancel();
+              debouncedCommit.current = debounce(() => {
+                setFormData(prev => {
+                  if (prev[field] !== value) {
+                    return { ...prev, [field]: value };
+                  }
+                  return prev;
+                });
+              }, 100);
+              debouncedCommit.current();
             }}
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
