@@ -149,12 +149,18 @@ const ChecklistForm: React.FC = () => {
     const preventScroll = (e: TouchEvent) => {
       e.preventDefault();
     };
-    document.addEventListener('touchmove', preventScroll, { passive: false});
-    document.addEventListener('touchstart', preventScroll, { passive: false});
+
+    const sliderContainers = document.querySelectorAll('.slider-row'); // add class "slider-container" to your slider wrapper div
+    sliderContainers.forEach(container => {
+      container.addEventListener('touchmove', preventScroll, { passive: false});
+      container.addEventListener('touchstart', preventScroll, { passive: false});
+    });
 
     return () => {
-      document.removeEventListener('touchmove', preventScroll);
-      document.removeEventListener('touchstart', preventScroll);
+      sliderContainers.forEach(container => {
+        container.removeEventListener('touchmove', preventScroll);
+        container.removeEventListener('touchstart', preventScroll);
+      });
     };
 
   }, []);
