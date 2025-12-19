@@ -151,7 +151,7 @@ const ChecklistForm: React.FC = () => {
       e.preventDefault();
     };
 
-    const sliderContainers = document.querySelectorAll('.slider-container'); // add class "slider-container" to your slider wrapper div
+    const sliderThumbs = document.querySelectorAll('.slider-thumb'); // add class "slider-thumb" to your slider wrapper div
     sliderContainers.forEach(container => {
       (container as HTMLElement).addEventListener('touchmove', preventScroll, { passive: false});
       (container as HTMLElement).addEventListener('touchstart', preventScroll, { passive: false});
@@ -289,8 +289,8 @@ const ChecklistForm: React.FC = () => {
             max={max}
             value={formData[field] as number}
             onChange={(value: number) => {
-              console.log(value);
-              //setFormData(prev => ({ ...prev, [field]: value }));
+              //console.log(value);
+              setFormData(prev => ({ ...prev, [field]: value }));
             }}
             onAfterChange={(value: number) => {
               //console.log([field].value);
@@ -299,7 +299,7 @@ const ChecklistForm: React.FC = () => {
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
-                className="h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white -outline-none focus:outline-none"
+                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white -outline-none focus:outline-none"
                 style={{
                   ...props.style,
                   top: '50%',
