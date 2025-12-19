@@ -146,7 +146,7 @@ const ChecklistForm: React.FC = () => {
   const [id, setId] = useState(edit || undefined);
 
   useEffect(() => {
-    const preventScroll = (e) => {
+    const preventScroll = (e: TouchEvent) => {
       e.preventDefault();
     };
     document.addEventListener('touchmove', preventScroll, { passive: false});
