@@ -22,6 +22,11 @@ code {
   user-select: none;
 }
 
+.slider-row {
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
 @media screen {
   .print-only {
     position: absolute;
