@@ -145,6 +145,7 @@ const ChecklistForm: React.FC = () => {
   const [isResetting, setIsResetting] = useState(false);
   const [id, setId] = useState(edit || undefined);
 
+  /*
   useEffect(() => {
     const preventScroll = (e: TouchEvent) => {
       e.preventDefault();
@@ -164,6 +165,7 @@ const ChecklistForm: React.FC = () => {
     };
 
   }, []);
+  */
 
   useEffect(() => {
     if (id) {
