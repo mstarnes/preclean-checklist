@@ -331,10 +331,11 @@ const ChecklistForm: React.FC = () => {
               //if (debouncedCommit.current) {
               //  debouncedCommit.current.cancel();
               //}
-              debouncedCommit.current = debounce(() => {
-                setFormData(prev => ({ ...prev, [field]: value }));
-              }, 1); // ← 350ms hides the flicker
-              debouncedCommit.current();
+              setFormData(prev => ({ ...prev, [field]: value }));
+              //debouncedCommit.current = debounce(() => {
+              //  setFormData(prev => ({ ...prev, [field]: value }));
+              //}, 1); // ← 350ms hides the flicker
+              //debouncedCommit.current();
             }}
 
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
