@@ -1,5 +1,5 @@
 // frontend/src/components/ChecklistForm.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -277,31 +277,42 @@ const ChecklistForm: React.FC = () => {
   // Helper to render a slider row
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
+    const sliderRef = useRef<HTMLDivElement>(null);
+
+    const commitValue = () => {
+      if (sliderRef.current) {
+        // Force commit current live value (from internal state via data attribute or props)
+        // react-slider doesn't expose live value externally, so use the thumb's text as proxy
+        const thumb = sliderRef.current.querySelector('.slider-thumb');
+        if (thumb) {
+          const liveValue = Number(thumb.textContent);
+          if (!isNaN(liveValue) && liveValue !== formData[field]) {
+            setFormData(prev => ({ ...prev, [field]: liveValue }));
+          }
+        }
+      }
+    };
+
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
-        <div className="flex items-center space-x-4 touch-none">
+        <div className="flex items-center space-x-4 touch-none" ref={sliderRef}>
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
-            className="w-40 h-10 relative slider-row slider-container" // height for better alignment
+            className="w-40 h-10 relative slider-row"
             trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
             value={formData[field] as number}
-            onChange={(value: number) => {
-              // Light fallback: commit only if different (catches missed onAfterChange on iOS)
-              if (value !== formData[field]) {
-                setFormData(prev => ({ ...prev, [field]: value }));
-              }
-            }}
             onAfterChange={(value: number) => {
-              //console.log([field].value);
               setFormData(prev => ({ ...prev, [field]: value }));
             }}
+            onMouseUp={commitValue}  // fallback for desktop
+            onTouchEnd={commitValue} // fallback for iOS PWA
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
-                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white -outline-none focus:outline-none"
+                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
                 style={{
                   ...props.style,
                   top: '50%',
@@ -311,12 +322,11 @@ const ChecklistForm: React.FC = () => {
                 {state.valueNow}
               </div>
             )}
-          />          
+          />
         </div>
       </div>
     );
   };
-
   
 
   const handleReset = async () => {
