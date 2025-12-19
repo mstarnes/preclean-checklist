@@ -278,9 +278,9 @@ const ChecklistForm: React.FC = () => {
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
-        <div className="flex items-center space-x-4 touch-none slider-container">
+        <div className="flex items-center space-x-4 touch-none">
           <Slider
-            className="w-40 h-10 relative slider-row"  // height for better alignment
+            className="w-40 h-10 relative slider-row slider-container" // height for better alignment
             trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
