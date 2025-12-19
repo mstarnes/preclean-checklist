@@ -265,7 +265,9 @@ const ChecklistForm: React.FC = () => {
             max={max}
             value={formData[field] as number}
             onChange={(value: number) => {
-              setFormData(prev => ({ ...prev, [field]: value }));
+              if (value !== formData[field]) {
+                setFormData(prev => ({ ...prev, [field]: value }));
+              }
             }}
             onAfterChange={(value: number) => {
               setFormData(prev => ({ ...prev, [field]: value }));
