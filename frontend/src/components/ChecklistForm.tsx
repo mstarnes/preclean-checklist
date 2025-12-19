@@ -310,19 +310,16 @@ const ChecklistForm: React.FC = () => {
             max={max}
             value={formData[field] as number}
             onAfterChange={(value: number) => {
-              // Cancel any pending debounce
+              // Cancel previous pending commit
               if (debouncedCommit.current) {
                 debouncedCommit.current.cancel();
               }
-              // Create new debounced commit
+
+              // Schedule new commit — last one in 150ms wins (catches double-fire)
               debouncedCommit.current = debounce(() => {
-                setFormData(prev => {
-                  if (prev[field] !== value) {
-                    return { ...prev, [field]: value };
-                  }
-                  return prev;
-                });
-              }, 100);
+                setFormData(prev => ({ ...prev, [field]: value }));
+              }, 150);
+
               debouncedCommit.current();
             }}
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
