@@ -17,6 +17,7 @@ code {
     monospace;
 }
 
+/*
 .slider-container, .react-slider-track, .react-slider-thumb {
   touch-action: pan-x;
   -webkit-user-select: none;
@@ -27,6 +28,7 @@ code {
   touch-action: none;
   overscroll-behavior: contain;
 }
+*/
 
 @media screen {
   .print-only {
