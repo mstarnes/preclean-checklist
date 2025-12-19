@@ -236,9 +236,9 @@ const Summary: React.FC = () => {
         </table>
       </div>
 
-      {/* Printable version — visible in DOM for iOS compatibility, hidden visually on screen */}
-      <div ref={componentRef} className="fixed inset-0 -z-50 overflow-hidden print:z-auto print:fixed print:inset-auto print:overflow-visible">
-        <div className="p-4 max-w-4xl mx-auto print:p-8">
+      {/* Printable version — overlaid behind main content on screen, full for print */}
+      <div ref={componentRef} className="fixed inset-0 -z-10 bg-white print:z-auto print:relative print:inset-auto print:bg-transparent">
+        <div className="p-4 print:p-8 max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-6 print:text-3xl">Restock Summary</h2>
           <table className="w-full border-collapse text-sm print:text-base">
             <thead className="bg-gray-100 print:bg-gray-200">
@@ -252,7 +252,7 @@ const Summary: React.FC = () => {
             </thead>
             <tbody>
               {items.map(key => (
-                <tr key={key} className={data.aggregated[key] > 0 ? 'bg-red-50' : ''}>
+                <tr key={key} className={data.aggregated[key] > 0 ? 'bg-red-50 print:bg-red-50' : ''}>
                   <td className="border border-gray-300 p-2 print:p-3">{labels[key as keyof typeof labels] || key}</td>
                   {cabins.map(cabin => (
                     <td key={cabin} className="border border-gray-300 p-2 text-center print:p-3">
@@ -267,7 +267,7 @@ const Summary: React.FC = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div>      
     </div>
   );
 };
