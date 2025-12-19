@@ -150,7 +150,7 @@ const ChecklistForm: React.FC = () => {
       e.preventDefault();
     };
 
-    const sliderContainers = document.querySelectorAll('.slider-row'); // add class "slider-container" to your slider wrapper div
+    const sliderContainers = document.querySelectorAll('.slider-container'); // add class "slider-container" to your slider wrapper div
     sliderContainers.forEach(container => {
       container.addEventListener('touchmove', preventScroll, { passive: false});
       container.addEventListener('touchstart', preventScroll, { passive: false});
@@ -278,7 +278,7 @@ const ChecklistForm: React.FC = () => {
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
-        <div className="flex items-center space-x-4 touch-none">
+        <div className="flex items-center space-x-4 touch-none slider-container">
           <Slider
             className="w-40 h-10 relative slider-row"  // height for better alignment
             trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
