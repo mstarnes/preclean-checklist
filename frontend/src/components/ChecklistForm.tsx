@@ -314,10 +314,10 @@ const ChecklistForm: React.FC = () => {
             logToDescription( "live: " + live );
             setOptimisticValue(live);
             setFormData(prev => ({ ...prev, [field]: live }));
-          }
         }
       }
     };
+    
 
     return (
       <div className="flex items-center justify-between py-3">
