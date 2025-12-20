@@ -293,12 +293,21 @@ const ChecklistForm: React.FC = () => {
 
     const sliderContainerRef = useRef<HTMLDivElement>(null);
 
+    const logToDescription = (message: string) => {
+      const timestamp = new Date().toLocaleTimeString();
+      setFormData(prev => ({
+        ...prev,
+        damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
+      }));
+    };
+
     const commitLiveValue = () => {
       if (sliderContainerRef.current) {
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
           if (!isNaN(live)) {
+            logToDescription("Committing live value: " + live);
             setFormData(prev => ({ ...prev, [field]: live }));
           }
         }
