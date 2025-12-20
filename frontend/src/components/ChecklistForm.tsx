@@ -305,7 +305,7 @@ const ChecklistForm: React.FC = () => {
     let initialValue = useRef(0);
     const setInitialValue = () => {
       console.log("setInitialValue");
-      alert(initialValue.current);
+      //alert(initialValue.current);
       if (initialValue.current > 0 ) {
         return;
       }
@@ -332,6 +332,7 @@ const ChecklistForm: React.FC = () => {
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
           logToDescription(`Committing first live value for ${label}: ${live}`);
+          alert( live + " " + initialValue.current);
           if (live !== initialValue.current) {
             setFormData(prev => ({ ...prev, [field]: live }));
           }
