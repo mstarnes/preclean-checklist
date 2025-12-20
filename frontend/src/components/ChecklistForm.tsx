@@ -326,7 +326,7 @@ const ChecklistForm: React.FC = () => {
 
             onAfterChange={(value: number) => {
               logToDescription(`onAfterChange ${label}: ${value}`);
-              logToDescription(`onAfterChange `)
+              logToDescription("onAfterChange " + JSON.stringify(formData));
               if (value === formData[field]) {
                 logToDescription(`do nothing`);
                 return; // do nothing — prevents snap-back
@@ -336,7 +336,7 @@ const ChecklistForm: React.FC = () => {
               //if (debouncedCommit.current) {
               //  debouncedCommit.current.cancel();
               //}
-              setFormData(prev => ({ ...prev, [field]: value }));
+              logToDescription("setFormData " + setFormData(prev => ({ ...prev, [field]: value })));
               //debouncedCommit.current = debounce(() => {
               //  setFormData(prev => ({ ...prev, [field]: value }));
               //}, 1); // ← 350ms hides the flicker
