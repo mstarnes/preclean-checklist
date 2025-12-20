@@ -288,7 +288,7 @@ const ChecklistForm: React.FC = () => {
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
-    const sliderContainerRef = useRef<HTMLDivElement>(null);
+    const [optimisticValue, setOptimisticValue] = useState<number>(formData[field] as number);
 
     const logToDescription = (message: string) => {
       const timestamp = new Date().toLocaleTimeString();
@@ -298,17 +298,22 @@ const ChecklistForm: React.FC = () => {
       }));
     };
 
-    const commitLiveValue = () => {
-      logToDescription( "commitLiveValue" );
-      logToDescription( JSON.stringify(sliderContainerRef));
-      if (sliderContainerRef.current) {
-        logToDescription( JSON.stringify(sliderContainerRef));
-        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
-        logToDescription( JSON.stringify(thumb) );
+    useEffect(() => {
+      setOptimisticValue(formData[field] as number);
+    }, [formData[field]]);
+
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const forceCommit = () => {
+      logToDescription( "forceCommit" );
+      if (containerRef.current) {
+        logToDescription( "containerRef.current" );
+        const thumb = containerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
-          const liveValue = Number(thumb.textContent.trim());
-          if (!isNaN(liveValue)) {
-            setFormData(prev => ({ ...prev, [field]: liveValue }));
+          const live = Number(thumb.textContent.trim());
+            logToDescription( "live: " + live );
+            setOptimisticValue(live);
+            setFormData(prev => ({ ...prev, [field]: live }));
           }
         }
       }
@@ -317,20 +322,14 @@ const ChecklistForm: React.FC = () => {
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
-        <div 
-          className="flex items-center space-x-4 touch-none"
-          ref={sliderContainerRef}
-          onTouchEnd={commitLiveValue}   // iOS PWA release
-          onMouseUp={commitLiveValue}    // Desktop fallback
-        >
-          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
+        <div className="flex items-center space-x-4 touch-none" ref={containerRef} onTouchEnd={forceCommit} onMouseUp={forceCommit}>
+          <span className="text-xl font-bold w-12 text-center">{optimisticValue}</span>
           <Slider
             className="w-40 h-10 relative slider-row slider-container"
             trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
-            value={formData[field] as number}
-            // No onAfterChange — manual commit on release
+            value={optimisticValue}  // use optimistic for controlled
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
