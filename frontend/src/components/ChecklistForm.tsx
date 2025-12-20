@@ -332,7 +332,7 @@ const ChecklistForm: React.FC = () => {
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
           logToDescription(`Committing first live value for ${label}: ${live}`);
-          alert( live + " " + initialValue.current);
+          // alert( live + " " + initialValue.current);
           if (live !== initialValue.current) {
             setFormData(prev => ({ ...prev, [field]: live }));
           }
@@ -342,7 +342,7 @@ const ChecklistForm: React.FC = () => {
       setTimeout(() => {
         committing.current = false;
         logToDescription(`Semaphore reset for ${label}`);
-      }, 400); // longer window to cover the double call
+      }, 100); // longer window to cover the double call
     };
 
     return (
