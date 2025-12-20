@@ -286,7 +286,7 @@ const ChecklistForm: React.FC = () => {
 
   const logToDescription = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    console.log(`${timestamp}: ${message}\n${prev.damagesDescription || ''}`);
+    console.log(`${timestamp}: ${message}`);
     /*
     setFormData(prev => ({
       ...prev,
