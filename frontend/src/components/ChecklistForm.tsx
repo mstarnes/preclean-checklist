@@ -299,6 +299,7 @@ const ChecklistForm: React.FC = () => {
     };
 
     const commitLiveValue = () => {
+      logToDescription( "commitLiveValue" );
       if (sliderContainerRef.current) {
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
         logToDescription( JSON.stringify(thumb) );
