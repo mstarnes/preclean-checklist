@@ -344,9 +344,6 @@ const ChecklistForm: React.FC = () => {
           className="flex items-center space-x-4 touch-none"
           ref={sliderContainerRef}
           onTouchEnd={forceCommit}
-          onTouchStart={setInitialValue}
-          onMouseUp={forceCommit}
-          onMouseDown={setInitialValue}
         >
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
@@ -354,6 +351,7 @@ const ChecklistForm: React.FC = () => {
             trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
+            onAfterChange={forceCommit}
             value={formData[field] as number}
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
