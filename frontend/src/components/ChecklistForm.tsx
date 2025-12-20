@@ -284,15 +284,16 @@ const ChecklistForm: React.FC = () => {
     }
   };
 
-  /*
   const logToDescription = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
+    console.log(`${timestamp}: ${message}\n${prev.damagesDescription || ''}`);
+    /*
     setFormData(prev => ({
       ...prev,
       damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
     }));
+    */
   };
-  */
 
   // Helper to render a slider row
 
@@ -309,31 +310,32 @@ const ChecklistForm: React.FC = () => {
     }
 
     const forceCommit = () => {
-      //logToDescription(`forceCommit called for ${label}`);
+      logToDescription(`forceCommit called for ${label}`);
 
       if (committing.current) {
-        //logToDescription(`Second forceCommit blocked for ${label}`);
+        logToDescription(`Second forceCommit blocked for ${label}`);
         return; // block the entire second call
       }
 
       committing.current = true;
-      //logToDescription(`Semaphore set for ${label}`);
+      logToDescription(`Semaphore set for ${label}`);
 
-      setTimeout(() => {
-        if (sliderContainerRef.current) {
-          //logToDescription(`containerRef.current found for ${label}`);
+      if (sliderContainerRef.current) {
+        logToDescription(`containerRef.current found for ${label}`);
 
-          const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
-          if (thumb && thumb.textContent) {
-            const live = Number(thumb.textContent.trim());
-            //logToDescription(`Committing first live value for ${label}: ${live}`);
-            if (live !== initialValue.current) {
-              setFormData(prev => ({ ...prev, [field]: live }));
-            }
+        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
+        if (thumb && thumb.textContent) {
+          const live = Number(thumb.textContent.trim());
+          logToDescription(`Committing first live value for ${label}: ${live}`);
+          if (live !== initialValue.current) {
+            setFormData(prev => ({ ...prev, [field]: live }));
           }
         }
+      }
+
+      setTimeout(() => {
         committing.current = false;
-        //logToDescription(`Semaphore reset for ${label}`);
+        logToDescription(`Semaphore reset for ${label}`);
       }, 400); // longer window to cover the double call
     };
 
