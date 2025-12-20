@@ -285,62 +285,37 @@ const ChecklistForm: React.FC = () => {
   };
 
   // Helper to render a slider row
+
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
-    const [optimisticValue, setOptimisticValue] = useState<number>(formData[field] as number);
+    const initialValue = formData[field] as number;
 
-    const logToDescription = (message: string) => {
-      const timestamp = new Date().toLocaleTimeString();
-      setFormData(prev => ({
-        ...prev,
-        damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
-      }));
-    };
+    const sliderContainerRef = useRef<HTMLDivElement>(null);
 
-    // Extract the current value for dependency
-    const currentFieldValue = formData[field] as number;
-
-    useEffect(() => {
-      setOptimisticValue(currentFieldValue);
-    }, [currentFieldValue]);
-
-    const containerRef = useRef<HTMLDivElement>(null);
-    const isCommitting = useRef(false);
-
-    const forceCommit = () => {
-      if (isCommitting.current) {
-        logToDescription("forceCommit ignored (already committing)");
-        return; // ignore second call
-      }
-
-      isCommitting.current = true;
-
-      if (containerRef.current) {
-        const thumb = containerRef.current.querySelector('.slider-thumb');
+    const commitLiveValue = () => {
+      if (sliderContainerRef.current) {
+        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
-          logToDescription("Committing live value: " + live);
-          setFormData(prev => ({ ...prev, [field]: live }));
+          if (!isNaN(live)) {
+            setFormData(prev => ({ ...prev, [field]: live }));
+          }
         }
       }
-
-      setTimeout(() => {
-        isCommitting.current = false;
-      }, 500); // window to ignore the second call
     };
 
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
-        <div className="flex items-center space-x-4 touch-none" ref={containerRef} onTouchEnd={forceCommit} onMouseUp={forceCommit}>
-          <span className="text-xl font-bold w-12 text-center">{optimisticValue}</span>
+        <div className="flex items-center space-x-4 touch-none" ref={sliderContainerRef} onTouchEnd={commitLiveValue} onMouseUp={commitLiveValue}>
+          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             className="w-40 h-10 relative slider-row slider-container"
             trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
-            value={optimisticValue}  // use optimistic for controlled
+            defaultValue={initialValue}  // uncontrolled — no value prop
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
