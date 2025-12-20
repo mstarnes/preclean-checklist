@@ -327,7 +327,7 @@ const ChecklistForm: React.FC = () => {
 
       setTimeout(() => {
         isCommitting.current = false;
-      }, 200); // window to ignore the second call
+      }, 500); // window to ignore the second call
     };
 
     return (
