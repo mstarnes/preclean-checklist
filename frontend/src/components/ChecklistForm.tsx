@@ -355,7 +355,9 @@ const ChecklistForm: React.FC = () => {
             trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
+            onTouchEnd={forceCommit}
             onTouchStart={setInitialValue}
+            onBeforeChange={setInitialValue}
             onAfterChange={forceCommit}
             value={formData[field] as number}
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
