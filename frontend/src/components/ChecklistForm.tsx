@@ -306,21 +306,29 @@ const ChecklistForm: React.FC = () => {
     }, [currentFieldValue]);
 
     const containerRef = useRef<HTMLDivElement>(null);
+    const isCommitting = useRef(false);
 
     const forceCommit = () => {
-      logToDescription( "forceCommit" );
+      if (isCommitting.current) {
+        logToDescription("forceCommit ignored (already committing)");
+        return; // ignore second call
+      }
+
+      isCommitting.current = true;
+
       if (containerRef.current) {
-        logToDescription( "containerRef.current" );
         const thumb = containerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
-            logToDescription( "live: " + live );
-            setOptimisticValue(live);
-            setFormData(prev => ({ ...prev, [field]: live }));
+          logToDescription("Committing live value: " + live);
+          setFormData(prev => ({ ...prev, [field]: live }));
         }
       }
+
+      setTimeout(() => {
+        isCommitting.current = false;
+      }, 200); // window to ignore the second call
     };
-    
 
     return (
       <div className="flex items-center justify-between py-3">
