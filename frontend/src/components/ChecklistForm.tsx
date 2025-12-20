@@ -283,7 +283,7 @@ const ChecklistForm: React.FC = () => {
         return { min: 0, max: 1 };
     }
   };
-  
+
   /*
   const logToDescription = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
@@ -301,6 +301,17 @@ const ChecklistForm: React.FC = () => {
 
     const sliderContainerRef = useRef<HTMLDivElement>(null);
     const committing = useRef(false);
+    let initialValue = useRef(0);
+    const setInitialValue = () => {
+      console.log("setInitialValue");
+      if (sliderContainerRef.current) {
+        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
+        if (thumb && thumb.textContent) {
+          initialValue.current = Number(thumb.textContent.trim());
+          console.log("setInitialValue set");
+        }
+      }
+    }
 
     const forceCommit = () => {
       //logToDescription(`forceCommit called for ${label}`);
@@ -321,7 +332,9 @@ const ChecklistForm: React.FC = () => {
           if (thumb && thumb.textContent) {
             const live = Number(thumb.textContent.trim());
             //logToDescription(`Committing first live value for ${label}: ${live}`);
-            setFormData(prev => ({ ...prev, [field]: live }));
+            if (live !== initialValue.current) {
+              setFormData(prev => ({ ...prev, [field]: live }));
+            }
           }
         }
         committing.current = false;
@@ -336,6 +349,7 @@ const ChecklistForm: React.FC = () => {
           className="flex items-center space-x-4 touch-none"
           ref={sliderContainerRef}
           onTouchEnd={forceCommit}
+          onTouchStart={setInitialValue}
           onMouseUp={forceCommit}
         >
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
