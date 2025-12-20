@@ -291,8 +291,8 @@ const ChecklistForm: React.FC = () => {
     const lastCommittedValue = useRef<number>(formData[field] as number);
 
     useEffect(() => {
-      lastCommittedValue.current = field as number;
-    }, [field as number]);
+      lastCommittedValue.current = formData[field] as number;
+    }, [formData[field]]);
 
     //const debouncedCommit = useRef<ReturnType<typeof debounce> | null>(null);
     const logToDescription = (message: string) => {
