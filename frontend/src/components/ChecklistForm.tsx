@@ -305,6 +305,9 @@ const ChecklistForm: React.FC = () => {
     let initialValue = useRef(0);
     const setInitialValue = () => {
       console.log("setInitialValue");
+      if (initialValue > 0 ) {
+        return;
+      }
       initialValue.current = formData[field] as number;
       //alert(initialValue.current);
       console.log("setInitialValue set");
