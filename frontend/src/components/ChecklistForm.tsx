@@ -344,6 +344,7 @@ const ChecklistForm: React.FC = () => {
           className="flex items-center space-x-4 touch-none"
           ref={sliderContainerRef}
           onTouchEnd={forceCommit}
+          onTouchStart={setInitialValue}
         >
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
