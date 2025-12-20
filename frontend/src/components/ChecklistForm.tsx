@@ -234,7 +234,6 @@ const ChecklistForm: React.FC = () => {
       ...prev,
       [name]:
         type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-      damagesDescription: `handleChange ${name} ${value}\n${prev.damagesDescription || ''}`,
     }));
   };
 
@@ -327,6 +326,7 @@ const ChecklistForm: React.FC = () => {
 
             onAfterChange={(value: number) => {
               logToDescription(`onAfterChange ${label}: ${value}`);
+              logToDescription(`onAfterChange `)
               if (value === formData[field]) {
                 logToDescription(`do nothing`);
                 return; // do nothing — prevents snap-back
