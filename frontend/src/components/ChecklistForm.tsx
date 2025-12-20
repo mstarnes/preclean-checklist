@@ -288,6 +288,11 @@ const ChecklistForm: React.FC = () => {
   // Helper to render a slider row
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
+    const lastCommittedValue = useRef<number>(formData[field] as number);
+
+    useEffect(() => {
+      lastCommittedValue.current = formData[field] as number;
+    }, [formData[field]]);
 
     //const debouncedCommit = useRef<ReturnType<typeof debounce> | null>(null);
     const logToDescription = (message: string) => {
@@ -326,21 +331,13 @@ const ChecklistForm: React.FC = () => {
 
             onAfterChange={(value: number) => {
               logToDescription(`onAfterChange ${label}: ${value}`);
-              logToDescription("onAfterChange " + JSON.stringify(formData));
-              if (value === formData[field]) {
-                logToDescription(`do nothing`);
-                return; // do nothing — prevents snap-back
+              // If this is the revert fire (value matches last committed), ignore it
+              if (value === lastCommittedValue.current) {
+                return;
               }
-              logToDescription(`do something`);
 
-              //if (debouncedCommit.current) {
-              //  debouncedCommit.current.cancel();
-              //}
-              logToDescription("setFormData " + setFormData(prev => ({ ...prev, [field]: value })));
-              //debouncedCommit.current = debounce(() => {
-              //  setFormData(prev => ({ ...prev, [field]: value }));
-              //}, 1); // ← 350ms hides the flicker
-              //debouncedCommit.current();
+              // Commit the new value
+              setFormData(prev => ({ ...prev, [field]: value }));
             }}
 
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
