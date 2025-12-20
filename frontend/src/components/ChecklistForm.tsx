@@ -286,43 +286,32 @@ const ChecklistForm: React.FC = () => {
 
 
   // Helper to render a slider row
+  
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
-    const lastCommittedValue = useRef<number>(formData[field] as number);
 
-    // Extract the current value for dependency
-    const currentFieldValue = formData[field] as number;
+    const sliderContainerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-      lastCommittedValue.current = currentFieldValue;
-    }, [currentFieldValue]); // simple dependency — warning gone
-
-    //const debouncedCommit = useRef<ReturnType<typeof debounce> | null>(null);
-    const logToDescription = (message: string) => {
-      const timestamp = new Date().toLocaleTimeString();
-      setFormData(prev => ({
-        ...prev,
-        damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
-      }));
-    };
-    /*
-    useEffect(() => {
-      return () => {
-        if (debouncedCommit.current) {
-          logToDescription(`debouncedCommit`)
-          debouncedCommit.current.cancel();
+    const commitLiveValue = () => {
+      if (sliderContainerRef.current) {
+        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
+        if (thumb && thumb.textContent) {
+          const liveValue = Number(thumb.textContent.trim());
+          if (!isNaN(liveValue)) {
+            setFormData(prev => ({ ...prev, [field]: liveValue }));
+          }
         }
-      };
-    }, []);
-    */
+      }
+    };
 
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
         <div 
-          className="flex items-center space-x-4 touch-none"
-          onTouchStart={() => logToDescription(`touchstart ${label}`)}
-          onTouchEnd={() => logToDescription(`touchend ${label}`)}
+          className="flex items-center space-x-4 touch-none" 
+          ref={sliderContainerRef}
+          onTouchEnd={commitLiveValue}   // iOS PWA release
+          onMouseUp={commitLiveValue}     // Desktop release fallback
         >
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
@@ -331,18 +320,7 @@ const ChecklistForm: React.FC = () => {
             min={min}
             max={max}
             value={formData[field] as number}
-
-            onAfterChange={(value: number) => {
-              logToDescription(`onAfterChange ${label}: ${value}`);
-              // If this is the revert fire (value matches last committed), ignore it
-              if (value === lastCommittedValue.current) {
-                return;
-              }
-
-              // Commit the new value
-              setFormData(prev => ({ ...prev, [field]: value }));
-            }}
-
+            // Remove onAfterChange entirely — we handle commit manually
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
@@ -356,12 +334,11 @@ const ChecklistForm: React.FC = () => {
                 {state.valueNow}
               </div>
             )}
-          />          
+          />
         </div>
       </div>
     );
   };
-
 
   const handleReset = async () => {
     if (id) {
