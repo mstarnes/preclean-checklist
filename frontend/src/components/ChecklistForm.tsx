@@ -309,6 +309,7 @@ const ChecklistForm: React.FC = () => {
       }
 
       committing.current = true;
+      logToDescription(`Semaphore set for ${label}`);
 
       if (sliderContainerRef.current) {
         logToDescription(`containerRef.current found for ${label}`);
