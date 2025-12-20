@@ -283,7 +283,8 @@ const ChecklistForm: React.FC = () => {
         return { min: 0, max: 1 };
     }
   };
-
+  
+  /*
   const logToDescription = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
     setFormData(prev => ({
@@ -291,7 +292,8 @@ const ChecklistForm: React.FC = () => {
       damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
     }));
   };
-  
+  */
+
   // Helper to render a slider row
 
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
