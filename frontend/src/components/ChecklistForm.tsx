@@ -290,10 +290,12 @@ const ChecklistForm: React.FC = () => {
     const { min, max } = getMinMax(field);
     const lastCommittedValue = useRef<number>(formData[field] as number);
 
+    // Extract the current value for dependency
+    const currentFieldValue = formData[field] as number;
+
     useEffect(() => {
-      const currentValue = formData[field] as number;
-      lastCommittedValue.current = currentValue;
-    }, [formData[field], field]); // add field to deps (safe, it's constant per instance)
+      lastCommittedValue.current = currentFieldValue;
+    }, [currentFieldValue]); // simple dependency — warning gone
 
     //const debouncedCommit = useRef<ReturnType<typeof debounce> | null>(null);
     const logToDescription = (message: string) => {
