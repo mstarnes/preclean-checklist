@@ -346,7 +346,7 @@ const ChecklistForm: React.FC = () => {
           onTouchEnd={forceCommit}
           onTouchStart={setInitialValue}
           onMouseUp={forceCommit}
-          onMouseUp={setInitialValue}
+          onMouseDown={setInitialValue}
         >
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
