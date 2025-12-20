@@ -298,9 +298,12 @@ const ChecklistForm: React.FC = () => {
       }));
     };
 
+    // Extract the current value for dependency
+    const currentFieldValue = formData[field] as number;
+
     useEffect(() => {
-      setOptimisticValue(formData[field] as number);
-    }, [formData[field]]);
+      setOptimisticValue(currentFieldValue);
+    }, [currentFieldValue]);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
