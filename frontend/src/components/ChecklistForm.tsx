@@ -284,17 +284,24 @@ const ChecklistForm: React.FC = () => {
     }
   };
 
-
   // Helper to render a slider row
-  
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
     const sliderContainerRef = useRef<HTMLDivElement>(null);
 
+    const logToDescription = (message: string) => {
+      const timestamp = new Date().toLocaleTimeString();
+      setFormData(prev => ({
+        ...prev,
+        damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
+      }));
+    };
+
     const commitLiveValue = () => {
       if (sliderContainerRef.current) {
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
+        logToDescription( JSON.stringify(thumb) );
         if (thumb && thumb.textContent) {
           const liveValue = Number(thumb.textContent.trim());
           if (!isNaN(liveValue)) {
@@ -308,10 +315,10 @@ const ChecklistForm: React.FC = () => {
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
         <div 
-          className="flex items-center space-x-4 touch-none" 
+          className="flex items-center space-x-4 touch-none"
           ref={sliderContainerRef}
           onTouchEnd={commitLiveValue}   // iOS PWA release
-          onMouseUp={commitLiveValue}     // Desktop release fallback
+          onMouseUp={commitLiveValue}    // Desktop fallback
         >
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
@@ -320,7 +327,7 @@ const ChecklistForm: React.FC = () => {
             min={min}
             max={max}
             value={formData[field] as number}
-            // Remove onAfterChange entirely — we handle commit manually
+            // No onAfterChange — manual commit on release
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
