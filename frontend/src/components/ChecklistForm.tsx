@@ -284,47 +284,67 @@ const ChecklistForm: React.FC = () => {
     }
   };
 
+  const logToDescription = (message: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    setFormData(prev => ({
+      ...prev,
+      damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
+    }));
+  };
+  
   // Helper to render a slider row
 
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
-    const initialValue = formData[field] as number;
-
     const sliderContainerRef = useRef<HTMLDivElement>(null);
+    const committing = useRef(false);
 
-    const logToDescription = (message: string) => {
-      const timestamp = new Date().toLocaleTimeString();
-      setFormData(prev => ({
-        ...prev,
-        damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
-      }));
-    };
+    const forceCommit = () => {
+      logToDescription(`forceCommit called for ${label}`);
 
-    const commitLiveValue = () => {
+      if (committing.current) {
+        logToDescription(`Second forceCommit ignored for ${label} (semaphore blocked)`);
+        return;
+      }
+
+      committing.current = true;
+
       if (sliderContainerRef.current) {
+        logToDescription(`containerRef.current found for ${label}`);
+
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
-          if (!isNaN(live)) {
-            logToDescription("Committing live value: " + live);
-            setFormData(prev => ({ ...prev, [field]: live }));
-          }
+          logToDescription(`Committing first live value for ${label}: ${live}`);
+          setFormData(prev => ({ ...prev, [field]: live }));
+        } else {
+          logToDescription(`No thumb or text for ${label}`);
         }
       }
+
+      setTimeout(() => {
+        committing.current = false;
+        logToDescription(`Semaphore reset for ${label}`);
+      }, 300);
     };
 
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
-        <div className="flex items-center space-x-4 touch-none" ref={sliderContainerRef} onTouchEnd={commitLiveValue} onMouseUp={commitLiveValue}>
+        <div 
+          className="flex items-center space-x-4 touch-none"
+          ref={sliderContainerRef}
+          onTouchEnd={forceCommit}
+          onMouseUp={forceCommit}
+        >
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             className="w-40 h-10 relative slider-row slider-container"
             trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
-            defaultValue={initialValue}  // uncontrolled — no value prop
+            value={formData[field] as number}
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
