@@ -304,13 +304,8 @@ const ChecklistForm: React.FC = () => {
     let initialValue = useRef(0);
     const setInitialValue = () => {
       console.log("setInitialValue");
-      if (sliderContainerRef.current) {
-        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
-        if (thumb && thumb.textContent) {
-          initialValue.current = Number(thumb.textContent.trim());
-          console.log("setInitialValue set");
-        }
-      }
+      initialValue.current = formData[field] as number;
+      console.log("setInitialValue set");
     }
 
     const forceCommit = () => {
@@ -351,6 +346,7 @@ const ChecklistForm: React.FC = () => {
           onTouchEnd={forceCommit}
           onTouchStart={setInitialValue}
           onMouseUp={forceCommit}
+          onMouseUp={setInitialValue}
         >
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
