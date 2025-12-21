@@ -300,6 +300,7 @@ const ChecklistForm: React.FC = () => {
           <Slider
             value={formData[field] as number}
             onChange={(_, value) => {
+              addDebugLog("onChange: " + value);
               setFormData(prev => ({ ...prev, [field]: value as number }));
             }}
             min={min}
@@ -340,7 +341,7 @@ const ChecklistForm: React.FC = () => {
       </div>
     );
   };
-  
+
   /*
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
