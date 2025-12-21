@@ -304,14 +304,16 @@ const ChecklistForm: React.FC = () => {
             min={min}
             max={max}
             value={formData[field] as number}
-            onChange={(value: number) => {
-              // Live update during drag — smooth continuous movement
-              setFormData(prev => ({ ...prev, [field]: value }));
+
+            onChange={(event, value) => {
+              setFormData(prev => ({ ...prev, [field]: value as number }));
             }}
-            onAfterChange={(value: number) => {
+
+            onAfterChange={(event, value) => {
               // Optional: final commit (debounce already handles save)
               // Can keep or remove — onChange is sufficient for live feel
             }}
+            
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
