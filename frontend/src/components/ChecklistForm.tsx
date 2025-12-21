@@ -1,5 +1,5 @@
 // frontend/src/components/ChecklistForm.tsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -300,6 +300,7 @@ const ChecklistForm: React.FC = () => {
           <Slider
             value={formData[field] as number}
             onChange={(_, value) => {
+              addDebugLog("onChange: " + value);
               setFormData(prev => ({ ...prev, [field]: value as number }));
             }}
             min={min}
