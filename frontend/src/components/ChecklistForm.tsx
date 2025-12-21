@@ -297,43 +297,50 @@ const ChecklistForm: React.FC = () => {
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4 w-64">
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
-
           <Slider
-            className="w-40 h-10 relative slider-row slider-container"
-            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
-            min={min}
-            max={max}
             value={formData[field] as number}
-
-            onChange={(event, value) => {
+            onChange={(_, value) => {
               setFormData(prev => ({ ...prev, [field]: value as number }));
             }}
-
-            onAfterChange={(event, value) => {
-              // Optional: final commit (debounce already handles save)
-              // Can keep or remove — onChange is sufficient for live feel
+            min={min}
+            max={max}
+            step={1}
+            valueLabelDisplay="on"  // shows live value in thumb during drag + always
+            sx={{
+              color: '#3b82f6', // blue track
+              height: 8,
+              '& .MuiSlider-track': {
+                backgroundColor: '#3b82f6',
+                border: 'none',
+              },
+              '& .MuiSlider-rail': {
+                backgroundColor: '#d1d5db',
+                opacity: 1,
+              },
+              '& .MuiSlider-thumb': {
+                width: 40,
+                height: 40,
+                backgroundColor: '#3b82f6',
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                '&:hover': {
+                  boxShadow: '0 0 0 8px rgba(59, 130, 246, 0.16)',
+                },
+                '& .MuiSlider-valueLabel': {
+                  backgroundColor: '#3b82f6',
+                  color: '#fff',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                },
+              },
             }}
-            
-            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
-              <div
-                {...props}
-                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
-                style={{
-                  ...props.style,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                {state.valueNow}
-              </div>
-            )}
           />
-
         </div>
       </div>
     );
   };
-
+  
   /*
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
