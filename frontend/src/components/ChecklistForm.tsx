@@ -288,6 +288,7 @@ const ChecklistForm: React.FC = () => {
   };
 
   // Helper to render a slider row
+  
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
