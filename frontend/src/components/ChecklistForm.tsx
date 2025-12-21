@@ -147,7 +147,14 @@ const ChecklistForm: React.FC = () => {
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
 
   const addDebugLog = (message: string) => {
-    const timestamp = new Date().toLocaleTimeString();
+    const now = new Date();
+    const timestamp = now.toLocaleTimeString('en-US', {
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      fractionalSecondDigits: 3, // milliseconds
+    });
     setDebugLogs(prev => [`${timestamp}: ${message}`, ...prev]);
   };
 
