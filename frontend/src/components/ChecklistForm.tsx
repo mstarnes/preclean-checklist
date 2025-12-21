@@ -299,24 +299,32 @@ const ChecklistForm: React.FC = () => {
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
 
           <Slider
-            value={formData[field] as number}
-            onChange={(_, value) => {
-              addDebugLog("onChange: " + value);
-              setFormData(prev => ({ ...prev, [field]: value as number }));
-            }}
+            className="w-40 h-10 relative slider-row slider-container"
+            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
-            marks
-            valueLabelDisplay="auto"
-            sx={{
-              color: 'primary.main',
-              '& .MuiSlider-thumb': {
-                width: 40,
-                height: 40,
-                fontSize: '1rem',
-                fontWeight: 'bold',
-              },
+            value={formData[field] as number}
+            onChange={(value: number) => {
+              // Live update during drag — smooth continuous movement
+              setFormData(prev => ({ ...prev, [field]: value }));
             }}
+            onAfterChange={(value: number) => {
+              // Optional: final commit (debounce already handles save)
+              // Can keep or remove — onChange is sufficient for live feel
+            }}
+            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
+              <div
+                {...props}
+                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
+                style={{
+                  ...props.style,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                {state.valueNow}
+              </div>
+            )}
           />
 
         </div>
