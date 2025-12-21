@@ -326,8 +326,8 @@ const ChecklistForm: React.FC = () => {
             min={min}
             max={max}
             value={formData[field] as number}
-            onTouchEnd={forceCommit}
-            onMouseUp={forceCommit}
+            onTouchEnd={forceCommit}   // iOS PWA release
+            onMouseUp={forceCommit}    // Desktop fallback
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
