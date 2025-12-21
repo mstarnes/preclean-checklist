@@ -144,16 +144,12 @@ const ChecklistForm: React.FC = () => {
   const [isPosted, setIsPosted] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [id, setId] = useState(edit || undefined);
+  const [debugLogs, setDebugLogs] = useState<string[]>([]);
 
-  /*
-  const logToDescription = (message: string) => {
+  const addDebugLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
-      setFormData(prev => ({
-        ...prev,
-        damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
-      }));
+    setDebugLogs(prev => [`${timestamp}: ${message}`, ...prev]);
   };
-  */
 
   /*
   useEffect(() => {
@@ -284,17 +280,6 @@ const ChecklistForm: React.FC = () => {
     }
   };
 
-  const logToDescription = (message: string) => {
-    const timestamp = new Date().toLocaleTimeString();
-    console.log(`${timestamp}: ${message}`);
-    /*
-    setFormData(prev => ({
-      ...prev,
-      damagesDescription: `${timestamp}: ${message}\n${prev.damagesDescription || ''}`
-    }));
-    */
-  };
-
   // Helper to render a slider row
 
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
@@ -315,23 +300,23 @@ const ChecklistForm: React.FC = () => {
     }
 
     const forceCommit = () => {
-      logToDescription(`forceCommit called for ${label}`);
+      addDebugLogs(`forceCommit called for ${label}`);
 
       if (committing.current) {
-        logToDescription(`Second forceCommit blocked for ${label}`);
+        addDebugLogs(`Second forceCommit blocked for ${label}`);
         return; // block the entire second call
       }
 
       committing.current = true;
-      logToDescription(`Semaphore set for ${label}`);
+      addDebugLogs(`Semaphore set for ${label}`);
 
       if (sliderContainerRef.current) {
-        logToDescription(`containerRef.current found for ${label}`);
+        addDebugLogs(`containerRef.current found for ${label}`);
 
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
-          logToDescription(`Committing first live value for ${label}: ${live}`);
+          addDebugLogs(`Committing first live value for ${label}: ${live}`);
           // alert( live + " " + initialValue.current);
           if (live !== initialValue.current) {
             setFormData(prev => ({ ...prev, [field]: live }));
@@ -341,7 +326,7 @@ const ChecklistForm: React.FC = () => {
 
       setTimeout(() => {
         committing.current = false;
-        logToDescription(`Semaphore reset for ${label}`);
+        addDebugLogs(`Semaphore reset for ${label}`);
       }, 100); // longer window to cover the double call
     };
 
@@ -679,6 +664,21 @@ const ChecklistForm: React.FC = () => {
           <div className="h-16"></div>
         </div>
       </section>
+
+      {/* Debug log area — fixed at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black text-white text-xs p-2 max-h-48 overflow-y-auto z-50 opacity-90">
+        <div className="font-bold mb-1">Debug Logs (newest first):</div>
+        {debugLogs.map((log, i) => (
+          <div key={i}>{log}</div>
+        ))}
+        <button 
+          onClick={() => setDebugLogs([])}
+          className="mt-2 bg-red-600 px-2 py-1 rounded text-xs"
+        >
+          Clear logs
+        </button>
+      </div>
+
     </div>
   );
 };
