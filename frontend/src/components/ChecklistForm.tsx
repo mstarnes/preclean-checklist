@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FaUndo, FaCheck, FaLock } from "react-icons/fa";
 import debounce from "lodash/debounce";
-import Slider from 'react-slider';
+import Slider from '@mui/material/Slider';
 
 interface FormDataType {
   cabinNumber: number;
@@ -288,7 +288,41 @@ const ChecklistForm: React.FC = () => {
   };
 
   // Helper to render a slider row
-  
+
+  const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
+    const { min, max } = getMinMax(field);
+
+    return (
+      <div className="flex items-center justify-between py-3">
+        <span className="text-base font-medium">{label}</span>
+        <div className="flex items-center space-x-4 w-64">
+          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
+          <Slider
+            value={formData[field] as number}
+            onChange={(_, value) => {
+              setFormData(prev => ({ ...prev, [field]: value as number }));
+            }}
+            min={min}
+            max={max}
+            step={1}
+            marks
+            valueLabelDisplay="auto"
+            sx={{
+              color: 'primary.main',
+              '& .MuiSlider-thumb': {
+                width: 40,
+                height: 40,
+                fontSize: '1rem',
+                fontWeight: 'bold',
+              },
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  /*
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
@@ -348,6 +382,7 @@ const ChecklistForm: React.FC = () => {
       </div>
     );
   };
+  */
 
 
   const handleReset = async () => {
