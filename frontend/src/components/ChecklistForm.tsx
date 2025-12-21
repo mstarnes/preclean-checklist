@@ -300,23 +300,23 @@ const ChecklistForm: React.FC = () => {
     }
 
     const forceCommit = () => {
-      addDebugLogs(`forceCommit called for ${label}`);
+      addDebugLog(`forceCommit called for ${label}`);
 
       if (committing.current) {
-        addDebugLogs(`Second forceCommit blocked for ${label}`);
+        addDebugLog(`Second forceCommit blocked for ${label}`);
         return; // block the entire second call
       }
 
       committing.current = true;
-      addDebugLogs(`Semaphore set for ${label}`);
+      addDebugLog(`Semaphore set for ${label}`);
 
       if (sliderContainerRef.current) {
-        addDebugLogs(`containerRef.current found for ${label}`);
+        addDebugLog(`containerRef.current found for ${label}`);
 
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
-          addDebugLogs(`Committing first live value for ${label}: ${live}`);
+          addDebugLog(`Committing first live value for ${label}: ${live}`);
           // alert( live + " " + initialValue.current);
           if (live !== initialValue.current) {
             setFormData(prev => ({ ...prev, [field]: live }));
@@ -326,7 +326,7 @@ const ChecklistForm: React.FC = () => {
 
       setTimeout(() => {
         committing.current = false;
-        addDebugLogs(`Semaphore reset for ${label}`);
+        addDebugLog(`Semaphore reset for ${label}`);
       }, 100); // longer window to cover the double call
     };
 
