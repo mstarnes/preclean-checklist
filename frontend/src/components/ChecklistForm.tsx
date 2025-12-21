@@ -297,36 +297,28 @@ const ChecklistForm: React.FC = () => {
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4 w-64">
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
+
           <Slider
-            className="w-40 h-10 relative slider-row slider-container"
-            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
+            value={formData[field] as number}
+            onAfterChange={(_, value) => {
+              addDebugLog("onChange: " + value);
+              setFormData(prev => ({ ...prev, [field]: value as number }));
+            }}
             min={min}
             max={max}
-            value={formData[field] as number}
-            onChange={(value: number) => {
-              // Live update during drag — smooth continuous movement
-              addDebugLog("onChange: " + value);
-              setFormData(prev => ({ ...prev, [field]: value }));
+            marks
+            valueLabelDisplay="auto"
+            sx={{
+              color: 'primary.main',
+              '& .MuiSlider-thumb': {
+                width: 40,
+                height: 40,
+                fontSize: '1rem',
+                fontWeight: 'bold',
+              },
             }}
-            onAfterChange={(value: number) => {
-              // Optional: final commit (debounce already handles save)
-              // Can keep or remove — onChange is sufficient for live feel
-              addDebugLog("onAfterChange: " + value);
-            }}
-            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
-              <div
-                {...props}
-                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
-                style={{
-                  ...props.style,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                {state.valueNow}
-              </div>
-            )}
           />
+
         </div>
       </div>
     );
