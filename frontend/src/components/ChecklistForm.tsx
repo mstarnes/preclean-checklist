@@ -347,33 +347,31 @@ const ChecklistForm: React.FC = () => {
         onMouseUp={forceCommit}
       >
 
-          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
-          <Slider
-            className="w-40 h-10 relative slider-row slider-container"
-            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
-            min={min}
-            max={max}
-            onTouchEnd={forceCommit}
-            onTouchStart={setInitialValue}
-            onBeforeChange={setInitialValue}
-            onAfterChange={forceCommit}
-            value={formData[field] as number}
-            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
-              <div
-                {...props}
-                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
-                style={{
-                  ...props.style,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                {state.valueNow}
-              </div>
-            )}
-          />
-        </div>
-        
+        <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
+        <Slider
+          className="w-40 h-10 relative slider-row slider-container"
+          trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
+          min={min}
+          max={max}
+          onTouchEnd={forceCommit}
+          onTouchStart={setInitialValue}
+          onBeforeChange={setInitialValue}
+          onAfterChange={forceCommit}
+          value={formData[field] as number}
+          renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
+            <div
+              {...props}
+              className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
+              style={{
+                ...props.style,
+                top: '50%',
+                transform: 'translateY(-50%)',
+              }}
+            >
+              {state.valueNow}
+            </div>
+          )}
+        />
       </div>
     );
   };
