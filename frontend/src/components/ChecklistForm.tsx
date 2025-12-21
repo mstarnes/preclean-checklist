@@ -288,30 +288,27 @@ const ChecklistForm: React.FC = () => {
   };
 
   // Helper to render a slider row
-
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
     const sliderContainerRef = useRef<HTMLDivElement>(null);
     const committing = useRef(false);
-    let initialValue = useRef(0);
-    const setInitialValue = () => {
-      console.log("setInitialValue");
-      //alert(initialValue.current);
-      if (initialValue.current > 0 ) {
-        return;
-      }
+
+    // Persistent ref for initial value
+    const initialValue = useRef<number | null>(null);
+
+    // Set initial value on mount or when formData[field] changes from load/reset
+    useEffect(() => {
       initialValue.current = formData[field] as number;
-      //alert(initialValue.current);
-      console.log("setInitialValue set");
-    }
+      addDebugLog(`Initial value set for ${label}: ${initialValue.current}`);
+    }, [formData[field], field, label]);
 
     const forceCommit = () => {
       addDebugLog(`forceCommit called for ${label}`);
 
       if (committing.current) {
         addDebugLog(`Second forceCommit blocked for ${label}`);
-        return; // block the entire second call
+        return;
       }
 
       committing.current = true;
@@ -323,10 +320,14 @@ const ChecklistForm: React.FC = () => {
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
-          addDebugLog(`Committing first live value for ${label}: ${live}`);
-          // alert( live + " " + initialValue.current);
+          addDebugLog(`Live value read for ${label}: ${live}`);
+
+          // Only commit if different from initial (ignore revert to old value)
           if (live !== initialValue.current) {
+            addDebugLog(`Committing new value for ${label}: ${live}`);
             setFormData(prev => ({ ...prev, [field]: live }));
+          } else {
+            addDebugLog(`Ignoring revert to initial value for ${label}: ${live}`);
           }
         }
       }
@@ -334,18 +335,18 @@ const ChecklistForm: React.FC = () => {
       setTimeout(() => {
         committing.current = false;
         addDebugLog(`Semaphore reset for ${label}`);
-      }, 100); // longer window to cover the double call
+      }, 400);
     };
 
     return (
-      <div className="flex items-center justify-between py-3">
-        <span className="text-base font-medium">{label}</span>
-        <div 
-          className="flex items-center space-x-4 touch-none"
-          ref={sliderContainerRef}
-          onTouchEnd={forceCommit}
-          onTouchStart={setInitialValue}
-        >
+      // ... your JSX
+      <div 
+        className="flex items-center space-x-4 touch-none"
+        ref={sliderContainerRef}
+        onTouchEnd={forceCommit}
+        onMouseUp={forceCommit}
+      >
+
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             className="w-40 h-10 relative slider-row slider-container"
@@ -372,9 +373,71 @@ const ChecklistForm: React.FC = () => {
             )}
           />
         </div>
+        
       </div>
     );
   };
+
+
+  const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
+    const { min, max } = getMinMax(field);
+
+    const sliderContainerRef = useRef<HTMLDivElement>(null);
+
+    const forceCommit = () => {
+      addDebugLog(`forceCommit called for ${label}`);
+
+      if (sliderContainerRef.current) {
+        addDebugLog(`containerRef.current found for ${label}`);
+
+        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
+        if (thumb && thumb.textContent) {
+          const live = Number(thumb.textContent.trim());
+          addDebugLog(`Committing live value for ${label}: ${live}`);
+          setFormData(prev => ({ ...prev, [field]: live }));
+        } else {
+          addDebugLog(`No thumb or text found for ${label}`);
+        }
+      } else {
+        addDebugLog(`No containerRef for ${label}`);
+      }
+    };
+
+    return (
+      <div className="flex items-center justify-between py-3">
+        <span className="text-base font-medium">{label}</span>
+        <div 
+          className="flex items-center space-x-4 touch-none"
+          ref={sliderContainerRef}
+        >
+          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
+          <Slider
+            className="w-40 h-10 relative slider-row slider-container"
+            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
+            min={min}
+            max={max}
+            value={formData[field] as number}
+            onTouchEnd={forceCommit}
+            onMouseUp={forceCommit}
+            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
+              <div
+                {...props}
+                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
+                style={{
+                  ...props.style,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                {state.valueNow}
+              </div>
+            )}
+          />
+        </div>
+      </div>
+    );
+  };
+
 
   const handleReset = async () => {
     if (id) {
