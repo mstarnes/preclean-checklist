@@ -295,7 +295,7 @@ const ChecklistForm: React.FC = () => {
     const { min, max } = getMinMax(field);
 
     const handleChange = (event: Event, value: number) => {
-      addDebugLog(`onChange for ${label}: ${value}`);
+      addDebugLog(`onChange for ${label}: ${Array.isArray(value) ? value[0] : value}`);
       setValue(value);
     };
 
