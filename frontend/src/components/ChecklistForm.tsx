@@ -292,15 +292,6 @@ const ChecklistForm: React.FC = () => {
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
-    const [localValue, setLocalValue] = useState<number>(formData[field] as number);
-
-    // Extract value to avoid complex deps
-    const currentFieldValue = formData[field] as number;
-
-    useEffect(() => {
-      setLocalValue(currentFieldValue);
-    }, [currentFieldValue, field]); // fixes both warnings
-
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
@@ -308,17 +299,12 @@ const ChecklistForm: React.FC = () => {
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             value={localValue}
-            onChange={(event, value) => {
-              setLocalValue(value as number);  // live during drag — smooth
-              addDebugLog(`onChange for ${label}: ${value}`);
-            }}
             onChangeCommitted={(event, value) => {
-              setFormData(prev => ({ ...prev, [field]: value as number }));  // commit on release
               addDebugLog(`onChangeCommitted for ${label}: ${value}`);
+              setFormData(prev => ({ ...prev, [field]: value as number }));  // commit on release
             }}
             min={min}
             max={max}
-            step={1}
             valueLabelDisplay="auto"  // shows live value during drag
             sx={{
               color: '#3b82f6',
@@ -334,6 +320,7 @@ const ChecklistForm: React.FC = () => {
               '& .MuiSlider-thumb': {
                 width: 48,
                 height: 48,
+                z-index: 99,
                 backgroundColor: '#3b82f6',
                 '& .MuiSlider-valueLabel': {
                   backgroundColor: '#3b82f6',
