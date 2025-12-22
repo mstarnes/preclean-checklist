@@ -305,7 +305,7 @@ const ChecklistForm: React.FC = () => {
             }}
             min={min}
             max={max}
-            valueLabelDisplay="auto"  // shows live value during drag
+            valueLabelDisplay="on"  // shows live value during drag
             sx={{
               color: '#3b82f6',
               height: 8,
@@ -315,7 +315,7 @@ const ChecklistForm: React.FC = () => {
               },
               '& .MuiSlider-rail': {
                 backgroundColor: '#d1d5db',
-                opacity: 0,
+                opacity: 1,
               },
               '& .MuiSlider-thumb': {
                 width: 48,
@@ -323,7 +323,7 @@ const ChecklistForm: React.FC = () => {
                 backgroundColor: '#3b82f6',
                 '& .MuiSlider-valueLabel': {
                   backgroundColor: '#3b82f6',
-                  color: '#fff',
+                  color: '#777',
                   fontSize: '1rem',
                   fontWeight: 'bold',
                   top: -6, // adjust label position (lower = closer to thumb)
