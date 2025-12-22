@@ -302,11 +302,11 @@ const ChecklistForm: React.FC = () => {
             value={formData[field] as number}
             onChange={(event, value) => {
               addDebugLog(`onChange for ${label}: ${value}`);
-            }
+            }}
             onChangeCommitted={(event, value) => {
               addDebugLog(`onChangeCommitted for ${label}: ${value}`);
               setFormData(prev => ({ ...prev, [field]: value as number }));
-            }
+            }}
             min={min}
             max={max}
             step={1}  // integer steps, but with live onChange it's smooth
