@@ -323,10 +323,10 @@ const ChecklistForm: React.FC = () => {
                 backgroundColor: '#3b82f6',
                 '& .MuiSlider-valueLabel': {
                   backgroundColor: '#3b82f6',
-                  color: '#777',
+                  color: '#fff',
                   fontSize: '1rem',
                   fontWeight: 'bold',
-                  top: -6, // adjust label position (lower = closer to thumb)
+                  top: -12, // adjust label position (lower = closer to thumb)
                 },
               },
               '& .MuiSlider-valueLabel': {
