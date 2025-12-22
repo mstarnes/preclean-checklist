@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { FaUndo, FaCheck, FaLock } from "react-icons/fa";
 import debounce from "lodash/debounce";
 import Slider from '@mui/material/Slider';
-import type { Event, SyntheticEvent } from "react";  // Optional, for clarity
+import type { SyntheticEvent } from "react";  // Optional, for clarity
 
 interface FormDataType {
   cabinNumber: number;
