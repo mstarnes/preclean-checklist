@@ -300,9 +300,6 @@ const ChecklistForm: React.FC = () => {
 
           <Slider
             value={formData[field] as number}
-            onChange={(event, value) => {
-              addDebugLog(`onChange for ${label}: ${value}`);
-            }}
             onChangeCommitted={(event, value) => {
               addDebugLog(`onChangeCommitted for ${label}: ${value}`);
               setFormData(prev => ({ ...prev, [field]: value as number }));
