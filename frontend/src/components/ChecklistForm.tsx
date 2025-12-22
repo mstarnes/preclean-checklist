@@ -301,13 +301,13 @@ const ChecklistForm: React.FC = () => {
           <Slider
             value={formData[field] as number}
             onChangeCommitted={(_, value) => {
-              addDebugLog("onChange: " + value);
+              addDebugLog("onChangeCommitted: " + value);
               setFormData(prev => ({ ...prev, [field]: value as number }));
             }}
             min={min}
             max={max}
             step={1}  // integer steps, but with live onChange it's smooth
-            valueLabelDisplay="on"  // always shows number in thumb (live during drag)
+            valueLabelDisplay="auto"  // always shows number in thumb (live during drag)
             sx={{
               color: '#3b82f6',
               height: 8,
