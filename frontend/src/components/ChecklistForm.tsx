@@ -295,16 +295,14 @@ const ChecklistForm: React.FC = () => {
     const { min, max } = getMinMax(field);
 
     const handleSliderChange = (event: Event, newValue: number) => {
-      addDebugLog(`onChangeCommitted for ${label}: ${newValue}`);
+      addDebugLog(`onChange for ${label}: ${newValue}`);
       setValue(newValue);
     };
 
-    /*
     const handleOnChangeCommitted = (event: Event, newValue: number) => {
       addDebugLog(`handleOnChangeCommitted for ${label}: ${newValue}`);
-      setFormData(prev => ({ ...prev, [field]: newValue as number }));
+      setFormData(prev => ({ ...prev, [field]: value as number }));
     };
-    */
 
     return (
       <div className="flex items-center justify-between py-3">
@@ -312,10 +310,10 @@ const ChecklistForm: React.FC = () => {
         <div className="flex items-center space-x-4 w-64">
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
-            size="medium"
+            size="large"
             value={value}
             onChange={handleSliderChange}
-            // onChangeCommitted={handleOnChangeCommitted}
+            onChangeCommitted={handleOnChangeCommitted}
             min={min}
             max={max}
             step={1}
