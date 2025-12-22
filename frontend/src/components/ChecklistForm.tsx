@@ -330,8 +330,30 @@ const ChecklistForm: React.FC = () => {
             max={max}
             step={1}
             valueLabelDisplay="on"
-            sx={{ /* your styles */ }}
-          />
+ 
+            sx={{
+              color: '#3b82f6',
+              height: 8,
+              '& .MuiSlider-track': {
+                backgroundColor: '#3b82f6',
+                border: 'none',
+              },
+              '& .MuiSlider-rail': {
+                backgroundColor: '#d1d5db',
+                opacity: 1,
+              },
+              '& .MuiSlider-thumb': {
+                backgroundColor: '#3b82f6',
+                '& .MuiSlider-valueLabel': {
+                  backgroundColor: '#3b82f6',
+                  color: '#fff',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  top: 40, // adjust label position (lower = closer to thumb)
+                },
+              },
+            }}
+         />
         </div>
       </div>
     );
