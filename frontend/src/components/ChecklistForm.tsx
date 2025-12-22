@@ -298,17 +298,18 @@ const ChecklistForm: React.FC = () => {
       newValue: number | number[],
       activeThumb?: number  // Include this optional param to match exactly
     ) => {
-      try {
         // activeThumb is ignored for single-value sliders
         const numericValue = Array.isArray(newValue) ? newValue[0] : newValue;
-        addDebugLog(`onChange for ${label}: ${numericValue}`);
-        addDebugLog( "value is " + value);
-        addDebugLog( "numericValue is " + value);
+      addDebugLog(`onChange for ${label}: ${numericValue}`);
+      addDebugLog( "value is " + value);
+      addDebugLog( "numericValue is " + numericValue);
+      try {
         setValue(numericValue as number);  // Cast if your state is strictly number
-        addDebugLog( "value is now " + value);
+        addDebugLog( "1 value is now " + value);
       } catch (error) {
         addDebugLog(`Runtime error in SliderRow (${label}): ${error instanceof Error ? error.message : String(error)}`);
       }
+      addDebugLog( "2 value is now " + value);
 
     };
 
