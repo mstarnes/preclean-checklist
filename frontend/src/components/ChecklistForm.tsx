@@ -298,7 +298,7 @@ const ChecklistForm: React.FC = () => {
         <div className="flex items-center space-x-4 w-64">
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
-            value={localValue}
+            value={formData[field] as number}
             onChangeCommitted={(event, value) => {
               addDebugLog(`onChangeCommitted for ${label}: ${value}`);
               setFormData(prev => ({ ...prev, [field]: value as number }));  // commit on release
