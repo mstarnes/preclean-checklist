@@ -292,6 +292,10 @@ const ChecklistForm: React.FC = () => {
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
+    const handleSliderChange = (event: Event, newValue: number) => {
+      addDebugLog(newValue);
+    };
+
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
@@ -299,6 +303,7 @@ const ChecklistForm: React.FC = () => {
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             value={formData[field] as number}
+            onChange={handleSliderChange}
             onChangeCommitted={(event, value) => {
               addDebugLog(`onChangeCommitted for ${label}: ${value}`);
               setFormData(prev => ({ ...prev, [field]: value as number }));  // commit on release
