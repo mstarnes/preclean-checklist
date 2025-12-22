@@ -335,16 +335,12 @@ const ChecklistForm: React.FC = () => {
                 width: 48,
                 height: 48,
                 backgroundColor: '#3b82f6',
-                position: 'relative',
-                top: '50%',
-                transform: 'translateY(-50%)',  // center vertically on track
                 '& .MuiSlider-valueLabel': {
                   backgroundColor: '#3b82f6',
                   color: '#fff',
                   fontSize: '1rem',
                   fontWeight: 'bold',
-                  left: '50%',
-                  transform: 'translateX(-50%) scale(1)',
+                  top: -6, // adjust label position (lower = closer to thumb)
                 },
               },
               '& .MuiSlider-valueLabel': {
