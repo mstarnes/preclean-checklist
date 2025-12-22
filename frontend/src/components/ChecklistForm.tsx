@@ -299,7 +299,7 @@ const ChecklistForm: React.FC = () => {
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
             value={formData[field] as number}
-            onChange={(_, value) => {
+            onAfterChange={(_, value) => {
               addDebugLog("onChange: " + value);
               setFormData(prev => ({ ...prev, [field]: value as number }));
             }}
