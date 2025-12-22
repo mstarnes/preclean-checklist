@@ -307,7 +307,7 @@ const ChecklistForm: React.FC = () => {
             min={min}
             max={max}
             step={1}  // integer steps, but with live onChange it's smooth
-            valueLabelDisplay="auto"  // always shows number in thumb (live during drag)
+            valueLabelDisplay="on"  // always shows number in thumb (live during drag)
             sx={{
               color: '#3b82f6',
               height: 8,
