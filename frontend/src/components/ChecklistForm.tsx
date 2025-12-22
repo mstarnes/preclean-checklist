@@ -296,7 +296,7 @@ const ChecklistForm: React.FC = () => {
 
     const handleChange = (event: Event, value: number) => {
       addDebugLog(`onChange for ${label}: ${value}`);
-      setValue(newValue);
+      setValue(value);
     };
 
     const handleOnChangeCommitted = (event: Event, newValue: number) => {
