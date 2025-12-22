@@ -293,7 +293,7 @@ const ChecklistForm: React.FC = () => {
     const { min, max } = getMinMax(field);
 
     const handleSliderChange = (event: Event, newValue: number) => {
-      addDebugLog(newValue);
+      addDebugLog(`onChangeCommitted for ${label}: ${newValue}`);
     };
 
     return (
