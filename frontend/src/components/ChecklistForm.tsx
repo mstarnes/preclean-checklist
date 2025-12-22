@@ -288,20 +288,29 @@ const ChecklistForm: React.FC = () => {
   };
 
   // Helper to render a slider row
-
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
-
     const [value, setValue] = React.useState<number>(formData[field] as number);
     const { min, max } = getMinMax(field);
 
-    const handleChange = (event: Event, value: number) => {
-      addDebugLog(`onChange for ${label}: ${Array.isArray(value) ? value[0] : value}`);
-      setValue(value);
+    const handleChange = (
+      event: React.ChangeEvent<{}>,  // or React.SyntheticEvent
+      newValue: number | number[]
+    ) => {
+      // Since this is a single-value slider, newValue will always be a number
+      const numericValue = Array.isArray(newValue) ? newValue[0] : newValue;
+      
+      addDebugLog(`onChange for ${label}: ${numericValue}`);
+      setValue(numericValue);
     };
 
-    const handleOnChangeCommitted = (event: Event, newValue: number) => {
-      addDebugLog(`handleOnChangeCommitted for ${label}: ${newValue}`);
-      setFormData(prev => ({ ...prev, [field]: value as number }));
+    const handleOnChangeCommitted = (
+      event: React.ChangeEvent<{}>,
+      newValue: number | number[]
+    ) => {
+      const numericValue = Array.isArray(newValue) ? newValue[0] : newValue;
+      
+      addDebugLog(`handleOnChangeCommitted for ${label}: ${numericValue}`);
+      setFormData(prev => ({ ...prev, [field]: numericValue }));
     };
 
     return (
@@ -317,29 +326,8 @@ const ChecklistForm: React.FC = () => {
             min={min}
             max={max}
             step={1}
-            valueLabelDisplay="on"  // shows live value during drag
-            sx={{
-              color: '#3b82f6',
-              height: 8,
-              '& .MuiSlider-track': {
-                backgroundColor: '#3b82f6',
-                border: 'none',
-              },
-              '& .MuiSlider-rail': {
-                backgroundColor: '#d1d5db',
-                opacity: 1,
-              },
-              '& .MuiSlider-thumb': {
-                backgroundColor: '#3b82f6',
-                '& .MuiSlider-valueLabel': {
-                  backgroundColor: '#3b82f6',
-                  color: '#fff',
-                  fontSize: '1rem',
-                  fontWeight: 'bold',
-                  top: 40, // adjust label position (lower = closer to thumb)
-                },
-              },
-            }}
+            valueLabelDisplay="on"
+            sx={{ /* your styles */ }}
           />
         </div>
       </div>
