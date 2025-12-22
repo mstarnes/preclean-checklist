@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { FaUndo, FaCheck, FaLock } from "react-icons/fa";
 import debounce from "lodash/debounce";
 import Slider from '@mui/material/Slider';
+import type { Event, SyntheticEvent } from "react";  // Optional, for clarity
 
 interface FormDataType {
   cabinNumber: number;
@@ -293,24 +294,26 @@ const ChecklistForm: React.FC = () => {
     const { min, max } = getMinMax(field);
 
     const handleChange = (
-      event: React.ChangeEvent<{}>,  // or React.SyntheticEvent
-      newValue: number | number[]
+      event: Event | SyntheticEvent,
+      newValue: number | number[],
+      activeThumb?: number  // Include this optional param to match exactly
     ) => {
-      // Since this is a single-value slider, newValue will always be a number
+      // activeThumb is ignored for single-value sliders
       const numericValue = Array.isArray(newValue) ? newValue[0] : newValue;
-      
+
       addDebugLog(`onChange for ${label}: ${numericValue}`);
-      setValue(numericValue);
+      setValue(numericValue as number);  // Cast if your state is strictly number
     };
 
     const handleOnChangeCommitted = (
-      event: React.ChangeEvent<{}>,
-      newValue: number | number[]
+      event: Event | SyntheticEvent,
+      newValue: number | number[],
+      activeThumb?: number
     ) => {
       const numericValue = Array.isArray(newValue) ? newValue[0] : newValue;
-      
+
       addDebugLog(`handleOnChangeCommitted for ${label}: ${numericValue}`);
-      setFormData(prev => ({ ...prev, [field]: numericValue }));
+      setFormData(prev => ({ ...prev, [field]: numericValue as number }));
     };
 
     return (
