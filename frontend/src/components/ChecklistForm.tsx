@@ -301,8 +301,9 @@ const ChecklistForm: React.FC = () => {
       // activeThumb is ignored for single-value sliders
       const numericValue = Array.isArray(newValue) ? newValue[0] : newValue;
 
-      addDebugLog( "value is " + value);
       addDebugLog(`onChange for ${label}: ${numericValue}`);
+      addDebugLog( "value is " + value);
+      addDebugLog( "numericValue is " + value);
       setValue(numericValue as number);  // Cast if your state is strictly number
       addDebugLog( "value is now " + value);
     };
