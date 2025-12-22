@@ -315,12 +315,11 @@ const ChecklistForm: React.FC = () => {
               },
               '& .MuiSlider-rail': {
                 backgroundColor: '#d1d5db',
-                opacity: 1,
+                opacity: 0,
               },
               '& .MuiSlider-thumb': {
                 width: 48,
                 height: 48,
-                z-index: 99,
                 backgroundColor: '#3b82f6',
                 '& .MuiSlider-valueLabel': {
                   backgroundColor: '#3b82f6',
