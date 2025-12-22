@@ -307,10 +307,10 @@ const ChecklistForm: React.FC = () => {
         addDebugLog( "form shows " + formData[field]);
         setValue(numericValue as number);  // Cast if your state is strictly number
         addDebugLog( "1 value is now " + value);
-        addDebugLog(JSON.stringify(prev));
+        addDebugLog(JSON.stringify(formData));
         setFormData(prev => ({ ...prev, [field]: numericValue as number }));
         addDebugLog( "form now has " + formData[field]);
-        addDebugLog(JSON.stringify(prev));
+        addDebugLog(JSON.stringify(formData));
       } catch (error) {
         addDebugLog(`Runtime error in SliderRow (${label}): ${error instanceof Error ? error.message : String(error)}`);
       }
