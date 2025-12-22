@@ -291,6 +291,7 @@ const ChecklistForm: React.FC = () => {
   // Helper to render a slider row
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const [value, setValue] = React.useState<number>(formData[field] as number);
+    addDebugLog( "value is " + value);
     const { min, max } = getMinMax(field);
 
     const handleChange = (
@@ -303,6 +304,7 @@ const ChecklistForm: React.FC = () => {
 
       addDebugLog(`onChange for ${label}: ${numericValue}`);
       setValue(numericValue as number);  // Cast if your state is strictly number
+      addDebugLog( "value is now " + value);
     };
 
     const handleOnChangeCommitted = (
