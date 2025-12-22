@@ -291,16 +291,17 @@ const ChecklistForm: React.FC = () => {
 
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
 
-    const [value, setValue] = React.useState<number>(30);
+    const [value, setValue] = React.useState<number>(formData[field] as number);
     const { min, max } = getMinMax(field);
 
     const handleSliderChange = (event: Event, newValue: number) => {
       addDebugLog(`onChangeCommitted for ${label}: ${newValue}`);
+      setValue(newValue);
     };
 
     const handleOnChangeCommitted = (event: Event, newValue: number) => {
       addDebugLog(`handleOnChangeCommitted for ${label}: ${newValue}`);
-      setFormData(prev => ({ ...prev, [field]: value as number }));
+      setFormData(prev => ({ ...prev, [field]: newValue as number }));
     };
 
     return (
@@ -309,11 +310,12 @@ const ChecklistForm: React.FC = () => {
         <div className="flex items-center space-x-4 w-64">
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
           <Slider
+            size="medium"
             value={value}
             onChange={handleSliderChange}
-            onChangeCommitted={handleOnChangeCommitted}
             min={min}
             max={max}
+            step={1}
             valueLabelDisplay="on"  // shows live value during drag
             sx={{
               color: '#3b82f6',
@@ -327,8 +329,6 @@ const ChecklistForm: React.FC = () => {
                 opacity: 1,
               },
               '& .MuiSlider-thumb': {
-                width: 24,
-                height: 24,
                 backgroundColor: '#3b82f6',
                 '& .MuiSlider-valueLabel': {
                   backgroundColor: '#3b82f6',
