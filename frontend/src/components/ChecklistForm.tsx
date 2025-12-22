@@ -294,7 +294,7 @@ const ChecklistForm: React.FC = () => {
     const [value, setValue] = React.useState<number>(formData[field] as number);
     const { min, max } = getMinMax(field);
 
-    const handleSliderChange = (event: Event, newValue: number[0]) => {
+    const handleChange = (event: Event, newValue: number[0]) => {
       addDebugLog(`onChange for ${label}: ${newValue}`);
       setValue(newValue);
     };
@@ -308,11 +308,11 @@ const ChecklistForm: React.FC = () => {
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4 w-64">
-          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
+          <span className="text-xl font-bold w-12 text-center">{value}</span>
           <Slider
             size="medium"
             value={value}
-            onChange={handleSliderChange}
+            onChange={handleChange}
             onChangeCommitted={handleOnChangeCommitted}
             min={min}
             max={max}
