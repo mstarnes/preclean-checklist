@@ -297,18 +297,18 @@ const ChecklistForm: React.FC = () => {
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4 w-64">
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
+
           <Slider
             value={formData[field] as number}
-            onAfterChange={(_, value) => {
-              addDebugLog("onChange: " + value);
+            onChange={(_, value) => {
               setFormData(prev => ({ ...prev, [field]: value as number }));
             }}
             min={min}
             max={max}
-            step={1}
-            valueLabelDisplay="on"  // shows live value in thumb during drag + always
+            step={1}  // integer steps, but with live onChange it's smooth
+            valueLabelDisplay="on"  // always shows number in thumb (live during drag)
             sx={{
-              color: '#3b82f6', // blue track
+              color: '#3b82f6',
               height: 8,
               '& .MuiSlider-track': {
                 backgroundColor: '#3b82f6',
@@ -319,24 +319,19 @@ const ChecklistForm: React.FC = () => {
                 opacity: 1,
               },
               '& .MuiSlider-thumb': {
-                width: 40,
-                height: 40,
+                width: 48,
+                height: 48,
                 backgroundColor: '#3b82f6',
-                color: '#fff',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                '&:hover': {
-                  boxShadow: '0 0 0 8px rgba(59, 130, 246, 0.16)',
-                },
                 '& .MuiSlider-valueLabel': {
                   backgroundColor: '#3b82f6',
                   color: '#fff',
-                  fontSize: '1rem',
+                  fontSize: '1.125rem',
                   fontWeight: 'bold',
                 },
               },
             }}
           />
+
         </div>
       </div>
     );
