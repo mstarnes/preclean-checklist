@@ -294,9 +294,12 @@ const ChecklistForm: React.FC = () => {
 
     const [localValue, setLocalValue] = useState<number>(formData[field] as number);
 
+    // Extract value to avoid complex deps
+    const currentFieldValue = formData[field] as number;
+
     useEffect(() => {
-      setLocalValue(formData[field] as number);
-    }, [formData[field]]);
+      setLocalValue(currentFieldValue);
+    }, [currentFieldValue, field]); // fixes both warnings
 
     return (
       <div className="flex items-center justify-between py-3">
