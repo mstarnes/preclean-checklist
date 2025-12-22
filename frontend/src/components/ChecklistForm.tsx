@@ -298,14 +298,18 @@ const ChecklistForm: React.FC = () => {
       newValue: number | number[],
       activeThumb?: number  // Include this optional param to match exactly
     ) => {
-      // activeThumb is ignored for single-value sliders
-      const numericValue = Array.isArray(newValue) ? newValue[0] : newValue;
+      try {
+        // activeThumb is ignored for single-value sliders
+        const numericValue = Array.isArray(newValue) ? newValue[0] : newValue;
+        addDebugLog(`onChange for ${label}: ${numericValue}`);
+        addDebugLog( "value is " + value);
+        addDebugLog( "numericValue is " + value);
+        setValue(numericValue as number);  // Cast if your state is strictly number
+        addDebugLog( "value is now " + value);
+      } catch (error) {
+        addDebugLog(`Runtime error in SliderRow (${label}): ${error instanceof Error ? error.message : String(error)}`);
+      }
 
-      addDebugLog(`onChange for ${label}: ${numericValue}`);
-      addDebugLog( "value is " + value);
-      addDebugLog( "numericValue is " + value);
-      setValue(numericValue as number);  // Cast if your state is strictly number
-      addDebugLog( "value is now " + value);
     };
 
     const handleOnChangeCommitted = (
@@ -331,7 +335,6 @@ const ChecklistForm: React.FC = () => {
             onChangeCommitted={handleOnChangeCommitted}
             min={min}
             max={max}
-            step={1}
             valueLabelDisplay="on"
  
             sx={{
