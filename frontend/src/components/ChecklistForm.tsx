@@ -299,10 +299,12 @@ const ChecklistForm: React.FC = () => {
       setValue(newValue);
     };
 
+    /*
     const handleOnChangeCommitted = (event: Event, newValue: number) => {
       addDebugLog(`handleOnChangeCommitted for ${label}: ${newValue}`);
       setFormData(prev => ({ ...prev, [field]: newValue as number }));
     };
+    */
 
     return (
       <div className="flex items-center justify-between py-3">
@@ -313,6 +315,7 @@ const ChecklistForm: React.FC = () => {
             size="medium"
             value={value}
             onChange={handleSliderChange}
+            // onChangeCommitted={handleOnChangeCommitted}
             min={min}
             max={max}
             step={1}
