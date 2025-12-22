@@ -292,22 +292,31 @@ const ChecklistForm: React.FC = () => {
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
+    const [localValue, setLocalValue] = useState<number>(formData[field] as number);
+
+    useEffect(() => {
+      setLocalValue(formData[field] as number);
+    }, [formData[field]]);
+
     return (
       <div className="flex items-center justify-between py-3">
         <span className="text-base font-medium">{label}</span>
         <div className="flex items-center space-x-4 w-64">
           <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
-
           <Slider
-            value={formData[field] as number}
+            value={localValue}
+            onChange={(event, value) => {
+              setLocalValue(value as number);  // live during drag — smooth
+              addDebugLog(`onChange for ${label}: ${value}`);
+            }}
             onChangeCommitted={(event, value) => {
+              setFormData(prev => ({ ...prev, [field]: value as number }));  // commit on release
               addDebugLog(`onChangeCommitted for ${label}: ${value}`);
-              setFormData(prev => ({ ...prev, [field]: value as number }));
             }}
             min={min}
             max={max}
-            step={1}  // integer steps, but with live onChange it's smooth
-            valueLabelDisplay="on"  // always shows number in thumb (live during drag)
+            step={1}
+            valueLabelDisplay="auto"  // shows live value during drag
             sx={{
               color: '#3b82f6',
               height: 8,
@@ -323,16 +332,23 @@ const ChecklistForm: React.FC = () => {
                 width: 48,
                 height: 48,
                 backgroundColor: '#3b82f6',
+                position: 'relative',
+                top: '50%',
+                transform: 'translateY(-50%)',  // center vertically on track
                 '& .MuiSlider-valueLabel': {
                   backgroundColor: '#3b82f6',
                   color: '#fff',
-                  fontSize: '1.125rem',
+                  fontSize: '1rem',
                   fontWeight: 'bold',
+                  left: '50%',
+                  transform: 'translateX(-50%) scale(1)',
                 },
+              },
+              '& .MuiSlider-valueLabel': {
+                left: 'calc(-50% + 12px)',
               },
             }}
           />
-
         </div>
       </div>
     );
