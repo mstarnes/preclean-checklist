@@ -299,43 +299,42 @@ const ChecklistForm: React.FC = () => {
     const isCommitting = useRef(false);
 
     const forceCommit = useCallback(() => {
-        const forceCommit = () => {
-          addDebugLog(`forceCommit called for ${label}`);
+      addDebugLog(`forceCommit called for ${label}`);
 
-          if (isCommitting.current) {
-            addDebugLog(`Second forceCommit ignored for ${label}`);
-            return;
-          }
+      if (isCommitting.current) {
+        addDebugLog(`Second forceCommit ignored for ${label}`);
+        return;
+      }
 
-          isCommitting.current = true;
-          addDebugLog(`Processing first commit for ${label}`);
+      isCommitting.current = true;
+      addDebugLog(`Processing first commit for ${label}`);
 
-          // Remove onAfterChange listener to prevent second fire
-          const sliderElement = sliderRef.current;
-          if (sliderElement) {
-            sliderElement.removeEventListener('afterchange', forceCommit);
-            addDebugLog(`onAfterChange listener removed for ${label}`);
-          }
+      // Remove onAfterChange listener to prevent second fire
+      const sliderElement = sliderRef.current;
+      if (sliderElement) {
+        sliderElement.removeEventListener('afterchange', forceCommit);
+        addDebugLog(`onAfterChange listener removed for ${label}`);
+      }
 
-          if (sliderContainerRef.current) {
-            const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
-            if (thumb && thumb.textContent) {
-              const live = Number(thumb.textContent.trim());
-              addDebugLog(`Committing live value for ${label}: ${live}`);
-              setFormData(prev => ({ ...prev, [field]: live }));
-            }
-          }
+      if (sliderContainerRef.current) {
+        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
+        if (thumb && thumb.textContent) {
+          const live = Number(thumb.textContent.trim());
+          addDebugLog(`Committing live value for ${label}: ${live}`);
+          setFormData(prev => ({ ...prev, [field]: live }));
+        }
+      }
 
-          setTimeout(() => {
-            isCommitting.current = false;
-            addDebugLog(`Commit flag reset for ${label}`);
+      setTimeout(() => {
+        isCommitting.current = false;
+        addDebugLog(`Commit flag reset for ${label}`);
 
-            // Re-add listener
-            if (sliderElement) {
-              sliderElement.addEventListener('afterchange', forceCommit);
-              addDebugLog(`onAfterChange listener restored for ${label}`);
-            }
-          }, 400);
+        // Re-add listener
+        if (sliderElement) {
+          sliderElement.addEventListener('afterchange', forceCommit);
+          addDebugLog(`onAfterChange listener restored for ${label}`);
+        }
+      }, 400);
     }, [field, label]); // add any actual dependencies (field/label are stable)
 
     // Attach native listener on mount and cleanup properly
