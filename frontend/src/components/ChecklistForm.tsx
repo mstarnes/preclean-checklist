@@ -291,17 +291,16 @@ const ChecklistForm: React.FC = () => {
 
   
   // Helper to render a slider row
-
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
     const sliderContainerRef = useRef<HTMLDivElement>(null);
+    const sliderRef = useRef<HTMLDivElement>(null); // ref for the actual slider element
     const isCommitting = useRef(false);
 
     const forceCommit = () => {
       addDebugLog(`forceCommit called for ${label}`);
 
-      // Block second call
       if (isCommitting.current) {
         addDebugLog(`Second forceCommit ignored for ${label}`);
         return;
@@ -309,6 +308,12 @@ const ChecklistForm: React.FC = () => {
 
       isCommitting.current = true;
       addDebugLog(`Processing first commit for ${label}`);
+
+      // Remove onAfterChange listener to prevent second fire
+      if (sliderRef.current) {
+        sliderRef.current.removeEventListener('afterchange', handleAfterChange);
+        addDebugLog(`onAfterChange listener removed for ${label}`);
+      }
 
       if (sliderContainerRef.current) {
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
@@ -319,12 +324,35 @@ const ChecklistForm: React.FC = () => {
         }
       }
 
-      // Reset flag after 400ms (covers the double call window)
+      // Reset flag and re-add listener after 400ms
       setTimeout(() => {
         isCommitting.current = false;
         addDebugLog(`Commit flag reset for ${label}`);
+
+        if (sliderRef.current) {
+          sliderRef.current.addEventListener('afterchange', handleAfterChange);
+          addDebugLog(`onAfterChange listener restored for ${label}`);
+        }
       }, 400);
     };
+
+    // The actual handler for onAfterChange (bound to native event)
+    const handleAfterChange = () => {
+      forceCommit();
+    };
+
+    // Attach the native listener on mount
+    useEffect(() => {
+      if (sliderRef.current) {
+        sliderRef.current.addEventListener('afterchange', handleAfterChange);
+      }
+
+      return () => {
+        if (sliderRef.current) {
+          sliderRef.current.removeEventListener('afterchange', handleAfterChange);
+        }
+      };
+    }, []);
 
     return (
       <div className="flex items-center justify-between py-3">
@@ -339,10 +367,11 @@ const ChecklistForm: React.FC = () => {
             value={formData[field] as number}
             onTouchEnd={forceCommit}
             onMouseUp={forceCommit}
-            onAfterChange={forceCommit}  // fallback if touchend missed
+            // Remove onAfterChange prop — we use native listener instead
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
+                ref={sliderRef}  // attach ref to the slider root (the div react-slider renders)
                 className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
                 style={{
                   ...props.style,
@@ -358,7 +387,7 @@ const ChecklistForm: React.FC = () => {
       </div>
     );
   };
-
+  
   /*
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const [value, setValue] = React.useState<number>(formData[field] as number);
