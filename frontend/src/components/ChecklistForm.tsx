@@ -318,6 +318,7 @@ const ChecklistForm: React.FC = () => {
           const live = Number(thumb.textContent.trim());
           if( live !== Number(formData[field]) ) {
             addDebugLog(`Committing live value for ${label}: ${live}`);
+            addDebugLog('formData field value: ' + formData[field]);
             setFormData(prev => ({ ...prev, [field]: live }));
           }
         }
