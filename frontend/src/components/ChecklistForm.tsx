@@ -352,7 +352,7 @@ const ChecklistForm: React.FC = () => {
           sliderRef.current.removeEventListener('afterchange', handleAfterChange);
         }
       };
-    }, []);
+    }, [handleAfterChange]);
 
     return (
       <div className="flex items-center justify-between py-3">
