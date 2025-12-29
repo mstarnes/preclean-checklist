@@ -353,7 +353,7 @@ const ChecklistForm: React.FC = () => {
         } catch (error) {
           addDebugLog(`Runtime error in SliderRow useEffect (${label}): ${error instanceof Error ? error.message : String(error)}`);
         }
-    }, [forceCommit]); // empty deps — forceCommit is stable (no dependencies inside)
+    }, [forceCommit, label]); // empty deps — forceCommit is stable (no dependencies inside)
 
     return (
       <div className="flex items-center justify-between py-3">
