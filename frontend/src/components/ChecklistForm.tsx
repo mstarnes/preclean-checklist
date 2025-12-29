@@ -298,6 +298,11 @@ const ChecklistForm: React.FC = () => {
     const sliderRef = useRef<HTMLDivElement>(null); // ref for the actual slider element
     const isCommitting = useRef(false);
 
+    // The actual handler for onAfterChange (bound to native event)
+    const handleAfterChange = () => {
+      forceCommit();
+    };
+
     const forceCommit = () => {
       addDebugLog(`forceCommit called for ${label}`);
 
@@ -334,11 +339,6 @@ const ChecklistForm: React.FC = () => {
           addDebugLog(`onAfterChange listener restored for ${label}`);
         }
       }, 400);
-    };
-
-    // The actual handler for onAfterChange (bound to native event)
-    const handleAfterChange = () => {
-      forceCommit();
     };
 
     // Attach the native listener on mount
@@ -387,7 +387,7 @@ const ChecklistForm: React.FC = () => {
       </div>
     );
   };
-  
+
   /*
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const [value, setValue] = React.useState<number>(formData[field] as number);
