@@ -349,7 +349,7 @@ const ChecklistForm: React.FC = () => {
           sliderElement.removeEventListener('afterchange', forceCommit);
         }
       };
-    }, [forceCommit]); // empty deps — forceCommit is stable (no dependencies inside)
+    }, []); // empty deps — forceCommit is stable (no dependencies inside)
 
     return (
       <div className="flex items-center justify-between py-3">
