@@ -314,7 +314,7 @@ const ChecklistForm: React.FC = () => {
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
-          if( live !== Number(${formData[field]}) ) {
+          if( live !== Number(formData[field]) ) {
             addDebugLog(`Committing live value for ${label}: ${live}`);
             setFormData(prev => ({ ...prev, [field]: live }));
           }
