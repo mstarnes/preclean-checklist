@@ -291,97 +291,101 @@ const ChecklistForm: React.FC = () => {
 
   
   // Helper to render a slider row
-  const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
-    const { min, max } = getMinMax(field);
+  const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => { 
+    try {
+      const { min, max } = getMinMax(field);
 
-    const sliderContainerRef = useRef<HTMLDivElement>(null);
-    const sliderRef = useRef<HTMLDivElement>(null);
-    const isCommitting = useRef(false);
+      const sliderContainerRef = useRef<HTMLDivElement>(null);
+      const sliderRef = useRef<HTMLDivElement>(null);
+      const isCommitting = useRef(false);
 
-    const forceCommit = useCallback(() => {
-      addDebugLog(`forceCommit called for ${label}`);
+      const forceCommit = useCallback(() => {
+        addDebugLog(`forceCommit called for ${label}`);
 
-      if (isCommitting.current) {
-        addDebugLog(`Second forceCommit ignored for ${label}`);
-        return;
-      }
-
-      isCommitting.current = true;
-      addDebugLog(`Processing first commit for ${label}`);
-
-      // Remove onAfterChange listener to prevent second fire
-      const sliderElement = sliderRef.current;
-      if (sliderElement) {
-        sliderElement.removeEventListener('afterchange', forceCommit);
-        addDebugLog(`onAfterChange listener removed for ${label}`);
-      }
-
-      if (sliderContainerRef.current) {
-        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
-        if (thumb && thumb.textContent) {
-          const live = Number(thumb.textContent.trim());
-          addDebugLog(`Committing live value for ${label}: ${live}`);
-          setFormData(prev => ({ ...prev, [field]: live }));
+        if (isCommitting.current) {
+          addDebugLog(`Second forceCommit ignored for ${label}`);
+          return;
         }
-      }
 
-      setTimeout(() => {
-        isCommitting.current = false;
-        addDebugLog(`Commit flag reset for ${label}`);
+        isCommitting.current = true;
+        addDebugLog(`Processing first commit for ${label}`);
 
-        // Re-add listener
-        if (sliderElement) {
-          sliderElement.addEventListener('afterchange', forceCommit);
-          addDebugLog(`onAfterChange listener restored for ${label}`);
-        }
-      }, 400);
-    }, [field, label]); // add any actual dependencies (field/label are stable)
-
-    // Attach native listener on mount and cleanup properly
-    useEffect(() => {
-      const sliderElement = sliderRef.current;
-      if (sliderElement) {
-        sliderElement.addEventListener('afterchange', forceCommit);
-      }
-
-      return () => {
+        // Remove onAfterChange listener to prevent second fire
+        const sliderElement = sliderRef.current;
         if (sliderElement) {
           sliderElement.removeEventListener('afterchange', forceCommit);
+          addDebugLog(`onAfterChange listener removed for ${label}`);
         }
-      };
-    }, []); // empty deps — forceCommit is stable (no dependencies inside)
 
-    return (
-      <div className="flex items-center justify-between py-3">
-        <span className="text-base font-medium">{label}</span>
-        <div className="flex items-center space-x-4 touch-none" ref={sliderContainerRef}>
-          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
-          <Slider
-            className="w-40 h-10 relative slider-row slider-container"
-            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
-            min={min}
-            max={max}
-            value={formData[field] as number}
-            onTouchEnd={forceCommit}
-            onMouseUp={forceCommit}
-            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
-              <div
-                {...props}
-                ref={sliderRef}  // attach ref here
-                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
-                style={{
-                  ...props.style,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                {state.valueNow}
-              </div>
-            )}
-          />
+        if (sliderContainerRef.current) {
+          const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
+          if (thumb && thumb.textContent) {
+            const live = Number(thumb.textContent.trim());
+            addDebugLog(`Committing live value for ${label}: ${live}`);
+            setFormData(prev => ({ ...prev, [field]: live }));
+          }
+        }
+
+        setTimeout(() => {
+          isCommitting.current = false;
+          addDebugLog(`Commit flag reset for ${label}`);
+
+          // Re-add listener
+          if (sliderElement) {
+            sliderElement.addEventListener('afterchange', forceCommit);
+            addDebugLog(`onAfterChange listener restored for ${label}`);
+          }
+        }, 400);
+      }, [field, label]); // add any actual dependencies (field/label are stable)
+
+      // Attach native listener on mount and cleanup properly
+      useEffect(() => {
+        const sliderElement = sliderRef.current;
+        if (sliderElement) {
+          sliderElement.addEventListener('afterchange', forceCommit);
+        }
+
+        return () => {
+          if (sliderElement) {
+            sliderElement.removeEventListener('afterchange', forceCommit);
+          }
+        };
+      }, [forceCommit]); // empty deps — forceCommit is stable (no dependencies inside)
+
+      return (
+        <div className="flex items-center justify-between py-3">
+          <span className="text-base font-medium">{label}</span>
+          <div className="flex items-center space-x-4 touch-none" ref={sliderContainerRef}>
+            <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
+            <Slider
+              className="w-40 h-10 relative slider-row slider-container"
+              trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
+              min={min}
+              max={max}
+              value={formData[field] as number}
+              onTouchEnd={forceCommit}
+              onMouseUp={forceCommit}
+              renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
+                <div
+                  {...props}
+                  ref={sliderRef}  // attach ref here
+                  className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
+                  style={{
+                    ...props.style,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                  }}
+                >
+                  {state.valueNow}
+                </div>
+              )}
+            />
+          </div>
         </div>
-      </div>
-    );
+      );
+    } catch (error) {
+      addDebugLog(`Runtime error in SliderRow (${label}): ${error instanceof Error ? error.message : String(error)}`);
+    }
   };  
   
   /*
