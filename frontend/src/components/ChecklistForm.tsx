@@ -5,7 +5,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FaUndo, FaCheck, FaLock } from "react-icons/fa";
 import debounce from "lodash/debounce";
-import Slider from '@mui/material/Slider';
+// import Slider from '@mui/material/Slider';
+import Slider from 'react-slider';
 import type { SyntheticEvent } from "react";  // Optional, for clarity
 
 interface FormDataType {
@@ -288,7 +289,77 @@ const ChecklistForm: React.FC = () => {
     }
   };
 
+  
   // Helper to render a slider row
+
+  const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
+    const { min, max } = getMinMax(field);
+
+    const sliderContainerRef = useRef<HTMLDivElement>(null);
+    const isCommitting = useRef(false);
+
+    const forceCommit = () => {
+      addDebugLog(`forceCommit called for ${label}`);
+
+      // Block second call
+      if (isCommitting.current) {
+        addDebugLog(`Second forceCommit ignored for ${label}`);
+        return;
+      }
+
+      isCommitting.current = true;
+      addDebugLog(`Processing first commit for ${label}`);
+
+      if (sliderContainerRef.current) {
+        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
+        if (thumb && thumb.textContent) {
+          const live = Number(thumb.textContent.trim());
+          addDebugLog(`Committing live value for ${label}: ${live}`);
+          setFormData(prev => ({ ...prev, [field]: live }));
+        }
+      }
+
+      // Reset flag after 400ms (covers the double call window)
+      setTimeout(() => {
+        isCommitting.current = false;
+        addDebugLog(`Commit flag reset for ${label}`);
+      }, 400);
+    };
+
+    return (
+      <div className="flex items-center justify-between py-3">
+        <span className="text-base font-medium">{label}</span>
+        <div className="flex items-center space-x-4 touch-none" ref={sliderContainerRef}>
+          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
+          <Slider
+            className="w-40 h-10 relative slider-row slider-container"
+            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
+            min={min}
+            max={max}
+            value={formData[field] as number}
+            onTouchEnd={forceCommit}
+            onMouseUp={forceCommit}
+            onAfterChange={forceCommit}  // fallback if touchend missed
+            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
+              <div
+                {...props}
+                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
+                style={{
+                  ...props.style,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                {state.valueNow}
+              </div>
+            )}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  /*
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const [value, setValue] = React.useState<number>(formData[field] as number);
     const { min, max } = getMinMax(field);
@@ -370,6 +441,7 @@ const ChecklistForm: React.FC = () => {
       </div>
     );
   };
+  */
 
   /*
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
