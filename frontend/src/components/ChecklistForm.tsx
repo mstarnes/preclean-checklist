@@ -312,7 +312,7 @@ const ChecklistForm: React.FC = () => {
       // Remove onAfterChange listener to prevent second fire
       const sliderElement = sliderRef.current;
       if (sliderElement) {
-        sliderElement.removeEventListener('afterchange', forceCommit);
+        //sliderElement.removeEventListener('afterchange', forceCommit);
         addDebugLog(`onAfterChange listener removed for ${label}`);
       }
 
@@ -331,7 +331,7 @@ const ChecklistForm: React.FC = () => {
 
         // Re-add listener
         if (sliderElement) {
-          sliderElement.addEventListener('afterchange', forceCommit);
+          //sliderElement.addEventListener('afterchange', forceCommit);
           addDebugLog(`onAfterChange listener restored for ${label}`);
         }
       }, 400);
