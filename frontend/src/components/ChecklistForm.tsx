@@ -314,16 +314,16 @@ const ChecklistForm: React.FC = () => {
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
-          addDebugLog(`Committing live value for ${label}: ${live}`);
-          setFormData(prev => ({ ...prev, [field]: live }));
-          // todo: remove onAfterChange listener
+          if( live !== Number(${formData[field]}) ) {
+            addDebugLog(`Committing live value for ${label}: ${live}`);
+            setFormData(prev => ({ ...prev, [field]: live }));
+          }
         }
       }
 
       // Reset flag after 400ms (covers the double call window)
       setTimeout(() => {
         isCommitting.current = false;
-        // todo: restore onAfterChange listener
         addDebugLog(`Commit flag reset for ${label}`);
       }, 400);
     };
