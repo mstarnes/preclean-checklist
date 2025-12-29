@@ -310,6 +310,7 @@ const ChecklistForm: React.FC = () => {
       }
 
       isCommitting.current = true;
+      addDebugLog("Set isCommitting: " + JSON.stringify(isCommitting));
       addDebugLog(`Processing first commit for ${label}`);
 
       if (sliderContainerRef.current) {
