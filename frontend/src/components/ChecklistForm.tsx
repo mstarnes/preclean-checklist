@@ -1,5 +1,5 @@
 // frontend/src/components/ChecklistForm.tsx
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -291,16 +291,17 @@ const ChecklistForm: React.FC = () => {
 
   
   // Helper to render a slider row
-  const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => { 
+
+  const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
     const sliderContainerRef = useRef<HTMLDivElement>(null);
-    const sliderRef = useRef<HTMLDivElement>(null);
     const isCommitting = useRef(false);
 
-    const forceCommit = useCallback(() => {
+    const forceCommit = () => {
       addDebugLog(`forceCommit called for ${label}`);
 
+      // Block second call
       if (isCommitting.current) {
         addDebugLog(`Second forceCommit ignored for ${label}`);
         return;
@@ -309,51 +310,23 @@ const ChecklistForm: React.FC = () => {
       isCommitting.current = true;
       addDebugLog(`Processing first commit for ${label}`);
 
-      // Remove onAfterChange listener to prevent second fire
-      const sliderElement = sliderRef.current;
-      if (sliderElement) {
-        //sliderElement.removeEventListener('afterchange', forceCommit);
-        addDebugLog(`onAfterChange listener removed for ${label}`);
-      }
-
       if (sliderContainerRef.current) {
         const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
         if (thumb && thumb.textContent) {
           const live = Number(thumb.textContent.trim());
           addDebugLog(`Committing live value for ${label}: ${live}`);
           setFormData(prev => ({ ...prev, [field]: live }));
+          // todo: remove onAfterChange listener
         }
       }
 
+      // Reset flag after 400ms (covers the double call window)
       setTimeout(() => {
         isCommitting.current = false;
+        // todo: restore onAfterChange listener
         addDebugLog(`Commit flag reset for ${label}`);
-
-        // Re-add listener
-        if (sliderElement) {
-          //sliderElement.addEventListener('afterchange', forceCommit);
-          addDebugLog(`onAfterChange listener restored for ${label}`);
-        }
       }, 400);
-    }, [field, label]); // add any actual dependencies (field/label are stable)
-
-    // Attach native listener on mount and cleanup properly
-    useEffect(() => {
-      try {
-        const sliderElement = sliderRef.current;
-        if (sliderElement) {
-          sliderElement.addEventListener('afterchange', forceCommit);
-        }
-
-        return () => {
-          if (sliderElement) {
-            sliderElement.removeEventListener('afterchange', forceCommit);
-          }
-        };
-        } catch (error) {
-          addDebugLog(`Runtime error in SliderRow useEffect (${label}): ${error instanceof Error ? error.message : String(error)}`);
-        }
-    }, [forceCommit, label]); // empty deps — forceCommit is stable (no dependencies inside)
+    };
 
     return (
       <div className="flex items-center justify-between py-3">
@@ -368,10 +341,10 @@ const ChecklistForm: React.FC = () => {
             value={formData[field] as number}
             onTouchEnd={forceCommit}
             onMouseUp={forceCommit}
+            onAfterChange={forceCommit}  // fallback if touchend missed
             renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
               <div
                 {...props}
-                ref={sliderRef}  // attach ref here
                 className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
                 style={{
                   ...props.style,
@@ -386,8 +359,8 @@ const ChecklistForm: React.FC = () => {
         </div>
       </div>
     );
-  };  
-  
+  };
+
   /*
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const [value, setValue] = React.useState<number>(formData[field] as number);
