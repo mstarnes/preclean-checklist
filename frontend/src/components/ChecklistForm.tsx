@@ -302,7 +302,7 @@ const ChecklistForm: React.FC = () => {
       addDebugLog(`forceCommit called for ${label}`);
 
       // Block second call
-      if (isCommitting.current) {
+      if (isCommitting.current === true) {
         addDebugLog(`Second forceCommit ignored for ${label}`);
         return;
       }
