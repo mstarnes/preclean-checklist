@@ -305,6 +305,8 @@ const ChecklistForm: React.FC = () => {
       if (isCommitting.current === true) {
         addDebugLog(`Second forceCommit ignored for ${label}`);
         return;
+      } else {
+        addDebugLog("isCommitting: " + JSON.stringify(isCommitting));
       }
 
       isCommitting.current = true;
