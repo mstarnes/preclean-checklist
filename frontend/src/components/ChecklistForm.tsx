@@ -611,31 +611,38 @@ const ChecklistForm: React.FC = () => {
     <div className="p-4 max-w-md mx-auto bg-white min-h-screen relative">
       {isPosted && (
         <>
-        {/* Complete / Reopen button (rightmost) */}
-        <button
-          onClick={handleCompleteToggle}
-          className={`absolute top-4 right-4 p-2 rounded text-white font-bold ${/* your existing classes */}`}
-        >
-          {formData.completed ? <FaLock className="h-6 w-6" /> : <FaCheck className="h-6 w-6" />}
-        </button>
+          {/* Debug toggle button */}
+          {/* Reset button — disabled when completed */}
+          <button
+            onClick={handleReset}
+            disabled={formData.completed || isResetting}
+            className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded disabled:opacity-50"
+          >
+            {/* @ts-ignore */}
+            <FaUndo className="h-6 w-6" />
+          </button>
 
-        {/* Reset button */}
-        <button
-          onClick={handleReset}
-          disabled={formData.completed || isResetting}
-          className="absolute top-4 right-16 bg-red-500 text-white p-2 rounded disabled:opacity-50"
-        >
-          <FaUndo className="h-6 w-6" />
-        </button>
+          {/* Complete / Reopen button */}
+          <button
+            onClick={handleCompleteToggle}
+            className={`absolute top-4 right-16 p-2 rounded text-white font-bold ${
+              formData.completed
+                ? "bg-amber-600 hover:bg-amber-700" // lock style when completed
+                : "bg-green-500 hover:bg-green-600" // checkmark style when incomplete
+            }`}
+          >
+            {/* @ts-ignore */}
+            {formData.completed ? (<FaLock className="h-6 w-6" />) : (<FaCheck className="h-6 w-6" />)}
+          </button>
 
-        {/* Debug toggle button (left of Reset) */}
-        <button
-          onClick={() => setDebugMode(prev => !prev)}
-          className="absolute top-4 right-28 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded transition"
-          title={debugMode ? "Hide debug logs" : "Show debug logs"}
-        >
-          <FaBug className="h-6 w-6" />
-        </button>
+          <button
+            onClick={() => setDebugMode(prev => !prev)}
+            className="absolute top-4 right-28 bg-purple-600 text-white p-2 rounded font-bold"
+          >
+            {/* @ts-ignore */}
+            <FaBug className="h-6 w-6" />
+          </button>
+
         </>
       )}
 
