@@ -125,8 +125,6 @@ const initialFormData: FormDataType = {
   completed: false,
 };
 
-const [isCommitting, setIsCommitting] = useState(false);
-
 const ChecklistForm: React.FC = () => {
   const { cabin } = useParams<{ cabin: string }>();
   const [searchParams] = useSearchParams();
@@ -308,6 +306,7 @@ const ChecklistForm: React.FC = () => {
     const { min, max } = getMinMax(field);
 
     const sliderContainerRef = useRef<HTMLDivElement>(null);
+    const [isCommitting, setIsCommitting] = useState(false);
 
     const forceCommit = () => {
       addDebugLog(`forceCommit called for ${label}`);
