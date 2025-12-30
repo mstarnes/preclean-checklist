@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { FaUndo, FaCheck, FaLock } from "react-icons/fa";
+import { FaUndo, FaCheck, FaLock, FaBug } from "react-icons/fa";
 import debounce from "lodash/debounce";
 // import Slider from '@mui/material/Slider';
 import Slider from 'react-slider';
@@ -617,7 +617,7 @@ const ChecklistForm: React.FC = () => {
             className="absolute top-4 right-21 bg-purple-600 text-white p-2 rounded font-bold"
           >
             {/* @ts-ignore */}
-            <FaDebug className="h-6 w-6" />
+            <FaBug className="h-6 w-6" />
           </button>
           {/* Reset button — disabled when completed */}
           <button
