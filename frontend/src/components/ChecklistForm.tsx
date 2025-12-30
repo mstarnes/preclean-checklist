@@ -125,6 +125,8 @@ const initialFormData: FormDataType = {
   completed: false,
 };
 
+const [isCommitting, setIsCommitting] = useState(false);
+
 const ChecklistForm: React.FC = () => {
   const { cabin } = useParams<{ cabin: string }>();
   const [searchParams] = useSearchParams();
@@ -292,6 +294,81 @@ const ChecklistForm: React.FC = () => {
   
   // Helper to render a slider row
 
+  const SliderRow = ({ 
+    label, 
+    field, 
+    isCommitting, 
+    setIsCommitting 
+  }: { 
+    label: string; 
+    field: keyof FormDataType;
+    isCommitting: boolean;
+    setIsCommitting: React.Dispatch<React.SetStateAction<boolean>>;
+  }) => {
+    const { min, max } = getMinMax(field);
+
+    const sliderContainerRef = useRef<HTMLDivElement>(null);
+
+    const forceCommit = () => {
+      addDebugLog(`forceCommit called for ${label}`);
+
+      if (isCommitting) {
+        addDebugLog(`Second forceCommit blocked for ${label} (global flag true)`);
+        return;
+      }
+
+      setIsCommitting(true);
+      addDebugLog(`Global flag set for ${label}`);
+
+      if (sliderContainerRef.current) {
+        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
+        if (thumb && thumb.textContent) {
+          const live = Number(thumb.textContent.trim());
+          addDebugLog(`Committing live value for ${label}: ${live}`);
+          setFormData(prev => ({ ...prev, [field]: live }));
+        }
+      }
+
+      setTimeout(() => {
+        setIsCommitting(false);
+        addDebugLog(`Global flag reset`);
+      }, 400);
+    };
+
+    return (
+      <div className="flex items-center justify-between py-3">
+        <span className="text-base font-medium">{label}</span>
+        <div className="flex items-center space-x-4 touch-none" ref={sliderContainerRef}>
+          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
+          <Slider
+            className="w-40 h-10 relative slider-row slider-container"
+            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
+            min={min}
+            max={max}
+            value={formData[field] as number}
+            onTouchEnd={forceCommit}
+            onMouseUp={forceCommit}
+            onAfterChange={forceCommit}
+            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
+              <div
+                {...props}
+                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
+                style={{
+                  ...props.style,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                {state.valueNow}
+              </div>
+            )}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  /*
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const { min, max } = getMinMax(field);
 
@@ -364,7 +441,7 @@ const ChecklistForm: React.FC = () => {
       </div>
     );
   };
-
+  */
   /*
   const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
     const [value, setValue] = React.useState<number>(formData[field] as number);
@@ -610,8 +687,8 @@ const ChecklistForm: React.FC = () => {
             />
             <span>TV Remote under TV</span>
           </label>
-          <SliderRow label="Pen for Guestbook" field="pen" />
-          <SliderRow label="Check Lightbulbs" field="bathCheckLights" />
+          <SliderRow label="Pen for Guestbook" field="pen" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+          <SliderRow label="Check Lightbulbs" field="bathCheckLights" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
           <label className="block">
             Clean AC Filter:
             <select
@@ -631,29 +708,29 @@ const ChecklistForm: React.FC = () => {
       {/* Batteries */}
       <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-4">Batteries</h3>
-        <SliderRow label="Lock (AA)" field="lockBattery" />
-        <SliderRow label="Smoke Alarm (AA)" field="smokeAlarmBattery" />
-        <SliderRow label="Motion Detector (AA)" field="motionDetectorBattery" />
-        <SliderRow label="Door Sensor (CR2032)" field="doorSensorBattery" />
+        <SliderRow label="Lock (AA)" field="lockBattery" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Smoke Alarm (AA)" field="smokeAlarmBattery" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Motion Detector (AA)" field="motionDetectorBattery" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Door Sensor (CR2032)" field="doorSensorBattery" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
       </section>
 
       {/* Bath */}
       <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-4">Bath</h3>
-        <SliderRow label="Bath Towels" field="bathTowels" />
-        <SliderRow label="Hand Towels" field="handTowels" />
-        <SliderRow label="Wash Cloths" field="washCloths" />
-        <SliderRow label="Makeup Cloths" field="makeupCloths" />
-        <SliderRow label="Bath Mat" field="bathMat" />
-        <SliderRow label="Shampoo" field="shampoo" />
-        <SliderRow label="Conditioner" field="conditioner" />
-        <SliderRow label="Body Wash" field="bodyWash" />
-        <SliderRow label="Body Lotion" field="bodyLotion" />
-        <SliderRow label="Bar Soap" field="barSoap" />
-        <SliderRow label="Soap Dispenser" field="soapDispenser" />
-        <SliderRow label="Toilet Paper" field="toiletPaper" />
-        <SliderRow label="Paper Cups, Bathroom" field="bathroomCups" />
-        <SliderRow label="Kleenex" field="kleenex" />
+        <SliderRow label="Bath Towels" field="bathTowels" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Hand Towels" field="handTowels" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Wash Cloths" field="washCloths" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Makeup Cloths" field="makeupCloths" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Bath Mat" field="bathMat" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Shampoo" field="shampoo" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Conditioner" field="conditioner" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Body Wash" field="bodyWash" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Body Lotion" field="bodyLotion" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Bar Soap" field="barSoap" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Soap Dispenser" field="soapDispenser" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Toilet Paper" field="toiletPaper" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Paper Cups, Bathroom" field="bathroomCups" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Kleenex" field="kleenex" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
 
         {/* Checkboxes — unchanged */}
         <label className="flex items-center space-x-2">
@@ -743,20 +820,20 @@ const ChecklistForm: React.FC = () => {
       {/* Kitchen */}
       <section className="mb-8 bg-gray-50 p-4 rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-4">Kitchen</h3>
-        <SliderRow label="Water Bottles" field="waterBottles" />
-        <SliderRow label="Coffee Pods" field="coffeePods" />
-        <SliderRow label="Coffee Sweeteners" field="coffeeSweeteners" />
-        <SliderRow label="Coffee Creamer" field="coffeeCreamer" />
-        <SliderRow label="Coffee Cups, Ceramic" field="coffeeCupsCeramic" />
-        <SliderRow label="Coffee Cups, Paper" field="coffeeCupsPaper" />
-        <SliderRow label="Coffee Cup Lids" field="coffeeCupLids" />
-        <SliderRow label="Coffee Stirrers" field="coffeeStirrers" />
-        <SliderRow label="Reline Trash Cans" field="emptyRelineTrashCans" />
+        <SliderRow label="Water Bottles" field="waterBottles" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Coffee Pods" field="coffeePods" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Coffee Sweeteners" field="coffeeSweeteners" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Coffee Creamer" field="coffeeCreamer" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Coffee Cups, Ceramic" field="coffeeCupsCeramic" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Coffee Cups, Paper" field="coffeeCupsPaper" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Coffee Cup Lids" field="coffeeCupLids" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Coffee Stirrers" field="coffeeStirrers" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+        <SliderRow label="Reline Trash Cans" field="emptyRelineTrashCans" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
 
         {isCabin3 && (
           <>
-            <SliderRow label="Paper Towels" field="paperTowels" />
-            <SliderRow label="Dish Soap" field="dishSoap" />
+            <SliderRow label="Paper Towels" field="paperTowels" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
+            <SliderRow label="Dish Soap" field="dishSoap" isCommitting={isCommitting} setIsCommitting={setIsCommitting} />
           </>
         )}
 
