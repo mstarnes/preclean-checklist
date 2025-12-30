@@ -148,7 +148,7 @@ const ChecklistForm: React.FC = () => {
   const [isCommitting, setIsCommitting] = useState(false);
   const [id, setId] = useState(edit || undefined);
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
-  const [debugMode, setDebugMode] = useState(true); // set false for production
+  const [debugMode, setDebugMode] = useState(false); // set false for production
 
   const addDebugLog = (message: string) => {
     const now = new Date();
@@ -611,21 +611,10 @@ const ChecklistForm: React.FC = () => {
     <div className="p-4 max-w-md mx-auto bg-white min-h-screen relative">
       {isPosted && (
         <>
-          {/* Debug toggle button */}
-          {/* Reset button — disabled when completed */}
-          <button
-            onClick={handleReset}
-            disabled={formData.completed || isResetting}
-            className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded disabled:opacity-50"
-          >
-            {/* @ts-ignore */}
-            <FaUndo className="h-6 w-6" />
-          </button>
-
           {/* Complete / Reopen button */}
           <button
             onClick={handleCompleteToggle}
-            className={`absolute top-4 right-16 p-2 rounded text-white font-bold ${
+            className={`absolute top-4 right-4 p-2 rounded text-white font-bold ${
               formData.completed
                 ? "bg-amber-600 hover:bg-amber-700" // lock style when completed
                 : "bg-green-500 hover:bg-green-600" // checkmark style when incomplete
@@ -635,6 +624,17 @@ const ChecklistForm: React.FC = () => {
             {formData.completed ? (<FaLock className="h-6 w-6" />) : (<FaCheck className="h-6 w-6" />)}
           </button>
 
+          {/* Reset button — disabled when completed */}
+          <button
+            onClick={handleReset}
+            disabled={formData.completed || isResetting}
+            className="absolute top-4 right-16 bg-red-500 text-white p-2 rounded disabled:opacity-50"
+          >
+            {/* @ts-ignore */}
+            <FaUndo className="h-6 w-6" />
+          </button>
+
+          {/* Debug toggle button */}
           <button
             onClick={() => setDebugMode(prev => !prev)}
             className="absolute top-4 right-28 bg-purple-600 text-white p-2 rounded font-bold"
