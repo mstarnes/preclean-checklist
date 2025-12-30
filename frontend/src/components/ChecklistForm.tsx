@@ -145,6 +145,7 @@ const ChecklistForm: React.FC = () => {
   });
   const [isPosted, setIsPosted] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [isCommitting, setIsCommitting] = useState(false);
   const [id, setId] = useState(edit || undefined);
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
 
@@ -306,7 +307,6 @@ const ChecklistForm: React.FC = () => {
     const { min, max } = getMinMax(field);
 
     const sliderContainerRef = useRef<HTMLDivElement>(null);
-    const [isCommitting, setIsCommitting] = useState(false);
 
     const forceCommit = () => {
       addDebugLog(`forceCommit called for ${label}`);
