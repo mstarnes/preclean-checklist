@@ -614,9 +614,10 @@ const ChecklistForm: React.FC = () => {
           {/* Debug toggle button */}
           <button
             onClick={() => setDebugMode(prev => !prev)}
-            className="fixed top-4 right-32 bg-purple-600 text-white px-3 py-2 rounded-lg shadow hover:bg-purple-700 text-sm z-50"
+            className="absolute top-4 right-21 bg-purple-600 text-white p-2 rounded font-bold"
           >
-            {debugMode ? 'Hide Debug' : 'Show Debug'}
+            {/* @ts-ignore */}
+            <FaDebug className="h-6 w-6" />
           </button>
           {/* Reset button — disabled when completed */}
           <button
