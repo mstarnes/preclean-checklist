@@ -270,7 +270,7 @@ const ChecklistForm: React.FC = () => {
       case "paperTowels":
       case "dishSoap":
       case "doorSensorBattery":
-        return { min: 0, max: 1 };
+        return { min: 0, max: 2 };
       case "bathCheckLights":
       case "livingCheckLights":
         return { min: 0, max: 5 };
