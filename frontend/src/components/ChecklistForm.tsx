@@ -148,6 +148,7 @@ const ChecklistForm: React.FC = () => {
   const [isCommitting, setIsCommitting] = useState(false);
   const [id, setId] = useState(edit || undefined);
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
+  const [debugMode, setDebugMode] = useState(true); // set false for production
 
   const addDebugLog = (message: string) => {
     const now = new Date();
@@ -610,6 +611,13 @@ const ChecklistForm: React.FC = () => {
     <div className="p-4 max-w-md mx-auto bg-white min-h-screen relative">
       {isPosted && (
         <>
+          {/* Debug toggle button */}
+          <button
+            onClick={() => setDebugMode(prev => !prev)}
+            className="fixed top-4 right-32 bg-purple-600 text-white px-3 py-2 rounded-lg shadow hover:bg-purple-700 text-sm z-50"
+          >
+            {debugMode ? 'Hide Debug' : 'Show Debug'}
+          </button>
           {/* Reset button — disabled when completed */}
           <button
             onClick={handleReset}
@@ -885,36 +893,37 @@ const ChecklistForm: React.FC = () => {
       </section>
 
       {/* Debug log area — fixed at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black text-white text-xs p-3 max-h-64 overflow-y-auto z-50 opacity-95">
-        <div className="font-bold mb-2">Debug Logs (newest first):</div>
-        <div className="mb-2 space-x-2">
-          <button
-            onClick={() => {
-              const logText = debugLogs.join('\n');
-              navigator.clipboard.writeText(logText).then(() => {
-                toast.success('Debug logs copied to clipboard!');
-              }).catch(() => {
-                toast.error('Failed to copy logs');
-              });
-            }}
-            className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs"
-          >
-            Copy Logs
-          </button>
-          <button
-            onClick={() => setDebugLogs([])}
-            className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-xs"
-          >
-            Clear Logs
-          </button>
+      {debugMode && (
+        <div className="fixed bottom-0 left-0 right-0 bg-black text-white text-xs p-3 max-h-64 overflow-y-auto z-50 opacity-95">
+          <div className="font-bold mb-2">Debug Logs (newest first):</div>
+          <div className="mb-2 space-x-2">
+            <button
+              onClick={() => {
+                const logText = debugLogs.join('\n');
+                navigator.clipboard.writeText(logText).then(() => {
+                  toast.success('Debug logs copied to clipboard!');
+                }).catch(() => {
+                  toast.error('Failed to copy logs');
+                });
+              }}
+              className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs"
+            >
+              Copy Logs
+            </button>
+            <button
+              onClick={() => setDebugLogs([])}
+              className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-xs"
+            >
+              Clear Logs
+            </button>
+          </div>
+          <div className="font-mono">
+            {debugLogs.map((log, i) => (
+              <div key={i}>{log}</div>
+            ))}
+          </div>
         </div>
-        <div className="font-mono">
-          {debugLogs.map((log, i) => (
-            <div key={i}>{log}</div>
-          ))}
-        </div>
-      </div>
-
+      )}
     </div>
   );
 };
