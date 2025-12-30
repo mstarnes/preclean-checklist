@@ -1,13 +1,10 @@
-// frontend/src/components/ChecklistForm.tsx
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FaUndo, FaCheck, FaLock, FaBug } from "react-icons/fa";
 import debounce from "lodash/debounce";
-// import Slider from '@mui/material/Slider';
 import Slider from 'react-slider';
-//import type { SyntheticEvent } from "react";  // Optional, for clarity
 
 interface FormDataType {
   cabinNumber: number;
@@ -162,28 +159,6 @@ const ChecklistForm: React.FC = () => {
     setDebugLogs(prev => [`${timestamp}: ${message}`, ...prev]);
   };
 
-  /*
-  useEffect(() => {
-    const preventScroll = (e: TouchEvent) => {
-      e.preventDefault();
-    };
-
-    const sliderThumbs = document.querySelectorAll('.slider-thumb'); // add class "slider-thumb" to your slider wrapper div
-    sliderContainers.forEach(container => {
-      (container as HTMLElement).addEventListener('touchmove', preventScroll, { passive: false});
-      (container as HTMLElement).addEventListener('touchstart', preventScroll, { passive: false});
-    });
-
-    return () => {
-      sliderContainers.forEach(container => {
-        (container as HTMLElement).removeEventListener('touchmove', preventScroll);
-        (container as HTMLElement).removeEventListener('touchstart', preventScroll);
-      });
-    };
-
-  }, []);
-  */
-
   useEffect(() => {
     if (id) {
       axios.get(`/api/checklists/${id}`).then((res) => {
@@ -246,6 +221,7 @@ const ChecklistForm: React.FC = () => {
 
   const getMinMax = (name: keyof FormDataType) => {
     switch (name) {
+      case "lockBattery":
       case "bathTowels":
       case "washCloths":
       case "waterBottles":
@@ -253,23 +229,13 @@ const ChecklistForm: React.FC = () => {
       case "coffeeCupsPaper":
       case "coffeeCupLids":
         return { min: 0, max: 4 };
+      case "motionDetectorBattery":
+      case "doorSensorBattery":
+      case "smokeAlarmBattery":
       case "handTowels":
       case "makeupCloths":
       case "emptyRelineTrashCans":
       case "toiletPaper":
-        return { min: 0, max: 2 };
-      case "bathMat":
-      case "shampoo":
-      case "conditioner":
-      case "bodyWash":
-      case "bodyLotion":
-      case "barSoap":
-      case "soapDispenser":
-      case "kleenex":
-      case "pen":
-      case "paperTowels":
-      case "dishSoap":
-      case "doorSensorBattery":
         return { min: 0, max: 2 };
       case "bathCheckLights":
       case "livingCheckLights":
@@ -281,11 +247,6 @@ const ChecklistForm: React.FC = () => {
         return { min: 0, max: 12 };
       case "bathroomCups":
         return { min: 0, max: 7 };
-      case "lockBattery":
-        return { min: 0, max: 4 };
-      case "smokeAlarmBattery":
-      case "motionDetectorBattery":
-        return { min: 0, max: 2 };
       default:
         return { min: 0, max: 1 };
     }
@@ -366,227 +327,6 @@ const ChecklistForm: React.FC = () => {
       </div>
     );
   };
-
-  /*
-  const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
-    const { min, max } = getMinMax(field);
-
-    const sliderContainerRef = useRef<HTMLDivElement>(null);
-    const isCommitting = useRef(false);
-
-    const forceCommit = () => {
-      addDebugLog(`forceCommit called for ${label}`);
-
-      // Block second call
-      if (isCommitting.current === true) {
-        addDebugLog(`Second forceCommit ignored for ${label}`);
-        return;
-      } else {
-        addDebugLog("isCommitting: " + JSON.stringify(isCommitting));
-      }
-
-      isCommitting.current = true;
-      addDebugLog("Set isCommitting: " + JSON.stringify(isCommitting));
-      addDebugLog(`Processing first commit for ${label}`);
-
-      if (sliderContainerRef.current) {
-        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
-        if (thumb && thumb.textContent) {
-          const live = Number(thumb.textContent.trim());
-          if( live !== Number(formData[field]) ) {
-            addDebugLog(`Committing live value for ${label}: ${live}`);
-            addDebugLog('formData field value: ' + formData[field]);
-            setFormData(prev => ({ ...prev, [field]: live }));
-          }
-        }
-      }
-
-      // Reset flag after 400ms (covers the double call window)
-      setTimeout(() => {
-        isCommitting.current = false;
-        addDebugLog(`Commit flag reset for ${label}`);
-      }, 400);
-    };
-
-    return (
-      <div className="flex items-center justify-between py-3">
-        <span className="text-base font-medium">{label}</span>
-        <div className="flex items-center space-x-4 touch-none" ref={sliderContainerRef}>
-          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
-          <Slider
-            className="w-40 h-10 relative slider-row slider-container"
-            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
-            min={min}
-            max={max}
-            value={formData[field] as number}
-            onTouchEnd={forceCommit}
-            onMouseUp={forceCommit}
-            onAfterChange={forceCommit}  // fallback if touchend missed
-            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
-              <div
-                {...props}
-                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
-                style={{
-                  ...props.style,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                {state.valueNow}
-              </div>
-            )}
-          />
-        </div>
-      </div>
-    );
-  };
-  */
-  /*
-  const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
-    const [value, setValue] = React.useState<number>(formData[field] as number);
-    const { min, max } = getMinMax(field);
-
-    const handleChange = (
-      event: Event | SyntheticEvent,
-      newValue: number | number[],
-      activeThumb?: number  // Include this optional param to match exactly
-    ) => {
-        // activeThumb is ignored for single-value sliders
-        const numericValue = Array.isArray(newValue) ? newValue[0] : newValue;
-      addDebugLog(`onChange for ${label}: ${numericValue}`);
-      addDebugLog( "value is " + value);
-      addDebugLog( "numericValue is " + numericValue);
-      try {
-        addDebugLog( "form shows " + formData[field]);
-        setValue(numericValue as number);  // Cast if your state is strictly number
-        addDebugLog( "1 value is now " + value);
-        addDebugLog(JSON.stringify(formData));
-        setFormData(prev => ({ ...prev, [field]: numericValue as number }));
-        addDebugLog( "form now has " + formData[field]);
-        addDebugLog(JSON.stringify(formData));
-      } catch (error) {
-        addDebugLog(`Runtime error in SliderRow (${label}): ${error instanceof Error ? error.message : String(error)}`);
-      }
-      addDebugLog( "2 value is now " + value);
-
-    };
-
-    const handleOnChangeCommitted = (
-      event: Event | SyntheticEvent,
-      newValue: number | number[],
-      activeThumb?: number
-    ) => {
-      const numericValue = Array.isArray(newValue) ? newValue[0] : newValue;
-
-      addDebugLog(`handleOnChangeCommitted for ${label}: ${numericValue}`);
-      setFormData(prev => ({ ...prev, [field]: numericValue as number }));
-    };
-
-    return (
-      <div className="flex items-center justify-between py-3">
-        <span className="text-base font-medium">{label}</span>
-        <div className="flex items-center space-x-4 w-64">
-          <span className="text-xl font-bold w-12 text-center">{value}</span>
-          <Slider
-            size="medium"
-            value={value}
-            onChange={handleChange}
-            onChangeCommitted={handleOnChangeCommitted}
-            min={min}
-            max={max}
-            valueLabelDisplay="on"
- 
-            sx={{
-              color: '#3b82f6',
-              height: 8,
-              '& .MuiSlider-track': {
-                backgroundColor: '#3b82f6',
-                border: 'none',
-              },
-              '& .MuiSlider-rail': {
-                backgroundColor: '#d1d5db',
-                opacity: 1,
-              },
-              '& .MuiSlider-thumb': {
-                backgroundColor: '#3b82f6',
-                '& .MuiSlider-valueLabel': {
-                  backgroundColor: '#3b82f6',
-                  color: '#fff',
-                  fontSize: '1rem',
-                  fontWeight: 'bold',
-                  top: 40, // adjust label position (lower = closer to thumb)
-                },
-              },
-            }}
-         />
-        </div>
-      </div>
-    );
-  };
-  */
-
-  /*
-  const SliderRow = ({ label, field }: { label: string; field: keyof FormDataType }) => {
-    const { min, max } = getMinMax(field);
-
-    const sliderContainerRef = useRef<HTMLDivElement>(null);
-
-    const forceCommit = () => {
-      addDebugLog(`forceCommit called for ${label}`);
-
-      if (sliderContainerRef.current) {
-        addDebugLog(`containerRef.current found for ${label}`);
-
-        const thumb = sliderContainerRef.current.querySelector('.slider-thumb');
-        if (thumb && thumb.textContent) {
-          const live = Number(thumb.textContent.trim());
-          addDebugLog(`Committing live value for ${label}: ${live}`);
-          setFormData(prev => ({ ...prev, [field]: live }));
-        } else {
-          addDebugLog(`No thumb or text found for ${label}`);
-        }
-      } else {
-        addDebugLog(`No containerRef for ${label}`);
-      }
-    };
-
-    return (
-      <div className="flex items-center justify-between py-3">
-        <span className="text-base font-medium">{label}</span>
-        <div 
-          className="flex items-center space-x-4 touch-none"
-          ref={sliderContainerRef}
-        >
-          <span className="text-xl font-bold w-12 text-center">{formData[field] as number}</span>
-          <Slider
-            className="w-40 h-10 relative slider-row slider-container"
-            trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
-            min={min}
-            max={max}
-            value={formData[field] as number}
-            onAfterChange={forceCommit}   // iOS PWA release
-            onTouchEnd={forceCommit}   // iOS PWA release
-            onMouseUp={forceCommit}    // Desktop fallback
-            renderThumb={(props: React.HTMLAttributes<HTMLDivElement>, state: { valueNow: number }) => (
-              <div
-                {...props}
-                className="slider-thumb h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md border-4 border-white"
-                style={{
-                  ...props.style,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                {state.valueNow}
-              </div>
-            )}
-          />
-        </div>
-      </div>
-    );
-  };
-  */
-
 
   const handleReset = async () => {
     if (id) {
