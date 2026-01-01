@@ -46,10 +46,12 @@ code {
   body * {
     visibility: hidden;
   }
+
   .print-only,
   .print-only * {
-    visibility: visible;
+    visibility: visible !important;
   }
+
   .print-only {
     position: static !important;
     left: auto !important;
@@ -62,5 +64,10 @@ code {
   @page {
     size: A4 portrait;
     margin: 1cm;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
   }
 }
