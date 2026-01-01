@@ -17,36 +17,28 @@ code {
     monospace;
 }
 
-/*
-@media screen {
-  .print-only {
-    position: absolute;
-    left: -9999px;
-    top: -9999px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-  }
-}
-*/
-
 @media print {
   body {
-    -webkit-print-color-adjust: exact; /* Ensures backgrounds/colors print correctly */
+    -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  /* Hide everything except the table */
-  body > *:not(.print-container) { /* Adjust selector to target your page wrapper if needed */
+  /* WRONG — this class doesn't exist in your HTML */
+  /* body > *:not(.print-container) {
+    display: none !important;
+  } */
+
+  /* CORRECT — hide everything except the actual printable wrapper */
+  body > *:not(.print-area) {
     display: none !important;
   }
 
-  /* Or more targeted: hide specific elements */
-  button, .mb-6, h2:first-of-type {
+  /* Also hide any children of .print-area that should not print */
+  .print-hidden {
     display: none !important;
   }
 
-  /* Show/make visible the table */
+  /* Rest of your print styles... */
   .overflow-x-auto {
     overflow: visible !important;
     margin: 0 !important;
@@ -56,23 +48,24 @@ code {
   table {
     width: auto !important;
     min-width: 100% !important;
-    table-layout: auto !important; /* Better for print fitting */
-    font-size: 10pt; /* Smaller text for print, adjust as needed */
+    table-layout: auto !important;
+    font-size: 10pt;
   }
 
   th, td {
-    border: 1px solid #000 !important; /* Darker borders for print */
+    border: 1px solid #333 !important;
     padding: 4px 8px !important;
   }
 
-  /* Optional: Add a title */
   body::before {
     content: "Restock Summary";
     display: block;
-    font-size: 16pt;
+    font-size: 18pt;
     font-weight: bold;
     text-align: center;
     margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #000;
   }
 
   @page {
