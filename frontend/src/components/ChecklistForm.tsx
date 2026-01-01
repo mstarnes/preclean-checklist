@@ -222,33 +222,35 @@ const ChecklistForm: React.FC = () => {
   const getMinMax = (name: keyof FormDataType) => {
     switch (name) {
       case "lockBattery":
+        return { min: 0, max: 4, step: 4 };
       case "bathTowels":
       case "washCloths":
       case "waterBottles":
       case "coffeeCupsCeramic":
       case "coffeeCupsPaper":
       case "coffeeCupLids":
-        return { min: 0, max: 4 };
+        return { min: 0, max: 4, step: 1 };
       case "motionDetectorBattery":
       case "doorSensorBattery":
       case "smokeAlarmBattery":
+        return { min: 0, max: 2, step: 2 };
       case "handTowels":
       case "makeupCloths":
       case "emptyRelineTrashCans":
       case "toiletPaper":
-        return { min: 0, max: 2 };
+        return { min: 0, max: 2, step: 1 };
       case "bathCheckLights":
       case "livingCheckLights":
-        return { min: 0, max: 5 };
+        return { min: 0, max: 5, step: 1 };
       case "coffeePods":
       case "coffeeSweeteners":
       case "coffeeCreamer":
       case "coffeeStirrers":
-        return { min: 0, max: 12 };
+        return { min: 0, max: 12, step: 1 };
       case "bathroomCups":
-        return { min: 0, max: 7 };
+        return { min: 0, max: 7, step: 1 };
       default:
-        return { min: 0, max: 1 };
+        return { min: 0, max: 1, step: 1 };
     }
   };
 
@@ -266,7 +268,7 @@ const ChecklistForm: React.FC = () => {
     isCommitting: boolean;
     setIsCommitting: React.Dispatch<React.SetStateAction<boolean>>;
   }) => {
-    const { min, max } = getMinMax(field);
+    const { min, max, step } = getMinMax(field);
 
     const sliderContainerRef = useRef<HTMLDivElement>(null);
 
@@ -305,6 +307,7 @@ const ChecklistForm: React.FC = () => {
             trackClassName="h-4 bg-gray-300 rounded-full top-1/2 -translate-y-1/2"
             min={min}
             max={max}
+            step={step}
             value={formData[field] as number}
             onTouchEnd={forceCommit}
             onMouseUp={forceCommit}
