@@ -1,5 +1,5 @@
 // frontend/src/components/Summary.tsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 // import { useReactToPrint } from "react-to-print";
