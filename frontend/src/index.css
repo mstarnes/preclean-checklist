@@ -20,10 +20,61 @@ code {
 @media screen {
   .print-only {
     position: absolute;
-    /*left: -9999px;
-    top: -9999px;*/
+    left: -9999px;
+    top: -9999px;
     width: 1px;
     height: 1px;
     overflow: hidden;
+  }
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact; /* Ensures backgrounds/colors print correctly */
+    print-color-adjust: exact;
+  }
+
+  /* Hide everything except the table */
+  body > *:not(.print-container) { /* Adjust selector to target your page wrapper if needed */
+    display: none !important;
+  }
+
+  /* Or more targeted: hide specific elements */
+  button, .mb-6, h2:first-of-type {
+    display: none !important;
+  }
+
+  /* Show/make visible the table */
+  .overflow-x-auto {
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  table {
+    width: auto !important;
+    min-width: 100% !important;
+    table-layout: auto !important; /* Better for print fitting */
+    font-size: 10pt; /* Smaller text for print, adjust as needed */
+  }
+
+  th, td {
+    border: 1px solid #000 !important; /* Darker borders for print */
+    padding: 4px 8px !important;
+  }
+
+  /* Optional: Add a title */
+  body::before {
+    content: "Restock Summary";
+    display: block;
+    font-size: 16pt;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 1cm;
   }
 }

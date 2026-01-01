@@ -92,16 +92,19 @@ const Summary: React.FC = () => {
     pendings: [],
   });
   const { cart, addToCart } = useCart();
-  const componentRef = useRef<HTMLDivElement>(null);
+
+  const printableRef = useRef<HTMLDivElement>(null);
+
   const print = useReactToPrint({
-    contentRef: componentRef,
+    contentRef: printableRef,
     pageStyle: `
       @page { size: A4 portrait; margin: 1cm; }
       @media print {
-        body { -webkit-print-color-adjust: exact; }
+        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       }
     `,
   });
+
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -142,24 +145,30 @@ const Summary: React.FC = () => {
     }
   };
 
+  const pageTitle = isGlobal
+    ? "Restock Summary"
+    : `Restock Summary - Cabin ${
+        data.pendings.find((p) => p._id === id)?.cabinNumber || ""
+      }`;
+
   return (
     <div className="p-4">
+      {/* Print button - hidden on print */}
       <button
         onClick={print}
-        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded float-right"
+        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded float-right print:hidden"
       >
         Print
       </button>
-      <h2 className="text-2xl font-bold mb-4 clear-both">
-        Restock Summary{" "}
-        {isGlobal
-          ? ""
-          : `- Cabin ${
-              data.pendings.find((p) => p._id === id)?.cabinNumber || ""
-            }`}
+
+      {/* Screen-only title */}
+      <h2 className="text-2xl font-bold mb-4 clear-both print:hidden">
+        {pageTitle}
       </h2>
+
+      {/* Optional pre-clean message */}
       {!isGlobal && message && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded">
+        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded print:hidden">
           <p className="font-medium">{message}</p>
           <button
             onClick={() =>
@@ -173,94 +182,64 @@ const Summary: React.FC = () => {
           </button>
         </div>
       )}
-      <div className="overflow-x-auto -mx-4 px-4">
-        <table className="w-full border-collapse table-fixed">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border border-gray-300 p-3 text-left font-semibold w-[30%]">
-                Item
-              </th>
-              {cabins.map((cabin) => (
-                <th
-                  key={cabin}
-                  className="border border-gray-300 p-3 text-center font-semibold cursor-pointer hover:bg-gray-200"
-                  onClick={() => handleCabinClick(cabin)}
-                >
-                  Cabin {cabin}
-                </th>
-              ))}
-              <th className="border border-gray-300 p-3 text-center font-semibold">
-                Total
-              </th>
-              <th className="border border-gray-300 p-3 text-center font-semibold">
-                Buy
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((key) => (
-              <tr
-                key={key}
-                className={data.aggregated[key] > 0 ? "bg-red-50" : ""}
-              >
-                <td className="border border-gray-300 p-3 font-medium break-words">
-                  {labels[key as keyof typeof labels] || key}
-                </td>
-                {cabins.map((cabin) => (
-                  <td
-                    key={cabin}
-                    className="border border-gray-300 p-3 text-center"
-                  >
-                    {data.perCabin[cabin][key] || 0}
-                  </td>
-                ))}
-                <td className="border border-gray-300 p-3 text-center font-bold text-lg">
-                  {data.aggregated[key]}
-                </td>
-                <td className="border border-gray-300 p-3 text-center">
-                  {isInCart(key) ? (
-                    <span className="text-green-600 font-bold text-xl">✓</span>
-                  ) : data.aggregated[key] > 0 ? (
-                    /* @ts-ignore */
-                    <FaShoppingCart
-                      className="cursor-pointer text-blue-600 h-7 w-7 mx-auto hover:text-blue-800"
-                      onClick={() => handleAddToCart(key)}
-                    />
-                  ) : (
-                    <span className="text-gray-400">-</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
-      {/* Printable version — hidden on screen via absolute positioning, visible on print */}
-      <div ref={componentRef} className="absolute -left-full -top-full w-0 h-0 overflow-hidden print:static print:left-auto print:top-auto print:w-auto print:h-auto print:overflow-visible">
-        <div className="p-1">
-          <h2 className="text-base font-bold mb-1 text-center">Restock Summary</h2>
-          <table className="w-full border-collapse text-xs">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="border border-gray-500 py-0.5 px-1 text-left">Item</th>
-                {cabins.map(cabin => (
-                  <th key={cabin} className="border border-gray-500 py-0.5 px-1 text-center">Cabin {cabin}</th>
+      {/* Printable content - everything inside this ref will be printed */}
+      <div ref={printableRef} className="print-area">
+        <div className="overflow-x-auto -mx-4 px-4 print:overflow-visible print:mx-0 print:px-0">
+          <table className="w-full border-collapse table-fixed print:table-auto print:w-full print:min-w-full">
+            <thead className="bg-gray-100 print:bg-gray-200">
+              <tr>
+                <th className="border border-gray-300 p-3 text-left font-semibold w-[30%] print:border-gray-600 print:py-1 print:px-2">
+                  Item
+                </th>
+                {cabins.map((cabin) => (
+                  <th
+                    key={cabin}
+                    className="border border-gray-300 p-3 text-center font-semibold cursor-pointer hover:bg-gray-200 print:hover:bg-transparent print:cursor-default print:border-gray-600 print:py-1 print:px-2"
+                    onClick={() => handleCabinClick(cabin)}
+                  >
+                    Cabin {cabin}
+                  </th>
                 ))}
-                <th className="border border-gray-500 py-0.5 px-1 text-center">Total</th>
+                <th className="border border-gray-300 p-3 text-center font-semibold print:border-gray-600 print:py-1 print:px-2">
+                  Total
+                </th>
+                <th className="border border-gray-300 p-3 text-center font-semibold print:hidden">
+                  Buy
+                </th>
               </tr>
             </thead>
             <tbody>
-              {items.map(key => (
-                <tr key={key}>
-                  <td className="border border-gray-500 py-0.5 px-1">{labels[key as keyof typeof labels] || key}</td>
-                  {cabins.map(cabin => (
-                    <td key={cabin} className="border border-gray-500 py-0.5 px-1 text-center">
+              {items.map((key) => (
+                <tr
+                  key={key}
+                  className={data.aggregated[key] > 0 ? "bg-red-50 print:bg-red-100" : ""}
+                >
+                  <td className="border border-gray-300 p-3 font-medium break-words print:border-gray-600 print:py-1 print:px-2">
+                    {labels[key as keyof typeof labels] || key}
+                  </td>
+                  {cabins.map((cabin) => (
+                    <td
+                      key={cabin}
+                      className="border border-gray-300 p-3 text-center print:border-gray-600 print:py-1 print:px-2"
+                    >
                       {data.perCabin[cabin][key] || 0}
                     </td>
                   ))}
-                  <td className="border border-gray-500 py-0.5 px-1 text-center font-bold">
+                  <td className="border border-gray-300 p-3 text-center font-bold text-lg print:border-gray-600 print:py-1 print:px-2 print:font-bold">
                     {data.aggregated[key]}
+                  </td>
+                  <td className="border border-gray-300 p-3 text-center print:hidden">
+                    {isInCart(key) ? (
+                      <span className="text-green-600 font-bold text-xl">✓</span>
+                    ) : data.aggregated[key] > 0 ? (
+                      <FaShoppingCart
+                        className="cursor-pointer text-blue-600 h-7 w-7 mx-auto hover:text-blue-800"
+                        onClick={() => handleAddToCart(key)}
+                      />
+                    ) : (
+                      <span className="text-gray-400">-</span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -268,7 +247,6 @@ const Summary: React.FC = () => {
           </table>
         </div>
       </div>
-
     </div>
   );
 };
