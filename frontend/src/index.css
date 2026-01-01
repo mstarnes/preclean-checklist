@@ -38,29 +38,26 @@ code {
     width: 0;
     height: 0;
     overflow: hidden;
-    visibility: hidden;
   }
 }
 
 @media print {
-  /* Hide everything except the printable section */
-  body > *:not(.print-only) {
-    display: none !important;
+  body * {
+    visibility: hidden;
   }
 
   .print-only,
   .print-only * {
-    visibility: visible !important;
-    display: block !important;
+    visibility: visible;
   }
 
   .print-only {
-    position: static !important;
-    left: auto !important;
-    top: auto !important;
-    width: auto !important;
-    height: auto !important;
-    overflow: visible !important;
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+    overflow: visible;
   }
 
   @page {
