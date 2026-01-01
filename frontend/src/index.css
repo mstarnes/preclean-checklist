@@ -43,13 +43,15 @@ code {
 }
 
 @media print {
-  body * {
-    visibility: hidden !important;
+  /* Hide everything except the printable section */
+  body > *:not(.print-only) {
+    display: none !important;
   }
 
   .print-only,
   .print-only * {
     visibility: visible !important;
+    display: block !important;
   }
 
   .print-only {
@@ -70,6 +72,6 @@ code {
     margin: 0;
     padding: 0;
     background: white;
-    print-color-adjust: exact; /* modern, non-deprecated */
+    print-color-adjust: exact;
   }
 }
