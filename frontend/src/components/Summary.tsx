@@ -213,7 +213,7 @@ const Summary: React.FC = () => {
               {items.map((key) => (
                 <tr
                   key={key}
-                  className={data.aggregated[key] > 0 ? "bg-red-50 print:bg-red-100" : ""}
+                  className={data.aggregated[key] > 0 ? "bg-red-50 print:bg-transparent" : ""}
                 >
                   <td className="border border-gray-300 p-3 font-medium break-words print:border-gray-600 print:py-1 print:px-2">
                     {labels[key as keyof typeof labels] || key}
