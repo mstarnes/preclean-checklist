@@ -233,6 +233,8 @@ const Summary: React.FC = () => {
                     {isInCart(key) ? (
                       <span className="text-green-600 font-bold text-xl">✓</span>
                     ) : data.aggregated[key] > 0 ? (
+
+                      /* @ts-ignore */
                       <FaShoppingCart
                         className="cursor-pointer text-blue-600 h-7 w-7 mx-auto hover:text-blue-800"
                         onClick={() => handleAddToCart(key)}
