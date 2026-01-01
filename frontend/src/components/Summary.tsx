@@ -236,30 +236,36 @@ const Summary: React.FC = () => {
         </table>
       </div>
 
-      {/* Printable version — overlaid behind main content on screen, full for print */}
-      <div ref={componentRef} className="fixed inset-0 -z-10 bg-white print:z-auto print:relative print:inset-auto print:bg-transparent">
-        <div className="p-4 print:p-8 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-6 print:text-3xl">Restock Summary</h2>
+      {/* Printable version — completely off-screen on display, visible on print */}
+      <div ref={componentRef} className="print-only">
+        <div className="p-6 print:p-8 max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-6 print:text-3xl print:mb-8">
+            Restock Summary
+          </h2>
           <table className="w-full border-collapse text-sm print:text-base">
             <thead className="bg-gray-100 print:bg-gray-200">
               <tr>
-                <th className="border border-gray-300 p-2 text-left print:p-3">Item</th>
-                {cabins.map(cabin => (
-                  <th key={cabin} className="border border-gray-300 p-2 text-center print:p-3">Cabin {cabin}</th>
+                <th className="border border-gray-300 p-3 text-left print:p-4">Item</th>
+                {cabins.map((cabin) => (
+                  <th key={cabin} className="border border-gray-300 p-3 text-center print:p-4">
+                    Cabin {cabin}
+                  </th>
                 ))}
-                <th className="border border-gray-300 p-2 text-center print:p-3">Total</th>
+                <th className="border border-gray-300 p-3 text-center print:p-4">Total</th>
               </tr>
             </thead>
             <tbody>
-              {items.map(key => (
-                <tr key={key} className={data.aggregated[key] > 0 ? 'bg-red-50 print:bg-red-50' : ''}>
-                  <td className="border border-gray-300 p-2 print:p-3">{labels[key as keyof typeof labels] || key}</td>
-                  {cabins.map(cabin => (
-                    <td key={cabin} className="border border-gray-300 p-2 text-center print:p-3">
+              {items.map((key) => (
+                <tr key={key} className={data.aggregated[key] > 0 ? "bg-red-50 print:bg-red-50" : ""}>
+                  <td className="border border-gray-300 p-3 print:p-4">
+                    {labels[key as keyof typeof labels] || key}
+                  </td>
+                  {cabins.map((cabin) => (
+                    <td key={cabin} className="border border-gray-300 p-3 text-center print:p-4">
                       {data.perCabin[cabin][key] || 0}
                     </td>
                   ))}
-                  <td className="border border-gray-300 p-2 text-center font-bold print:p-3">
+                  <td className="border border-gray-300 p-3 text-center font-bold text-lg print:p-4">
                     {data.aggregated[key]}
                   </td>
                 </tr>
@@ -267,7 +273,7 @@ const Summary: React.FC = () => {
             </tbody>
           </table>
         </div>
-      </div>      
+      </div>
     </div>
   );
 };
