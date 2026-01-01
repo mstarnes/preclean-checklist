@@ -238,34 +238,34 @@ const Summary: React.FC = () => {
 
       {/* Printable version — off-screen on screen, full on print */}
       <div ref={componentRef} className="print-only">
-        <div className="p-6 print:p-8 max-w-4xl mx-auto bg-white">
+        <div className="p-8 bg-white">
           <h2 className="text-3xl font-bold text-center mb-8">
             Restock Summary
           </h2>
           <table className="w-full border-collapse">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="border border-gray-400 p-4 text-left font-bold">Item</th>
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-600 p-4 text-left font-bold">Item</th>
                 {cabins.map((cabin) => (
-                  <th key={cabin} className="border border-gray-400 p-4 text-center font-bold">
+                  <th key={cabin} className="border border-gray-600 p-4 text-center font-bold">
                     Cabin {cabin}
                   </th>
                 ))}
-                <th className="border border-gray-400 p-4 text-center font-bold">Total</th>
+                <th className="border border-gray-600 p-4 text-center font-bold">Total</th>
               </tr>
             </thead>
             <tbody>
               {items.map((key) => (
-                <tr key={key} className={data.aggregated[key] > 0 ? "bg-red-50" : ""}>
-                  <td className="border border-gray-400 p-4">
+                <tr key={key}>
+                  <td className="border border-gray-600 p-4">
                     {labels[key as keyof typeof labels] || key}
                   </td>
                   {cabins.map((cabin) => (
-                    <td key={cabin} className="border border-gray-400 p-4 text-center">
+                    <td key={cabin} className="border border-gray-600 p-4 text-center">
                       {data.perCabin[cabin][key] || 0}
                     </td>
                   ))}
-                  <td className="border border-gray-400 p-4 text-center font-bold text-lg">
+                  <td className="border border-gray-600 p-4 text-center font-bold text-xl">
                     {data.aggregated[key]}
                   </td>
                 </tr>
