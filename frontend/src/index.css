@@ -44,7 +44,7 @@ code {
 
 @media print {
   body * {
-    visibility: hidden;
+    visibility: hidden !important;
   }
 
   .print-only,
@@ -69,5 +69,6 @@ code {
   body {
     margin: 0;
     padding: 0;
+    background: white;
   }
 }

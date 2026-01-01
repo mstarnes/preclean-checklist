@@ -236,36 +236,36 @@ const Summary: React.FC = () => {
         </table>
       </div>
 
-      {/* Printable version — off-screen on display, full on print */}
+      {/* Printable version — off-screen on screen, full on print */}
       <div ref={componentRef} className="print-only">
-        <div className="p-4 print:p-8 max-w-4xl mx-auto bg-white">
-          <h2 className="text-2xl font-bold text-center mb-6 print:text-3xl print:mb-8">
+        <div className="p-6 print:p-8 max-w-4xl mx-auto bg-white">
+          <h2 className="text-3xl font-bold text-center mb-8">
             Restock Summary
           </h2>
-          <table className="w-full border-collapse text-sm print:text-base">
+          <table className="w-full border-collapse">
             <thead className="bg-gray-200">
               <tr>
-                <th className="border border-gray-400 p-2 text-left print:p-4 font-bold">Item</th>
+                <th className="border border-gray-400 p-4 text-left font-bold">Item</th>
                 {cabins.map((cabin) => (
-                  <th key={cabin} className="border border-gray-400 p-2 text-center print:p-4 font-bold">
+                  <th key={cabin} className="border border-gray-400 p-4 text-center font-bold">
                     Cabin {cabin}
                   </th>
                 ))}
-                <th className="border border-gray-400 p-2 text-center print:p-4 font-bold">Total</th>
+                <th className="border border-gray-400 p-4 text-center font-bold">Total</th>
               </tr>
             </thead>
             <tbody>
               {items.map((key) => (
                 <tr key={key} className={data.aggregated[key] > 0 ? "bg-red-50" : ""}>
-                  <td className="border border-gray-400 p-2 print:p-4">
+                  <td className="border border-gray-400 p-4">
                     {labels[key as keyof typeof labels] || key}
                   </td>
                   {cabins.map((cabin) => (
-                    <td key={cabin} className="border border-gray-400 p-2 text-center print:p-4">
+                    <td key={cabin} className="border border-gray-400 p-4 text-center">
                       {data.perCabin[cabin][key] || 0}
                     </td>
                   ))}
-                  <td className="border border-gray-400 p-2 text-center font-bold text-lg print:p-4">
+                  <td className="border border-gray-400 p-4 text-center font-bold text-lg">
                     {data.aggregated[key]}
                   </td>
                 </tr>
