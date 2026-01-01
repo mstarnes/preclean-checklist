@@ -17,6 +17,7 @@ code {
     monospace;
 }
 
+/*
 @media screen {
   .print-only {
     position: absolute;
@@ -27,6 +28,7 @@ code {
     overflow: hidden;
   }
 }
+*/
 
 @media print {
   body {
