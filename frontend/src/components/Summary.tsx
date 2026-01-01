@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useReactToPrint } from "react-to-print";
+// import { useReactToPrint } from "react-to-print";
 import { toast } from "react-toastify";
 import { ClipboardIcon } from "@heroicons/react/24/outline";
 import { FaShoppingCart } from "react-icons/fa";
@@ -93,6 +93,7 @@ const Summary: React.FC = () => {
   });
   const { cart, addToCart } = useCart();
 
+  /*
   const printableRef = useRef<HTMLDivElement>(null);
 
   const print = useReactToPrint({
@@ -104,6 +105,7 @@ const Summary: React.FC = () => {
       }
     `,
   });
+  */
 
   const [message, setMessage] = useState("");
 
@@ -154,8 +156,17 @@ const Summary: React.FC = () => {
   return (
     <div className="p-4">
       {/* Print button - hidden on print */}
+      {/*
       <button
         onClick={print}
+        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded float-right print:hidden"
+      >
+        Print
+      </button>
+      */}
+
+      <button
+        onClick={() => window.print()}
         className="mb-4 bg-blue-500 text-white px-4 py-2 rounded float-right print:hidden"
       >
         Print
@@ -184,7 +195,8 @@ const Summary: React.FC = () => {
       )}
 
       {/* Printable content - everything inside this ref will be printed */}
-      <div ref={printableRef} className="print-area">
+      {/* </div><div ref={printableRef} className="print-area"> */}
+      <div>
         <div className="overflow-x-auto -mx-4 px-4 print:overflow-visible print:mx-0 print:px-0">
           <table className="w-full border-collapse table-fixed print:table-auto print:w-full print:min-w-full">
             <thead className="bg-gray-100 print:bg-gray-200">
