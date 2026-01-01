@@ -219,7 +219,7 @@ const ChecklistForm: React.FC = () => {
     }));
   };
 
-  const getMinMax = (name: keyof FormDataType) => {
+  const getMinMaxStep = (name: keyof FormDataType) => {
     switch (name) {
       case "lockBattery":
         return { min: 0, max: 4, step: 4 };
@@ -268,7 +268,7 @@ const ChecklistForm: React.FC = () => {
     isCommitting: boolean;
     setIsCommitting: React.Dispatch<React.SetStateAction<boolean>>;
   }) => {
-    const { min, max, step } = getMinMax(field);
+    const { min, max, step } = getMinMaxStep(field);
 
     const sliderContainerRef = useRef<HTMLDivElement>(null);
 
