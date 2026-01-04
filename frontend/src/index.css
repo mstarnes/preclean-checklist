@@ -23,6 +23,22 @@ code {
     print-color-adjust: exact;
   }
 
+    /* Hide top navigation bar in print */
+  header,
+  nav,
+  .top-nav, 
+  [class*="nav"],
+  [class*="header"],
+  .fixed.top-0,
+  .absolute.top-0 {
+    display: none !important;
+  }
+
+  /* Ensure main content starts at top */
+  body {
+    padding-top: 0 !important;
+  }
+
   /* WRONG — this class doesn't exist in your HTML */
   /* body > *:not(.print-container) {
     display: none !important;
