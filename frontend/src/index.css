@@ -29,9 +29,11 @@ code {
   } */
 
   /* CORRECT — hide everything except the actual printable wrapper */
+  /*
   body > *:not(.print-area) {
     display: none !important;
   }
+  */
 
   /* Also hide any children of .print-area that should not print */
   .print-hidden {

@@ -196,7 +196,7 @@ const Summary: React.FC = () => {
 
       {/* Printable content - everything inside this ref will be printed */}
       {/* </div><div ref={printableRef} className="print-area"> */}
-      <div className="print-area">
+      <div>
         <div className="overflow-x-auto -mx-4 px-4 print:overflow-visible print:mx-0 print:px-0">
           <table className="w-full border-collapse table-fixed print:table-auto print:w-full print:min-w-full">
             <thead className="bg-gray-100 print:bg-gray-200">
