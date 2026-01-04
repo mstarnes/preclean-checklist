@@ -29,9 +29,11 @@ code {
   } */
 
   /* CORRECT — hide everything except the actual printable wrapper */
+  /*
   body > *:not(.print-area) {
     display: none !important;
   }
+  */
 
   /* Also hide any children of .print-area that should not print */
   .print-hidden {
@@ -65,7 +67,7 @@ code {
     text-align: center;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #000;
+    /* border-bottom: 2px solid #000; */
   }
 
   @page {
