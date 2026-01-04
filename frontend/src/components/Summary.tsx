@@ -154,7 +154,7 @@ const Summary: React.FC = () => {
       }`;
 
   return (
-    <div className="p-4">
+    <div className="p-4 print:bg-transparent">
       {/* Print button - hidden on print */}
       {/*
       <button
@@ -196,10 +196,10 @@ const Summary: React.FC = () => {
 
       {/* Printable content - everything inside this ref will be printed */}
       {/* </div><div ref={printableRef} className="print-area"> */}
-      <div>
+      <div className="print:bg-transparent">
         <div className="overflow-x-auto -mx-4 px-4 print:overflow-visible print:mx-0 print:px-0">
           <table className="w-full border-collapse table-fixed print:table-auto print:w-full print:min-w-full">
-            <thead className="bg-gray-100 print:bg-transparent">
+            <thead className="bg-gray-100">
               <tr>
                 <th className="border border-gray-300 p-3 text-left font-semibold w-[30%] print:border-gray-600 print:py-1 print:px-2">
                   Item
