@@ -199,7 +199,7 @@ const Summary: React.FC = () => {
       <div>
         <div className="overflow-x-auto -mx-4 px-4 print:overflow-visible print:mx-0 print:px-0">
           <table className="w-full border-collapse table-fixed print:table-auto print:w-full print:min-w-full">
-            <thead className="bg-gray-100 print:bg-gray-200">
+            <thead className="bg-gray-100 print:bg-transparent">
               <tr>
                 <th className="border border-gray-300 p-3 text-left font-semibold w-[30%] print:border-gray-600 print:py-1 print:px-2">
                   Item
