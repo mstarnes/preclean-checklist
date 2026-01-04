@@ -81,9 +81,11 @@ code {
     font-size: 18pt;
     font-weight: bold;
     text-align: center;
+    /* 
     margin-bottom: 20px;
     padding-bottom: 10px;
-    /* border-bottom: 2px solid #000; */
+    border-bottom: 2px solid #000; 
+    */
   }
 
   @page {
