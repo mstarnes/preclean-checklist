@@ -79,8 +79,8 @@ code {
   }
 
   th, td {
-    border: 1px solid #333 !important;
-    padding: 4px 8px !important;
+    border: 1px solid #777 !important;
+    padding: 4px 4px !important;
   }
 
   body::before {
@@ -98,6 +98,6 @@ code {
 
   @page {
     /* size: A4 portrait;*/
-    margin: 1cm;
+    margin: 0.5cm;
   }
 }
