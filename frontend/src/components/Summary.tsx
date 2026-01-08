@@ -238,7 +238,7 @@ const Summary: React.FC = () => {
                       {data.perCabin[cabin][key] || 0}
                     </td>
                   ))}
-                  <td className="border border-gray-300 p-3 text-center font-bold text-lg print:border-gray-100 print:py-1 print:px-2 print:font-bold">
+                  <td className="border border-gray-300 p-3 text-center font-bold print:border-gray-100 print:py-1 print:px-2 print:font-bold">
                     {data.aggregated[key]}
                   </td>
                   <td className="border border-gray-300 p-3 text-center print:hidden">
