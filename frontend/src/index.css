@@ -80,7 +80,7 @@ code {
 
   th, td {
     border: 1px solid #777 !important;
-    padding: 4px 4px !important;
+    padding: 1px 8px !important;
   }
 
   body::before {
@@ -89,11 +89,9 @@ code {
     font-size: 18pt;
     font-weight: bold;
     text-align: center;
-    /* 
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #000; 
-    */
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    border-bottom: 1px solid #000; 
   }
 
   @page {
