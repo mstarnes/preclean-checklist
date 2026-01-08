@@ -100,4 +100,25 @@ code {
     size: A4 portrait;
     margin: 1cm;
   }
+
+  @media (max-width: 768px) {
+    .print-only table {
+      font-size: 12pt !important;
+    }
+    .print-only td,
+    .print-only th {
+      padding: 4px 6px !important;
+    }
+    .print-only h2 {
+      font-size: 20pt !important;
+      margin-bottom: 12px !important;
+    }
+  }
+
+  /* Reduce margins on small devices */
+  @media (max-width: 768px) {
+    @page {
+      margin: 0.5cm !important;
+    }
+  }
 }
