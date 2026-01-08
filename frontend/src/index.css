@@ -34,6 +34,14 @@ code {
     display: none !important;
   }
 
+  body,
+  html,
+  [class*="bg-gray-100"],
+  .min-h-screen {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
+
   /* Ensure main content starts at top */
   body {
     padding-top: 0 !important;
